@@ -40,7 +40,18 @@ class Request extends \iMVC\BaseMVC
      * @var string
      */
     public $requestURI;
-    
+    /**
+     * Holds $_GET's value
+     * @var array
+     */
+    public $GET;
+    /**
+     * Holds $_POST's value
+     * @var array
+     */
+    public $POST;
+
+
     public function __construct()
     {
         $this->Initiate();
@@ -263,6 +274,10 @@ class Request extends \iMVC\BaseMVC
                     $i++;
             }
         }
+        // add $_GET values as request params
+        $this->GET = $_GET;
+        // add $_POST values as request params
+        $this->POST = $_POST;
     }
     /**
      * Check if passed controller class exists
