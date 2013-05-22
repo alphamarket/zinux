@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\Model;
+namespace iMVC\Model\DB;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -10,20 +10,15 @@ namespace iMVC\Model;
  *
  * @author dariush
  */
-require_once 'BaseMVC.php';
-class BaseModel extends \iMVC\BaseMVC
+require_once 'Model/BaseModel.php';
+
+class DBModel extends \iMVC\BaseMVC
 {
     public function Initiate() {}
     
-    /**
-     * holds loaded models's hash tables
-     * @var array
-     */
-    public static $load_table;
-    
-    public static function LoadModel($model_name, $module_name = NULL)
+    public static function LoadDBModel($model_name, $module_name = NULL)
     {
-        $mb = new BaseModel;
+        $mb = new \iMVC\Model\BaseModel;
         
         if(!isset($model_name))
             throw new InvalidArgumentException("\$model_name is not setted!");
@@ -33,63 +28,66 @@ class BaseModel extends \iMVC\BaseMVC
         
         $model_name = str_replace(".php", "", $model_name);
         $model_name = str_replace("Model", "", $model_name);
-        $model_name = "{$model_name}Model";
+        $model_name = str_replace("DB", "", $model_name);
+        $model_name = "{$model_name}DBModel";
         
-        if(self::IsModelLoaded($model_name, $module_name))
+        if(self::IsDBModelLoaded($model_name, $module_name))
         {
             return;
         }
-        $mp = MODULE_PATH."/{$module_name}/Models/$model_name.php";
+        $mp = MODULE_PATH."/{$module_name}/Models/DB/$model_name.php";
         
         if(!file_exists($mp))
-            throw new \iMVC\Exceptions\NotFoundException("Model '{$model_name}.php' not found at '/{$module_name}/Models/'");
+            throw new \iMVC\Exceptions\NotFoundException("Model '{$model_name}.php' not found at '/{$module_name}/Models/DB'");
         
         require_once $mp;
         
         if(!class_exists("{$model_name}"))
-            throw new ErrorException("Model '{$model_name}.php' found but class '{$model_name}' does not exists.");
+            throw new \ErrorException("Model '{$model_name}.php' found but class '{$model_name}' does not exists.");
             
         self::MarkAsLoaded($model_name, $module_name);
     }
     
-    public static function LoadGlobalModel($model_name, $module_name = "__GLOBAL")
+    public static function LoadGlobalDBModel($model_name, $module_name = "__GLOBAL")
     {
         if(!\iMVC\Tools\String::startsWith($module_name, '__'))
                 throw new InvalidArgumentException("Global module names should 
                     start with '__' indicator, but provided module name 
                     '$module_name' does not have such signature!");
         
-        self::LoadModel($model_name, $module_name);
+        self::LoadDBModel($model_name, $module_name);
     }
     
-    public static function IsGlobalModelLoaded($model_name, $module_name = "__GLOBAL")
+    public static function IsGlobalDBModelLoaded($model_name, $module_name = "__GLOBAL")
     {
         if(!\iMVC\Tools\String::startsWith($module_name, '__'))
                 throw new InvalidArgumentException("Global module names should 
                     start with '__' indicator, but provided module name 
                     '$module_name' does not have such signature!");
-        return self::IsModelLoaded($model_name, $module_name);
+        return self::IsDBModelLoaded($model_name, $module_name);
     }
-    public static function IsModelLoaded($model_name, $module_name = NULL)
+    public static function IsDBModelLoaded($model_name, $module_name = NULL)
     {
-        $mb = new BaseModel;
+        $mb = new \iMVC\Model\BaseModel;
         
         $model_name = str_replace(".php", "", $model_name);
         $model_name = str_replace("Model", "", $model_name);
-        $model_name = "{$model_name}Model";
+        $model_name = str_replace("DB", "", $model_name);
+        $model_name = "{$model_name}DBModel";
         
         if(!isset($module_name))
             $module_name = $mb->GetRequest()->module;
         
-        return isset(self::$load_table[$module_name."::".$model_name]);
+        return $mb->IsModelLoaded($model_name, $module_name);
     }
     
-    public static function MarkAsLoaded($model_name, $module_name)
+    protected static function MarkAsLoaded($model_name, $module_name)
     {
         $model_name = str_replace(".php", "", $model_name);
         $model_name = str_replace("Model", "", $model_name);
-        $model_name = "{$model_name}Model";
-        self::$load_table[$module_name."::".$model_name] = "LOADED";
+        $model_name = str_replace("DB", "", $model_name);
+        $model_name = "{$model_name}DBModel";
+        \iMVC\Model\BaseModel::MarkAsLoaded($model_name, $module_name);
     }
 }
 
