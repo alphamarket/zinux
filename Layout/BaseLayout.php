@@ -19,7 +19,7 @@ class BaseLayout extends \iMVC\BaseMVC
      * View object related to layout
      * @var \iMVC\View\BaseView
      */
-    protected $view;
+    public $view;
     /**
      * Construct a new layout with given view instance
      * @param \iMVC\View\BaseView $view 
