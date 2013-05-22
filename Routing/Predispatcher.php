@@ -13,7 +13,6 @@ namespace iMVC\Routing;
 require_once 'BaseMVC.php';
 require_once 'Request.php';
 require_once 'Tools/String.php';
-use iMVC\Routing;
 class Predispatcher extends \iMVC\BaseMVC 
 {
     /**

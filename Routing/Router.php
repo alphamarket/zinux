@@ -15,7 +15,6 @@ require_once 'Request.php';
 require_once 'Predispatcher.php';
 require_once 'Dispatcher.php';
 require_once 'Postdispatcher.php';
-use \iMVC\Routing;
 class Router extends \iMVC\BaseMVC 
 {
     public function Initiate(){}
@@ -27,6 +26,8 @@ class Router extends \iMVC\BaseMVC
     {
         // init the request
         $request->Initiate();
+        // register the current request
+        parent::SetRequest($request);
         // pre-dispatcher
         $predisp = new Predispatcher();
         $predisp->Process($request);

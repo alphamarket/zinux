@@ -162,15 +162,15 @@ class Request extends \iMVC\BaseMVC
             return;
         $checked = 0;
         /** read online modules **/
-        unset($GLOBALS['CONFIGS']['app']['module']);
+        unset($GLOBALS['CONFIGS']['imvc']['module']);
         $h = opendir(MODULE_PATH);
         while(($c = readdir($h))!=NULL)
         {
-            if($c == '.' || $c=='..')
-                continue;
-            $GLOBALS['CONFIGS']['app']['module'][] = $c;
+            if($c == '.' || $c=='..' || \iMVC\Tools\String::startsWith($c, '__'))
+                continue;            
+            $GLOBALS['CONFIGS']['imvc']['module'][] = $c;
         }
-        foreach($GLOBALS['CONFIGS']['app']['module'] as $index => $module)
+        foreach($GLOBALS['CONFIGS']['imvc']['module'] as $index => $module)
         {
             //  check normalized
             if(strtolower($module)==strtolower($this->_parts[0]))
@@ -378,7 +378,7 @@ class Request extends \iMVC\BaseMVC
      * @param string $_args_string passed arguments with URI
      * @throws \iMVC\Exceptions\InvalideArgumentException The action cannot be NULL
      */
-    public function SendInteralRequest($action, $controller = NULL, $module = NULL, $_args_string = NULL)
+    public function SendInternalRequest($action, $controller = NULL, $module = NULL, $_args_string = NULL)
     {
         if(!isset($action))
             throw new \iMVC\Exceptions\InvalideArgumentException("The \$action name is not setted ...");
@@ -423,5 +423,9 @@ class Request extends \iMVC\BaseMVC
          * Restore backuped request URI 
          */
         $this->setURI($srvr_rq);
+        /**
+         * Reset current request 
+         */
+        parent::SetRequest($this);
     }
 }
