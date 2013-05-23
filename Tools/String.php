@@ -32,6 +32,16 @@ class String
         
         return (substr($haystack, -$length) === $needle);
     }
+    /**
+     * Check if $haystack contains $needle
+     * @param string $haystack
+     * @param string $needle
+     * @return boolean
+     */
+    public static function Contains($haystack, $needle)
+    {
+        return (strpos($haystack, $needle) !== false);
+    }
 }
 
 ?>
