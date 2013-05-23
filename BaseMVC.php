@@ -10,6 +10,11 @@ if(!defined('IMVC_INCLUDE_PATH'))
 
 abstract class BaseMVC extends \stdClass
 {    
+    const SERIALIZED = "SERIALIZED";
+    const XML = "XML";
+    const HTML = "HTML";
+    const JSON = "JSON";
+    
     public abstract function Initiate();
     
     /**
