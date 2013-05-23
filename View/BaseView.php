@@ -81,13 +81,13 @@ class BaseView extends \iMVC\BaseMVC
     {
         if($this->suppress_view)
             return;
-        
+     
         if(!$this->view_rendered)
         {
             if(!file_exists($this->GetViewPath()))
             {
                 throw new \iMVC\Exceptions\NotFoundException("The view '".$this->GetViewName()."' not found!");
-            }
+            } 
             require $this->GetViewPath();
             $this->view_rendered = true;
         }
@@ -111,7 +111,21 @@ class BaseView extends \iMVC\BaseMVC
      */
     public function GetViewPath()
     {
-        return MODULE_PATH.$this->request->module.'/Views/View/'.str_replace("Controller", "", $this->request->controller).'/'.$this->GetViewName().'.phtml';
+        $p = MODULE_PATH.$this->request->module.'/Views/View/'.str_replace("Controller", "", $this->request->controller).'/';
+        if (($handle = opendir($p))) {
+            while (false !== ($file = readdir($handle))) {
+                if(strtolower($file) == strtolower($this->GetViewName().".phtml"))
+                {
+                    closedir($handle);
+                    return $p.$file;
+                }
+            }
+            closedir($handle);
+        }
+        else
+            throw new \iMVC\Exceptions\InvalideOperationException("Could not open directory '$p'");
+        
+        # return MODULE_PATH.$this->request->module.'/Views/View/'.str_replace("Controller", "", $this->request->controller).'/'.$this->GetViewName().'.phtml';
     }
     /**
      * Partially loads a view
