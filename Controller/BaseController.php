@@ -41,6 +41,22 @@ abstract class BaseController extends \iMVC\BaseMVC
         $this->layout->Dispose();
         parent::Dispose();   
     }
+    public function ToRespond($call_back_function)
+    {
+        $call_back_function(strtoupper($this->request->TYPE));
+    }
+    
+    public function RenderSerialized($obj)
+    {
+        $this->layout->SuppressLayout();
+        echo serialize($obj);
+    }
+    
+    public function RenderJSON($obj)
+    {
+        $this->layout->SuppressLayout();
+        echo json_encode($obj);
+    }
 }
 
 ?>
