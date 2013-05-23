@@ -50,23 +50,32 @@ class BaseLayout extends \iMVC\BaseMVC
                 $this->view->Render();
                 $this->content = ob_get_contents();
             ob_end_clean();
-            if(!file_exists($this->GetLayoutPath()))
-            {
-                echo "<center><h2>Layout not loaded ...<br />The layout '".$this->GetLayoutName ()."' not found!</center></h2>";
-                $this->suppress_layout = true;
-            }
-            if(!$this->view->IsViewSuppressed() && !$this->suppress_layout)
-            {
-                require $this->GetLayoutPath();
-            }
-            else
-                echo $this->content;
+            $this->RenderHTML();
             $this->layout_rendered = true;
         }
         else
         {
             throw new \Exceptions\AppException("The view has been rendered previously...");
         }
+    }
+    protected function RenderHTML()
+    {
+        if(!file_exists($this->GetLayoutPath()))
+        {
+            echo "<center><h2>Layout not loaded ...<br />The layout '".$this->GetLayoutName ()."' not found!</center></h2>";
+            $this->suppress_layout = true;
+        }
+        if(!$this->view->IsViewSuppressed() && !$this->suppress_layout)
+        {
+            require $this->GetLayoutPath();
+        }
+        else
+            $this->RenderContext();
+    }
+    protected function RenderContext()
+    {
+        $this->SuppressLayout();
+        echo $this->content;
     }
     /**
      * Sets layout's name to its default
