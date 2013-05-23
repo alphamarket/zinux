@@ -24,8 +24,6 @@ class Router extends \iMVC\BaseMVC
      */
     public function Run($request)
     {
-        // init the request
-        $request->Initiate();
         // register the current request
         parent::SetRequest($request);
         // pre-dispatcher
