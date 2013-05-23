@@ -50,6 +50,14 @@ class Request extends \iMVC\BaseMVC
      * @var array
      */
     public $POST;
+    /**
+     * Contains type of request
+     * @example 
+     * if URI is /fooModule/BarController/zooAction.json/blah/blah?f=u
+     * the $TYPE would be 'json'
+     * @var string
+     */
+    public $TYPE;
 
 
     public function __construct()
@@ -225,6 +233,13 @@ class Request extends \iMVC\BaseMVC
         $this->_process_level++;
         if(count($this->_parts) > $this->_URI_Accept_Level && ($c = $this->_parts[$this->_URI_Accept_Level]))
         {
+            # fetch page type
+            if(\iMVC\Tools\String::Contains($c, "."))
+            {
+                $dpos = strpos($c, ".");
+                $this->TYPE = substr($c, $dpos+ 1);
+                $c = substr($c, 0, $dpos);
+            }
             if(method_exists($this->controller, "${c}Action"))
             {
                 if(!is_callable(array($this->controller, "${c}Action")))
@@ -278,6 +293,9 @@ class Request extends \iMVC\BaseMVC
         $this->GET = $_GET;
         // add $_POST values as request params
         $this->POST = $_POST;
+        // if $TYPE didin't get set, set to default;
+        if(!$this->TYPE)
+            $this->TYPE = "html";
     }
     /**
      * Check if passed controller class exists
