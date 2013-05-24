@@ -32,7 +32,7 @@ abstract class BaseMVC extends \stdClass
     
     public function SetRequest(\iMVC\Routing\Request $request)
     {
-        $GLOBALS['imvc']['register']['request'] = json_encode($request);
+        $GLOBALS['imvc']['register']['request'] = $request;
     }
     /**
      * @return \iMVC\Routing\Request
@@ -45,7 +45,7 @@ abstract class BaseMVC extends \stdClass
             require_once IMVC_PATH.'/Exceptions/AppException.php';
             throw new \iMVC\Exceptions\AppException("There is no previously registered request");
         }
-        return json_decode($GLOBALS['imvc']['register']['request']);
+        return $GLOBALS['imvc']['register']['request'];
     }
     
     public function IsRequestRegistered()
