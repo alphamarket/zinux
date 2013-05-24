@@ -34,8 +34,6 @@ class Application extends \iMVC\BaseMVC
         
         $req = new \iMVC\Routing\Request();
         
-        $req->Initiate();
-        
         $this->LoadActiveRecord($req);
        
         $r->Run($req);
