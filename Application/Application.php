@@ -34,7 +34,7 @@ class Application extends \iMVC\BaseMVC
         
         $req = new \iMVC\Routing\Request();
         
-        $this->LoadActiveRecord($req);
+        $this->InitializeActiveRecord($req);
        
         $r->Run($req);
     }
@@ -77,7 +77,7 @@ __END:
         $this->Dispose();
     }
     
-    protected function LoadActiveRecord(\iMVC\Routing\Request $request)
+    public function InitializeActiveRecord(\iMVC\Routing\Request $request)
     { 
         if(!isset($GLOBALS['CONFIGS']['db']))
         {

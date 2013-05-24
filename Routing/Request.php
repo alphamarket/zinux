@@ -188,6 +188,9 @@ class Request extends \iMVC\BaseMVC
                     throw new \iMVC\Exceptions\NotFoundException("Wired! $module not found at '".MODULE_PATH."$module' ...!");
                 }
                 $this->module = $module;
+                if(strtolower($this->module)!="default")
+                    $this->controller = "{$module}_{$this->controller}";
+                    
                 // defines how many part of URI is matched with pattern
                 $this->_URI_Accept_Level++;
                 $checked = true;
@@ -309,7 +312,7 @@ class Request extends \iMVC\BaseMVC
         $c = str_replace("Controller", "", $c);
         $c = "${c}Controller";
         
-        if(strtolower($this->module)!="default")
+        if(!\iMVC\Tools\String::Contains(strtolower($c), strtolower($this->module)) && strtolower($this->module)!="default")
         {
             $c = "{$this->module}_{$c}";
         }
@@ -421,8 +424,6 @@ class Request extends \iMVC\BaseMVC
         $action = str_replace("Action", "", $action);
         $controller = str_replace("Controller", "", $controller);
         $r = new Request();
-        // init the request vars.
-        $r->Initiate();
         /**
          * Backup currently request URI 
          */
