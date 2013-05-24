@@ -307,11 +307,18 @@ class Request extends \iMVC\BaseMVC
     {
         // normalize the controller's class's name
         $c = str_replace("Controller", "", $c);
-        if($this->ImportControllerFile("${c}Controller"))
+        $c = "${c}Controller";
+        
+        if(strtolower($this->module)!="default")
         {
-            if(class_exists("{$c}Controller"))
+            $c = "{$this->module}_{$c}";
+        }
+        
+        if($this->ImportControllerFile($c))
+        {
+            if(class_exists($c))
             {
-                $this->controller = "${c}Controller";
+                $this->controller = $c;
                 return true;
 
             }
