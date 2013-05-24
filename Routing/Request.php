@@ -402,9 +402,12 @@ class Request extends \iMVC\BaseMVC
      * target module would be the one which is currently loaded. (non-required)
      * @param string $_args_string passed arguments with URI
      * @throws \iMVC\Exceptions\InvalideArgumentException The action cannot be NULL
+     * @deprecated since version 1.0.1.1
      */
     public function SendInternalRequest($action, $controller = NULL, $module = NULL, $_args_string = NULL)
     {
+        trigger_error("This function is deprecated, please use \iMVC\Routing\FakeRequest", E_USER_NOTICE);
+        
         if(!isset($action))
             throw new \iMVC\Exceptions\InvalideArgumentException("The \$action name is not setted ...");
         if(!isset($controller))
