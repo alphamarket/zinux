@@ -12,6 +12,7 @@ namespace iMVC\Routing;
  */
 require_once 'BaseMVC.php';
 require_once 'Request.php';
+require_once 'FakeRequest.php';
 require_once 'Predispatcher.php';
 require_once 'Dispatcher.php';
 require_once 'Postdispatcher.php';
