@@ -166,11 +166,10 @@ class Request extends \iMVC\BaseMVC
      */
     protected function  RetrieveModuleName()
     {
-        if(count($this->_parts)==0)
-            return;
         $checked = 0;
         /** read online modules **/
         unset($GLOBALS['CONFIGS']['imvc']['module']);
+        // we need to load module's directory names first
         $h = opendir(MODULE_PATH);
         while(($c = readdir($h))!=NULL)
         {
@@ -178,6 +177,8 @@ class Request extends \iMVC\BaseMVC
                 continue;            
             $GLOBALS['CONFIGS']['imvc']['module'][] = $c;
         }
+        if(count($this->_parts)==0)
+            return;
         foreach($GLOBALS['CONFIGS']['imvc']['module'] as $index => $module)
         {
             //  check normalized
@@ -406,6 +407,7 @@ class Request extends \iMVC\BaseMVC
      * @param string $_args_string passed arguments with URI
      * @throws \iMVC\Exceptions\InvalideArgumentException The action cannot be NULL
      * @deprecated since version 1.0.1.1
+     * @return string the request result
      */
     public function SendInternalRequest($action, $controller = NULL, $module = NULL, $_args_string = NULL)
     {
@@ -444,10 +446,15 @@ class Request extends \iMVC\BaseMVC
          * Create fake request 
          */
         $router = new Router();
+        ob_start();
         /**
          * Run the fake router with fake request! 
          */
         $router->Run($r);
+        
+        $content = ob_get_contents();
+        
+        ob_end_clean();
         /**
          * Restore backuped request URI 
          */
@@ -456,5 +463,6 @@ class Request extends \iMVC\BaseMVC
          * Reset current request 
          */
         parent::SetRequest($this);
+        return $content;
     }
 }
