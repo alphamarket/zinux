@@ -93,8 +93,12 @@ class FakeRequest extends \iMVC\BaseMVC
         $_REQUEST = $this->_REQUEST_BACKUP;
         parent::SetRequest($this->_REQUEST_REQUEST);
     }
+    /**
+     * @return string the request result
+     */
     public function Send()
     {
+        ob_start();
         try
         {
             $this->BackupGlobals();
@@ -112,6 +116,9 @@ class FakeRequest extends \iMVC\BaseMVC
 </div>
             <?php
         }
+        $content = ob_get_contents();
+        ob_end_clean();
+        return $content;
     }
     protected function RunInternalRequest()
     {

@@ -34,7 +34,7 @@ class Application extends \iMVC\BaseMVC
         
         $req = new \iMVC\Routing\Request();
         
-        $this->LoadActiveRecord($req);
+        $this->InitializeActiveRecord($req);
        
         $r->Run($req);
     }
@@ -77,7 +77,7 @@ __END:
         $this->Dispose();
     }
     
-    protected function LoadActiveRecord(\iMVC\Routing\Request $request)
+    public function InitializeActiveRecord(\iMVC\Routing\Request $request)
     { 
         if(!isset($GLOBALS['CONFIGS']['db']))
         {
@@ -106,14 +106,17 @@ __END:
         # must issue a "use" statement in your closure if passing variables
         \ActiveRecord\Config::initialize(function($cfg) use ($connections, $request)
         {
-            $db_m_path = MODULE_PATH."{$request->module}/Models/DB";
-
-            if(!file_exists($db_m_path))
+            foreach ($GLOBALS['CONFIGS']['imvc']['module'] as $key => $module) 
             {
-                trigger_error("Database model's directory didn't found at '$db_m_path'");
-            }
+                $db_m_path = MODULE_PATH."$module/Models/DB";
 
-            \ActiveRecord\Config::instance()->set_model_directory($db_m_path);
+                if(!file_exists($db_m_path))
+                {
+                    trigger_error("Database model's directory didn't found at '$db_m_path'");
+                }
+
+                \ActiveRecord\Config::instance()->set_model_directory($db_m_path);
+            }
 
             $cfg->set_connections($connections);
             
