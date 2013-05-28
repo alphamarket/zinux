@@ -337,13 +337,25 @@ class Request extends \iMVC\BaseMVC
      * @param string $c
      * @return boolean returns true if file imported nice; otherwise false
      */
-    protected function ImportControllerFile($c)
+    protected function ImportControllerFile(&$c)
     {
         $c_path = \MODULE_PATH.$this->module."/Controllers/${c}.php";
         if(file_exists($c_path))
         {
             require_once $c_path;
             return true;
+        }
+        $cf_path = \MODULE_PATH.$this->module."/Controllers/";
+        $h = opendir($cf_path);
+        while(($cf = readdir($h))!=NULL)
+        {
+            if(strtolower($cf)==strtolower("{$c}.php"))
+            {
+                $c = str_replace(".php", "", $cf);
+                $c_path = \MODULE_PATH.$this->module."/Controllers/${c}.php";
+                require_once $c_path;
+                return true;
+            }
         }
         return false;
     }
