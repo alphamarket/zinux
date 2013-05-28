@@ -42,6 +42,8 @@ class Application extends \iMVC\BaseMVC
      */
     public function Startup($config_file_address)
     {
+        $config_file_address = realpath($config_file_address);
+        
         if(!file_exists($config_file_address))
         {
             trigger_error ("$config_file_address config file does not exists... ");
