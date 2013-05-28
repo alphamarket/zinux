@@ -96,7 +96,7 @@ class FakeRequest extends \iMVC\BaseMVC
     /**
      * @return string the request result
      */
-    public function Send()
+    public function Send($enable_throw_exception = false)
     {
         ob_start();
         try
@@ -109,6 +109,8 @@ class FakeRequest extends \iMVC\BaseMVC
         }
         catch(\Exception $e)
         {
+            if($enable_throw_exception)
+                throw $e;
             ?>
 <div class="" style="color:darkred">
     <strong>Sending fake request failed : </strong><br />
