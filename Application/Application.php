@@ -2,11 +2,11 @@
 namespace iMVC\APP;
 
 require_once __DIR__.'/../BaseMVC.php';
-require_once 'Security/Hash.php';
+require_once 'Exceptions/include.all.inc';
+require_once 'Security/include.all.inc';
 require_once 'Routing/Router.php';
 require_once 'Model/BaseModel.php';
 require_once 'Tools/Debug.php';
-require_once 'Exceptions/include.all.inc';
 require_once 'Controller/BaseController.php';
 require_once 'Tools/Config.php';
 require_once 'DB/php-activerecord/ActiveRecord.php';
