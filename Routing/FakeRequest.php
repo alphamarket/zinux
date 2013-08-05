@@ -43,6 +43,11 @@ class FakeRequest extends \iMVC\BaseMVC
      */
     protected $_REQUEST_REQUEST;
     /**
+     * Holds backedup requested URI
+     * @var String
+     */
+    protected $_URI_BACKUP;
+    /**
      * Hold a space for fake $_GET
      * @var array
      */
@@ -83,6 +88,7 @@ class FakeRequest extends \iMVC\BaseMVC
         $this->_FILES_BACKUP = $_FILES;
         $this->_REQUEST_BACKUP = $_REQUEST;
         $this->_REQUEST_REQUEST = parent::GetRequest();
+        $this->_URI_BACKUP = $_SERVER['REQUEST_URI'];
     }
     protected function RestorGlobals()
     {
@@ -91,6 +97,7 @@ class FakeRequest extends \iMVC\BaseMVC
         $GLOBALS = $this->_GLOBAL_BACKUP;
         $_FILES = $this->_FILES_BACKUP;
         $_REQUEST = $this->_REQUEST_BACKUP;
+        $_SERVER['REQUEST_URI'] = $this->URI_BACKUP;
         parent::SetRequest($this->_REQUEST_REQUEST);
     }
     /**
