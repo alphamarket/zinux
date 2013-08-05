@@ -38,6 +38,9 @@ class SecureCookie
      */
     public static function Set($name, $value, $expire_from_now)
     {
+        // in testing env we do not want to set any cookie!!!
+        if(RUNNING_ENV == TEST) return;
+        
         setcookie("$name", $value, time()+$expire_from_now); 
         setcookie("h${name}", \iMVC\Security\Hash::Generate($name.$value.'53cUr3'.'hA5h'), time()+$expire_from_now);
     }
