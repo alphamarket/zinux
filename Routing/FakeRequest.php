@@ -97,7 +97,7 @@ class FakeRequest extends \iMVC\BaseMVC
         $GLOBALS = $this->_GLOBAL_BACKUP;
         $_FILES = $this->_FILES_BACKUP;
         $_REQUEST = $this->_REQUEST_BACKUP;
-        $_SERVER['REQUEST_URI'] = $this->URI_BACKUP;
+        $_SERVER['REQUEST_URI'] = $this->_URI_BACKUP;
         parent::SetRequest($this->_REQUEST_REQUEST);
     }
     /**
