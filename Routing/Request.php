@@ -151,6 +151,11 @@ class Request extends \iMVC\BaseMVC
     protected function DepartURI()
     {
         $parts = array_filter(\explode('?', $this->requestURI));
+        if(!count($parts))
+        {
+            $this->_parts = array();
+            return;
+        }
         $parts = \explode('/', $parts[0]);
         /*
          * Normalizing the $parts arrays
