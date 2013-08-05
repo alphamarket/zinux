@@ -163,6 +163,13 @@ class Request extends \iMVC\BaseMVC
         $parts = array_filter($parts);
         $parts = count($parts)? array_chunk($parts, count($parts)) : array();
         $parts = count($parts)? $parts[0] : array();
+        # fetch page type
+        if(\iMVC\Tools\String::Contains($parts[count($parts)-1], "."))
+        {
+            $dpos = strpos($parts[count($parts)-1], ".");
+            $this->TYPE = substr($parts[count($parts)-1], $dpos+ 1);
+            $parts[count($parts)-1] = substr($parts[count($parts)-1], 0, $dpos);
+        }
         $this->_parts = $parts;
     }
     /**
@@ -242,13 +249,6 @@ class Request extends \iMVC\BaseMVC
         $this->_process_level++;
         if(count($this->_parts) > $this->_URI_Accept_Level && ($c = $this->_parts[$this->_URI_Accept_Level]))
         {
-            # fetch page type
-            if(\iMVC\Tools\String::Contains($c, "."))
-            {
-                $dpos = strpos($c, ".");
-                $this->TYPE = substr($c, $dpos+ 1);
-                $c = substr($c, 0, $dpos);
-            }
             if(method_exists($this->controller, "${c}Action"))
             {
                 if(!is_callable(array($this->controller, "${c}Action")))
