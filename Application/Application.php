@@ -61,11 +61,11 @@ class Application extends \iMVC\BaseMVC
         $c->Load($config_file_address, true, RUNNING_ENV);
         $this->Initiate();
 __END:
-        if(!isset($GLOBALS['CONFIGS']['imvc']['modules']['path']))
+        if(!isset($GLOBALS[CONFIGS]['imvc']['modules']['path']))
             $mp = IMVC_PATH.'/../Modules/';
         else 
         {
-            $mp = IMVC_PATH."/../".$GLOBALS['CONFIGS']['imvc']['modules']['path'];
+            $mp = IMVC_PATH."/../".$GLOBALS[CONFIGS]['imvc']['modules']['path'];
         }
         defined('MODULE_PATH') || define('MODULE_PATH', realpath($mp)."/");
         $this->_startup_invoked = true;

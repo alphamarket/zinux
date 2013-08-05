@@ -168,18 +168,18 @@ class Request extends \iMVC\BaseMVC
     {
         $checked = 0;
         /** read online modules **/
-        unset($GLOBALS['CONFIGS']['imvc']['module']);
+        unset($GLOBALS[CONFIGS]['imvc']['module']);
         // we need to load module's directory names first
         $h = opendir(MODULE_PATH);
         while(($c = readdir($h))!=NULL)
         {
             if($c == '.' || $c=='..' || \iMVC\Tools\String::startsWith($c, '__'))
                 continue;            
-            $GLOBALS['CONFIGS']['imvc']['module'][] = $c;
+            $GLOBALS[CONFIGS]['imvc']['module'][] = $c;
         }
         if(count($this->_parts)==0)
             return;
-        foreach($GLOBALS['CONFIGS']['imvc']['module'] as $index => $module)
+        foreach($GLOBALS[CONFIGS]['imvc']['module'] as $index => $module)
         {
             //  check normalized
             if(strtolower($module)==strtolower($this->_parts[0]))

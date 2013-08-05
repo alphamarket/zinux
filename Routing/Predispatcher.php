@@ -20,10 +20,10 @@ class Predispatcher extends \iMVC\BaseMVC
      */
     public function Initiate()
     {
-        if(!isset($GLOBALS['CONFIGS']["dispatch"]['pre']))
+        if(!isset($GLOBALS[CONFIGS]["dispatch"]['pre']))
             $this->_pd = array();
         else
-            $this->_pd = $GLOBALS['CONFIGS']["dispatch"]['pre'];
+            $this->_pd = $GLOBALS[CONFIGS]["dispatch"]['pre'];
     }
     public function Process(Request &$request)
     {
@@ -89,9 +89,9 @@ class Predispatcher extends \iMVC\BaseMVC
     }
     protected function RunReservedURI(Request &$request)
     {
-        if(!isset($GLOBALS['CONFIGS']['route']))
+        if(!isset($GLOBALS[CONFIGS]['route']))
             return;
-        $route = $GLOBALS['CONFIGS']['route'];
+        $route = $GLOBALS[CONFIGS]['route'];
         foreach($route as $name => $uri_dir)
         {
             if(strtolower($uri_dir['URI'])==strtolower($request->getRequestURI()))

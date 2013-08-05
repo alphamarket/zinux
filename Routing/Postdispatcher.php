@@ -20,10 +20,10 @@ class Postdispatcher extends \iMVC\BaseMVC
      */
     public function Initiate()
     {
-        if(!isset($GLOBALS['CONFIGS']["dispatch"]['post']))
+        if(!isset($GLOBALS[CONFIGS]["dispatch"]['post']))
             $this->_pd = array();
         else
-            $this->_pd = $GLOBALS['CONFIGS']["dispatch"]['post'];
+            $this->_pd = $GLOBALS[CONFIGS]["dispatch"]['post'];
     }
     /**
      * Initiate post-dipatcher processes 

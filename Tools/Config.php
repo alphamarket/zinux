@@ -22,7 +22,7 @@ class Config extends \iMVC\BaseMVC
      */
     public function Load($file_address, $process_sections = false, $section_name = null)
     {
-        $GLOBALS['CONFIGS'] = \iMVC\Tools\Ini_Parser::parse($file_address, $process_sections, $section_name);
-        return $GLOBALS['CONFIGS'];
+        $GLOBALS[CONFIGS] = \iMVC\Tools\Ini_Parser::parse($file_address, $process_sections, $section_name);
+        return $GLOBALS[CONFIGS];
     }
 }
