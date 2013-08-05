@@ -1,0 +1,13 @@
+#!/bin/bash
+echo "Cloning from online repository..." 
+cd ./DB
+git clone git@github.com:dariushha/php-activerecord.git -v
+echo "Cloning all branches ..."
+cd php-activerecord
+for branch in `git branch -a | grep remotes | grep -v HEAD | grep -v master`; do
+    git branch --track ${branch##*/} $branch
+done
+git pull --all
+echo "Done!"
+cd ../..
+
