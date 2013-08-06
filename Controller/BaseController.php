@@ -43,7 +43,7 @@ abstract class BaseController extends \iMVC\BaseMVC
     }
     public function ToRespond($call_back_function)
     {
-        $call_back_function(strtolower($this->request->TYPE));
+        $call_back_function(strtolower($this->request->TYPE), $this);
     }
     
     public function RenderSerialized($obj)
