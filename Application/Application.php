@@ -9,7 +9,7 @@ require_once 'Model/BaseModel.php';
 require_once 'Tools/Debug.php';
 require_once 'Controller/BaseController.php';
 require_once 'Tools/Config.php';
-require_once 'DB/php-activerecord/ActiveRecord.php';
+require_once 'DB/DBInitializer.php';
 use \ActiveRecord;
 
 class Application extends \iMVC\BaseMVC 
@@ -34,6 +34,10 @@ class Application extends \iMVC\BaseMVC
         $r = new \iMVC\Routing\Router();
         
         $req = new \iMVC\Routing\Request();
+        
+        $dbi = new \iMVC\DB\DBInitializer();
+        
+        $dbi->InitActiveRecord($req);
        
         $r->Run($req);
     }
