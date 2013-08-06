@@ -54,6 +54,8 @@ class BaseView extends \iMVC\BaseMVC
      */
     public function SetView($view_name)
     {
+        if(!\iMVC\Tools\String::Contains(strtolower($view_name),"view"))
+            $view_name .= "View";
         $this->view_name = str_replace(".phtml","", $view_name);
     }
     /**
