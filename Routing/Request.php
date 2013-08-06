@@ -151,7 +151,7 @@ class Request extends \iMVC\BaseMVC
     protected function DepartURI()
     {
         $parts = array_filter(\explode('?', $this->requestURI));
-        if(!count($parts))
+        if(count($parts)===0)
         {
             $this->_parts = array();
             return;
@@ -164,7 +164,7 @@ class Request extends \iMVC\BaseMVC
         $parts = count($parts)? array_chunk($parts, count($parts)) : array();
         $parts = count($parts)? $parts[0] : array();
         # fetch page type
-        if(\iMVC\Tools\String::Contains($parts[count($parts)-1], "."))
+        if(count($parts) && \iMVC\Tools\String::Contains($parts[count($parts)-1], "."))
         {
             $dpos = strpos($parts[count($parts)-1], ".");
             $this->TYPE = substr($parts[count($parts)-1], $dpos+ 1);
