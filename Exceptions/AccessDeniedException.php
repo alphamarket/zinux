@@ -17,8 +17,7 @@ class AccessDeniedException extends \iMVC\Exceptions\AppException
 {
     public function __construct($message = null, $code = null, $previous = null) {
         parent::__construct(strlen($message)?$message:"Access denied to <b>".$_SERVER['REQUEST_URI']."</b>.", $code, $previous);
-        if(!headers_sent ())
-            header('HTTP/1.1 403 Access Denied.');
+        $this->SendErrorCode(403);
     }
 }
 

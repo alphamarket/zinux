@@ -6,6 +6,6 @@ class InvalideOperationException extends \iMVC\Exceptions\AppException
 {
     public function __construct($message = null, $code = null, $previous = null) {
         parent::__construct(strlen($message)?$message:"Invalide Operation.", $code, $previous);
-        if(!headers_sent ()) header('HTTP/1.1 500 Internal Server Error');
+        $this->SendErrorCode(500);
     }
 }

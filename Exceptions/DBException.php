@@ -1,6 +1,6 @@
 <?php
 namespace iMVC\Exceptions;
-class DBException extends \Exception
+class DBException extends AppException
 {
     protected $_detail;
     protected $_errorno;
@@ -10,6 +10,7 @@ class DBException extends \Exception
     {
         parent::__construct($message, $code, $previous);
         $this->createException($message? $message:  '<b>#'.  mysql_errno().'</b> - '.mysql_error());
+        $this->SendErrorCode(500);
     }
     /**
      * automaticly create mysql exception
