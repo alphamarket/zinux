@@ -21,12 +21,18 @@ class BaseLayout extends \iMVC\BaseMVC
      */
     public $view;
     /**
+     * Options setting
+     * @var \stdClass
+     */
+    public $options;
+    /**
      * Construct a new layout with given view instance
      * @param \iMVC\View\BaseView $view 
      */
     public function __construct(\iMVC\View\BaseView $view)
     {
         $this->view = $view;
+        $this->options = new \stdClass();
         $this->Initiate();
     }
     /**
