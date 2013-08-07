@@ -11,9 +11,16 @@ namespace iMVC\Exceptions;
  * @author dariush
  */
 require 'AppException.php';
-class SecurityException extends \iMVC\Exceptions\AppException
+class SecurityException extends AppException
 {
-    //put your code here
+    public function __construct($message =null, $code=null, $previous=null) {
+        if(!$message)
+        {
+            $message = "Security error";
+        }
+        parent::__construct($message, $code, $previous);
+        $this->SendErrorCode(403);
+    }
 }
 
 ?>
