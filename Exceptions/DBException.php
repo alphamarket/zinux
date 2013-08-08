@@ -1,5 +1,6 @@
 <?php
 namespace iMVC\Exceptions;
+require_once 'AppException.php';
 class DBException extends AppException
 {
     protected $_detail;
