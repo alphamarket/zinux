@@ -63,14 +63,16 @@ class SecureCookie
     {
         if(!isset($_COOKIE[$name]) || !isset($_COOKIE["h${name}"]))
         {
-            self::Delete($name);
+            # this causes un-intended header sending problem, we don't want it!
+            # self::Delete($name);
             return false;
         }
         if(\iMVC\Security\Hash::Generate($name.$_COOKIE[$name].'53cUr3'.'hA5h')!=$_COOKIE["h${name}"])
         {
-            self::Delete($name);
-            return false;
-            # throw new \iMVC\Exceptions\SecurityException("The cookie named \{$name\} does not matched with its hashed data!");
+            # this causes un-intended header sending problem, we don't want it!
+            # self::Delete($name);
+            # return false;
+            throw new \iMVC\Exceptions\SecurityException("The cookie's data is corrupted!");
         }
         return true;
     }
