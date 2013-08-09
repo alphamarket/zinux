@@ -6,8 +6,10 @@ class NotImplementedException extends AppException
     private $stack_trace;
 
     public function __construct($message, $code, $previous) {
-        parent::__construct($message, $code, $previous);
-        $this->SendErrorCode("501 Not Implemented.");
+            if(!isset($message))
+                    $message = "The method has not implemented...";
+            parent::__construct($message, $code, $previous);
+            $this->SendErrorCode("501 Not Implemented.");
     }
     private $error_code;
 
