@@ -160,7 +160,7 @@ class Request extends \iMVC\BaseMVC
         /*
          * Normalizing the $parts arrays
          */
-        $parts = array_filter($parts);
+        $parts = array_filter($parts, 'strlen');
         $parts = count($parts)? array_chunk($parts, count($parts)) : array();
         $parts = count($parts)? $parts[0] : array();
         # fetch page type
