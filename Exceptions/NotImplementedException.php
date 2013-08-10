@@ -4,7 +4,7 @@ require_once 'AppException.php';
 class NotImplementedException extends AppException
 {
     public function __construct($message=null, $code=null, $previous=null) {
-            if(!isset($message))
+            if(!isset($message) || !strlen($message))
                     $message = "The method has not implemented...";
             parent::__construct($message, $code, $previous);
             $this->SendErrorCode("501 Not Implemented.");

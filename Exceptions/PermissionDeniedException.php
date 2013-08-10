@@ -10,7 +10,7 @@ require_once 'AccessDeniedException.php';
 class PermissionDeniedException extends \iMVC\Exceptions\AccessDeniedException
 {
     public function __construct($message = null, $code = null, $previous = null) {
-        if(!$message)
+        if(!isset($message) || !strlen($message))
         {
             $message = "You <b>do not</b> have permission to view this page!";
         }
