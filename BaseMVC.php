@@ -1,6 +1,6 @@
 <?php
 namespace iMVC;
-defined("IMVC_PATH") || define('IMVC_PATH', realpath(__DIR__));
+defined("IMVC_PATH") || define('IMVC_PATH', realpath(__DIR__)."/");
 
 if(!defined('IMVC_INCLUDE_PATH'))
 {

@@ -3,9 +3,7 @@ namespace iMVC\Exceptions;
 require_once 'AppException.php';
 class NotImplementedException extends AppException
 {
-    private $stack_trace;
-
-    public function __construct($message, $code, $previous) {
+    public function __construct($message=null, $code=null, $previous=null) {
             if(!isset($message))
                     $message = "The method has not implemented...";
             parent::__construct($message, $code, $previous);
@@ -26,5 +24,4 @@ class NotImplementedException extends AppException
     }
 
     public function GetErrorCode(){return $this->error_code;}
-    public function GetErrorTraceAsString(){return $this->stack_trace;}
 }
