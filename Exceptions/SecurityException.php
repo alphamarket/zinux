@@ -14,7 +14,7 @@ require 'AppException.php';
 class SecurityException extends AppException
 {
     public function __construct($message =null, $code=null, $previous=null) {
-        if(!$message)
+        if(!isset($message) || !strlen($message))
         {
             $message = "Security error";
         }
