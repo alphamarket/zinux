@@ -370,7 +370,7 @@ class Request extends \iMVC\BaseMVC
      */
     public function IsGET()
     {
-        return (!$this->IsPOST()) && isset($_GET) && count($_GET)!=0;
+        return isset($_GET) && count($_GET)!=0;
     }
     /**
      * Get $_GET's value;
