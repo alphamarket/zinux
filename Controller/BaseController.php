@@ -58,8 +58,21 @@ abstract class BaseController extends \iMVC\BaseMVC
         echo json_encode($obj);
     }
     
-    function IsSecure(array $array, array $existance_array, array $check_sum_array, $do_exception = 1, $verbose_exceptions = 0)
+    function IsSecure(array $array, array $existance_array = array(), array $check_sum_array = array(), $do_exception = 1, $verbose_exceptions = 0)
     {
+        if(!isset($array))
+            if($do_exception)
+                throw new InvalidArgumentException($verbose_exceptions?"The array is not setted":"");
+            else return false;
+        
+        if(!count($check_sum_array) && !count($existance_array))
+            throw new \InvalidArgumentException("\$existance_array is not supplied but demads operation on \$check_sum_array!!");
+        
+        if(count($existance_array) && !count($existance_array))
+            if($do_exception)
+                throw new \InvalidArgumentException($verbose_exceptions?"The target array in empy!":"");
+            else return false;
+        
         foreach($existance_array as $value)
         {
             if(!isset($array[$value]))
