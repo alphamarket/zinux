@@ -62,7 +62,7 @@ abstract class BaseController extends \iMVC\BaseMVC
     {
         if(!isset($array))
             if($do_exception)
-                throw new InvalidArgumentException($verbose_exceptions?"The array is not setted":"");
+                throw new \InvalidArgumentException($verbose_exceptions?"The array is not setted":"");
             else return false;
         
         if(!count($check_sum_array) && !count($existance_array))
@@ -77,14 +77,14 @@ abstract class BaseController extends \iMVC\BaseMVC
         {
             if(!isset($array[$value]))
                 if($do_exception)
-                    throw new InvalidArgumentException($verbose_exceptions?"The argumen `$value` didn't supplied":"");
+                    throw new \InvalidArgumentException($verbose_exceptions?"The argumen `$value` didn't supplied":"");
                 else return false;
         }
         foreach($check_sum_array as $key=> $value)
         {
             if($array[$key] != $value)
                 if($do_exception)
-                    throw new InvalidArgumentException($verbose_exceptions?"The `$key`'s value didn't match with `$value`":"");
+                    throw new \InvalidArgumentException($verbose_exceptions?"The `$key`'s value didn't match with `$value`":"");
                 return false;
         }
         return true;
