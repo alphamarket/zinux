@@ -57,6 +57,25 @@ abstract class BaseController extends \iMVC\BaseMVC
         $this->layout->SuppressLayout();
         echo json_encode($obj);
     }
+    
+    function IsSecure(array $array, array $existance_array, array $check_sum_array, $do_exception = 1, $verbose_exceptions = 0)
+    {
+        foreach($existance_array as $value)
+        {
+            if(!isset($array[$value]))
+                if($do_exception)
+                    throw new InvalidArgumentException($verbose_exceptions?"The argumen `$value` didn't supplied":"");
+                else return false;
+        }
+        foreach($check_sum_array as $key=> $value)
+        {
+            if($array[$key] != $value)
+                if($do_exception)
+                    throw new InvalidArgumentException($verbose_exceptions?"The `$key`'s value didn't match with `$value`":"");
+                return false;
+        }
+        return true;
+    }
 }
 
 ?>
