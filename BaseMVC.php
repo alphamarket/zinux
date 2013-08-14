@@ -54,4 +54,65 @@ abstract class BaseMVC extends \stdClass
                 $GLOBALS['imvc']['register']['request']!=NULL;
     }
     
+    function IsSecure(array $array, array $existance_array = array(), array $check_sum_array = array(), $do_exception = 1, $verbose_exceptions = 0)
+    {
+        if(!isset($array))
+        {
+            if($do_exception)
+                throw new \InvalidArgumentException($verbose_exceptions?"The array is not setted":"Invalid Request");
+            else return false;
+        }
+        
+        if(!count($check_sum_array) && !count($existance_array))
+            throw new \InvalidArgumentException("\$existance_array is not supplied but demads operation on \$check_sum_array!!");
+        
+        if(count($existance_array) && !count($existance_array))
+        {
+            if($do_exception)
+                throw new \InvalidArgumentException($verbose_exceptions?"The target array in empy!":"Invalid Request");
+            else return false;
+        }  
+        foreach($existance_array as $value)
+        {
+            if(!isset($array[$value]))
+            {
+                if($do_exception)
+                    throw new \InvalidArgumentException($verbose_exceptions?"The argumen `$value` didn't supplied":"Invalid Request");
+                else return false;
+            }
+        }
+        foreach($check_sum_array as $key=> $value)
+        {
+            if($array[$key] != $value)
+            {
+                if($do_exception)
+                    throw new \InvalidArgumentException($verbose_exceptions?"The `$key`'s value didn't match with `$value`":"Invalid Request");
+                return false;
+            }
+        }
+        return true;
+    }
+    public function GetSecureGET(array $based_upon)
+    {
+        $t = time();
+        $based_upon[] = $t;
+        $tn = "s_".substr(sha1('t'), 0,5);
+        $link ="&$tn=$t";
+        require_once 'Security/Hash.php';
+        $h = Security\Hash::Generate(implode("", $based_upon));
+        $hn = "s_".substr(sha1('h'), 0,5);
+        $link = $link."&$hn=$h";
+        return $link;
+    }
+    public function IsGETSecured(array $based_upon)
+    {
+        $tn = "s_".substr(sha1('t'), 0,5);
+        $hn = "s_".substr(sha1('h'), 0,5);
+        $this->IsSecure($_GET, array($tn,$hn),array());
+        $based_upon[] = $_GET[$tn];
+        require_once 'Security/Hash.php';
+        $h = Security\Hash::Generate(implode("", $based_upon));
+        $this->IsSecure($_GET, array($tn,$hn),array($hn=>$h));
+        return true;
+    }
 }
