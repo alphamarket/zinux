@@ -98,7 +98,7 @@ abstract  class  Mail
         //Send the message, check for errors
         if(!$this->mail->Send()) {
             date_default_timezone_set($this->default_date_TZ_backup);
-            throw new ErrorException($this->mail->ErrorInfo);
+            throw new \ErrorException($this->mail->ErrorInfo);
         }
         date_default_timezone_set($this->default_date_TZ_backup);
         return true;
