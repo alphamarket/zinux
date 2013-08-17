@@ -159,7 +159,8 @@ class FakeRequest extends \iMVC\BaseMVC
             {
                 if($request->action == $cr->action)
                 {
-                    throw new \iMVC\Exceptions\InvalideOperationException("Cannot recursivly call current action.");
+                    if(strtolower($request->TYPE) == strtolower($cr->TYPE))
+                        throw new \iMVC\Exceptions\InvalideOperationException("Cannot recursivly call current action.");
                 }
             }
         }
