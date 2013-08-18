@@ -36,13 +36,14 @@ class SecureCookie
      * @param string $value
      * @param integer $expire_from_now
      */
-    public static function Set($name, $value, $expire_from_now)
+    public static function Set($name, $value, $expire_from_now, $path = "/")
     {
         // in testing env we do not want to set any cookie!!!
         if(RUNNING_ENV == TEST) return;
-        
-        setcookie("$name", $value, time()+$expire_from_now); 
-        setcookie("h${name}", \iMVC\Security\Hash::Generate($name.$value.'53cUr3'.'hA5h'), time()+$expire_from_now);
+        setcookie("$name", $value, time()+$expire_from_now, $path); 
+        setcookie("h${name}", \iMVC\Security\Hash::Generate($name.$value.'53cUr3'.'hA5h'), time()+$expire_from_now, $path);
+        unset($_COOKIE[$name]);
+        unset($_COOKIE["h{$name}"]);
     }
     /**
      * Delete a cookie
@@ -51,7 +52,6 @@ class SecureCookie
     public static function Delete($name)
     {
         self::Set($name, $name, -(24*3600));
-        self::Set("h${name}", $name, -(24*3600));
     }
     /**
      * Check if a cookie exists or not
