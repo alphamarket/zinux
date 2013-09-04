@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 clear
 for i in $( find . -type f -name "*.php" -o -name "*.inc" -o -name "*.phtml"| xargs ls -ld | cut -d '.' -f2); do
 	FNAME=".${i}.php";
