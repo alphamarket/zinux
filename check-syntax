@@ -1,16 +1,73 @@
-#!/bin/sh
+#!/bin/bash
 clear
-for i in $( find . -type f -name "*.php" -o -name "*.inc" -o -name "*.phtml"| xargs ls -ld | cut -d '.' -f2); do
-	FNAME=".${i}.php";
-	#if [[ $(echo $i | cut -d '/' -f2 ) == "db" ]]; then
-	#	continue;
-	#fi
+CERROR=1
+VERBOSE=0
+SCOUNT=0
+ECOUNT=0
+while test $# -gt 0; do
+        case "$1" in
+                -h|--help)
+                        echo "[options]		[argument]		[comments]"
+                        echo " "
+                        echo "-h, --help					brief help"
+						echo "-v	 				verbose output"
+                        echo "-c 					continue parsing syntaxes if any error happens"
+                        exit 0
+                        ;;
+                -v)
+                        VERBOSE=1
+						shift
+                        ;;
+                -c)
+                        CERROR=1
+                        shift
+                        ;;
+				-vc|-cv)
+                        VERBOSE=1
+                        CERROR=1
+                        shift
+                        ;;
+                *)
+                        break
+                        ;;
+        esac
+done
+EARRAY=()
+echo "Syntax checking initiated ..."
+for FNAME in $( find . -type f -name "*.php" -o -name "*.inc" -o -name "*.phtml" | rev | cut -d " " -f1 | rev); do
+	if ! [ -e $FNAME ]; then
+		continue;
+	fi
 	NAME=${FNAME##*/};
-	echo "Syntax checking on $FNAME";
-	RES=$(php -l ${FNAME});
+	RES=$(php -l ${FNAME} 2>&1);
 	needle='error:'
-	if [[ "$RES" == *"$needle"* ]]; then
-	  echo $RES;
-	  exit;
+	if [[ "$RES" == *"$needle"* ]]; then	
+	  if ! [[ $VERBOSE -eq 1 ]]; then
+	  	echo -e "\e[31mF\c";
+	  fi
+	  EARRAY+=("\e[31m[ Failed ] $RES");
+
+	  if [ $CERROR -eq 0 ]; then
+	  	echo -e "\e[31m[ Failed ] $RES";
+		exit 1;
+	  fi
+	  ECOUNT=$(($ECOUNT + 1))
+    else
+	  if [[ $VERBOSE -eq 1 ]]; then
+		echo -e "\e[32m[ OK ] Syntax checking on \e[39m$FNAME";
+	  else
+		echo -e "\e[32m.\c";
+	  fi
+	  SCOUNT=$(($SCOUNT + 1))
 	fi
 done
+echo " "
+for E in "${EARRAY[@]}"; do
+	echo -e $E"\n";
+done;
+if ! [ $ECOUNT -eq 0 ]; then
+	echo -e "\e[32m[ $SCOUNT successed ]"
+	echo -e "\e[31m[ $ECOUNT failure ]"
+	exit;
+fi 
+echo -e "\e[32m[ All OK ]"
