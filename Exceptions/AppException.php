@@ -1,38 +1,55 @@
 <?php
-namespace iMVC\Exceptions;
-    class AppException extends \Exception
-    {
-        private $stack_trace;
-        
-        public function __construct($message, $code, $previous) {
-            parent::__construct($message, $code, $previous);
-            try
-            {
-                throw new \Exception();
-            }
-            catch(\Exception $e)
-            {
-                $p = explode("\n", $e->getTraceAsString());
-                $s = "";
-                for($i=1;$i<count($p);$i++)
-                    $s .= $p[$i].'<br />';
-                $this->stack_trace = $s;
-            }
-        }
-        private $error_code;
-        
-        public function SendErrorCode($code = NULL)
-        {
-            if($code)
-                $this->error_code = $code;
-            if(!headers_sent ())
-            {
-                header('HTTP/1.1 '.$this->error_code);
-                return true;
-            }
-            return false;
-        }
-        
-        public function GetErrorCode(){return $this->error_code;}
-        public function GetErrorTraceAsString(){return $this->stack_trace;}
-    }
+
+
+namespace iMVC\exceptions;
+
+
+/**
+ * @author dariush
+ * @version 1.0
+ * @created 04-Sep-2013 15:35:06
+ */
+class appException extends Exception
+{
+
+	private $stack_trace;
+	private $error_code;
+
+	function __construct()
+	{
+	}
+
+	function __destruct()
+	{
+	}
+
+
+
+	/**
+	 * 
+	 * @param message
+	 * @param code
+	 * @param previous
+	 */
+	public function __construct($message, $code, $previous)
+	{
+	}
+
+	/**
+	 * 
+	 * @param code
+	 */
+	public function SendErrorCode($code = NULL)
+	{
+	}
+
+	public function GetErrorCode()
+	{
+	}
+
+	public function GetErrorTraceAsString()
+	{
+	}
+
+}
+?>

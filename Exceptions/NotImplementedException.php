@@ -1,27 +1,50 @@
 <?php
-namespace iMVC\Exceptions;
-require_once 'AppException.php';
-class NotImplementedException extends AppException
+require_once ('appException.php');
+
+namespace iMVC\exceptions;
+
+
+/**
+ * @author dariush
+ * @version 1.0
+ * @created 04-Sep-2013 15:35:09
+ */
+class notImplementedException extends appException
 {
-    public function __construct($message=null, $code=null, $previous=null) {
-            if(!isset($message) || !strlen($message))
-                    $message = "The method has not implemented...";
-            parent::__construct($message, $code, $previous);
-            $this->SendErrorCode("501 Not Implemented.");
-    }
-    private $error_code;
 
-    public function SendErrorCode($code = NULL)
-    {
-        if($code)
-            $this->error_code = $code;
-        if(!headers_sent ())
-        {
-            header('HTTP/1.1 '.$this->error_code);
-            return true;
-        }
-        return false;
-    }
+	private $error_code;
 
-    public function GetErrorCode(){return $this->error_code;}
+	function __construct()
+	{
+	}
+
+	function __destruct()
+	{
+	}
+
+
+
+	/**
+	 * 
+	 * @param message
+	 * @param code
+	 * @param previous
+	 */
+	public function __construct($message = null, $code = null, $previous = null)
+	{
+	}
+
+	/**
+	 * 
+	 * @param code
+	 */
+	public function SendErrorCode($code = NULL)
+	{
+	}
+
+	public function GetErrorCode()
+	{
+	}
+
 }
+?>

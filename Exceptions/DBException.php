@@ -1,43 +1,66 @@
 <?php
-namespace iMVC\Exceptions;
-require_once 'AppException.php';
-class DBException extends AppException
-{
-    protected $_detail;
-    protected $_errorno;
-    protected $_error_msg;
+require_once ('appException.php');
 
-    public function __construct($message = null, $code = null , $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-        $this->createException($message? $message:  '<b>#'.  mysql_errno().'</b> - '.mysql_error());
-        $this->SendErrorCode(500);
-    }
-    /**
-     * automaticly create mysql exception
-     * @param string details about the current mysql exception 
-     */
-    public function createException($detail = null) 
-    {
-        $this->message = $detail;
-        $this->_errorno = mysql_errno();
-        $this->_error_msg = mysql_error();
-    }
-    
-    /**
-     * get generated mysql error number
-     * @return int 
-     */
-    public function getErrorNo()
-    {
-        return $this->_errorno;
-    }
-    /**
-     * get generated mysql error message
-     * @return string 
-     */
-    public function getErrorMessage()
-    {
-        return $this->_error_msg;
-    }
+namespace iMVC\exceptions;
+
+
+/**
+ * @author dariush
+ * @version 1.0
+ * @created 04-Sep-2013 15:35:08
+ */
+class dbException extends appException
+{
+
+	protected $_detail;
+	protected $_errorno;
+	protected $_error_msg;
+
+	function __construct()
+	{
+	}
+
+	function __destruct()
+	{
+	}
+
+
+
+	/**
+	 * 
+	 * @param message
+	 * @param code
+	 * @param previous
+	 */
+	public function __construct($message = null, $code = null, $previous = null)
+	{
+	}
+
+	/**
+	 * automaticly create mysql exception
+	 * @param string details about the current mysql exception
+	 * 
+	 * @param detail
+	 */
+	public function createException($detail = null)
+	{
+	}
+
+	/**
+	 * get generated mysql error number
+	 * @return int
+	 */
+	public function getErrorNo()
+	{
+	}
+
+	/**
+	 * get generated mysql error message
+	 * @return string
+	 */
+	public function getErrorMessage()
+	{
+	}
+
 }
+?>

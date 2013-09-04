@@ -1,21 +1,37 @@
 <?php
+require_once ('accessDeniedException.php');
 
-namespace iMVC\Exceptions;
+namespace iMVC\exceptions;
+
+
 /**
  * Description of permissionDeniedException
- *
  * @author dariush
+ * @version 1.0
+ * @created 04-Sep-2013 15:35:09
  */
-require_once 'AccessDeniedException.php';
-class PermissionDeniedException extends \iMVC\Exceptions\AccessDeniedException
+class permissionDeniedException extends accessDeniedException
 {
-    public function __construct($message = null, $code = null, $previous = null) {
-        if(!isset($message) || !strlen($message))
-        {
-            $message = "You <b>do not</b> have permission to view this page!";
-        }
-        parent::__construct($message, $code, $previous);
-    }
-}
 
+	function __construct()
+	{
+	}
+
+	function __destruct()
+	{
+	}
+
+
+
+	/**
+	 * 
+	 * @param message
+	 * @param code
+	 * @param previous
+	 */
+	public function __construct($message = null, $code = null, $previous = null)
+	{
+	}
+
+}
 ?>

@@ -1,11 +1,36 @@
 <?php
-namespace iMVC\Exceptions;
-require_once 'AppException.php';
+require_once ('appException.php');
 
-class InvalideOperationException extends \iMVC\Exceptions\AppException
+namespace iMVC\exceptions;
+
+
+/**
+ * @author dariush
+ * @version 1.0
+ * @created 04-Sep-2013 15:35:09
+ */
+class invalideOperationException extends appException
 {
-    public function __construct($message = null, $code = null, $previous = null) {
-        parent::__construct(isset($message) && strlen($message)?$message:"Invalide Operation.", $code, $previous);
-        $this->SendErrorCode(500);
-    }
+
+	function __construct()
+	{
+	}
+
+	function __destruct()
+	{
+	}
+
+
+
+	/**
+	 * 
+	 * @param message
+	 * @param code
+	 * @param previous
+	 */
+	public function __construct($message = null, $code = null, $previous = null)
+	{
+	}
+
 }
+?>

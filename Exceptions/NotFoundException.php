@@ -1,11 +1,36 @@
 <?php
-namespace iMVC\Exceptions;
-require_once 'AppException.php';
+require_once ('appException.php');
 
-class NotFoundException extends \iMVC\Exceptions\AppException
+namespace iMVC\exceptions;
+
+
+/**
+ * @author dariush
+ * @version 1.0
+ * @created 04-Sep-2013 15:35:09
+ */
+class notFoundException extends appException
 {
-    public function __construct($message = null, $code = null, $previous = null) {
-        parent::__construct(isset($message) && strlen($message)?$message:"Page <b>".$_SERVER['REQUEST_URI']."</b> not found.", $code, $previous);
-        $this->SendErrorCode(404);
-    }
+
+	function __construct()
+	{
+	}
+
+	function __destruct()
+	{
+	}
+
+
+
+	/**
+	 * 
+	 * @param message
+	 * @param code
+	 * @param previous
+	 */
+	public function __construct($message = null, $code = null, $previous = null)
+	{
+	}
+
 }
+?>

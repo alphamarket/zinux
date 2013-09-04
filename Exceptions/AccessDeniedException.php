@@ -1,24 +1,36 @@
 <?php
+require_once ('appException.php');
 
-namespace iMVC\Exceptions;
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+namespace iMVC\exceptions;
+
 
 /**
- * Description of accessDeniedException
- *
  * @author dariush
+ * @version 1.0
+ * @created 04-Sep-2013 15:35:06
  */
-require_once 'AppException.php';
-
-class AccessDeniedException extends \iMVC\Exceptions\AppException
+class accessDeniedException extends appException
 {
-    public function __construct($message = null, $code = null, $previous = null) {
-        parent::__construct(strlen($message)?$message:"Access denied to <b>".$_SERVER['REQUEST_URI']."</b>.", $code, $previous);
-        $this->SendErrorCode(403);
-    }
-}
 
+	function __construct()
+	{
+	}
+
+	function __destruct()
+	{
+	}
+
+
+
+	/**
+	 * 
+	 * @param message
+	 * @param code
+	 * @param previous
+	 */
+	public function __construct($message = null, $code = null, $previous = null)
+	{
+	}
+
+}
 ?>
