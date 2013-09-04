@@ -22,7 +22,7 @@ while test $# -gt 0; do
                         CERROR=1
                         shift
                         ;;
-				-vc|-cv)
+                -vc|-cv)
                         VERBOSE=1
                         CERROR=1
                         shift
