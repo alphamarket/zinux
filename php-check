@@ -40,7 +40,7 @@ for FNAME in $( find . -type f -name "*.php" -o -name "*.inc" -o -name "*.phtml"
 	fi
     ROOT=$(dirname $FNAME | cut -d "/" -f2);
 	case "$ROOT" in
-		"TEST"|"db")
+		"TEST")
 			continue;
 		;;
 	esac
