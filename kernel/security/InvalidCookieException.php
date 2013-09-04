@@ -1,7 +1,7 @@
 <?php
-require_once ('SecurityException.php');
-
 namespace iMVC\kernel\security;
+
+require_once ('SecurityException.php');
 
 
 /**

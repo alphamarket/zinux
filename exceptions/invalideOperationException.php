@@ -1,7 +1,7 @@
 <?php
-require_once ('appException.php');
-
 namespace iMVC\exceptions;
+
+require_once ('appException.php');
 
 
 /**
@@ -12,25 +12,19 @@ namespace iMVC\exceptions;
 class invalideOperationException extends appException
 {
 
-	function __construct()
-	{
-	}
-
-	function __destruct()
-	{
-	}
-
-
-
 	/**
 	 * 
 	 * @param message
 	 * @param code
 	 * @param previous
 	 */
-	public function __construct($message = null, $code = null, $previous = null)
+	function __construct($message = null, $code = null, $previous = null)
 	{
 	}
-
+	
+	function __destruct()
+	{
+	}
+	
 }
 ?>

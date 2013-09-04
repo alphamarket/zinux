@@ -1,15 +1,15 @@
 <?php
+namespace iMVC\kernel\view;
+
 require_once ('..\layout\baseLayout.php');
 require_once ('..\helper\baseHelper.php');
 require_once ('..\..\baseiMVC.php');
-
-namespace iMVC\kernel\view;
 
 
 /**
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:50:21
+ * @created 04-Sep-2013 17:24:30
  */
 class baseView extends baseiMVC
 {
@@ -62,7 +62,7 @@ class baseView extends baseiMVC
 	 * 
 	 * @param should_suppressed
 	 */
-	public function suppressView(boolean $should_suppressed = 1)
+	public function suppressView($should_suppressed = 1)
 	{
 	}
 
@@ -100,9 +100,8 @@ class baseView extends baseiMVC
 	 * @param view_name
 	 * @param partial_view_params
 	 */
-	public function RenderPartial(string $view_name, array $partial_view_params = array)
+	public function RenderPartial(string $view_name, array $partial_view_params = array())
 	{
 	}
 
 }
-?>

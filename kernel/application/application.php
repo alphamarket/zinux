@@ -1,7 +1,7 @@
 <?php
-require_once ('..\..\baseiMVC.php');
-
 namespace iMVC\kernel\application;
+
+require_once ('..\..\baseiMVC.php');
 
 
 /**
@@ -41,7 +41,7 @@ class application extends baseiMVC
 	 * 
 	 * @param config_file_address
 	 */
-	public function Startup(string $config_file_address = "")
+	public function Startup(string $config_file_address = NULL)
 	{
 	}
 

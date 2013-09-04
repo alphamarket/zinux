@@ -1,7 +1,7 @@
 <?php
-require_once ('appException.php');
-
 namespace iMVC\exceptions;
+
+require_once ('appException.php');
 
 
 /**
@@ -16,26 +16,20 @@ class dbException extends appException
 	protected $_errorno;
 	protected $_error_msg;
 
-	function __construct()
-	{
-	}
-
-	function __destruct()
-	{
-	}
-
-
-
 	/**
 	 * 
 	 * @param message
 	 * @param code
 	 * @param previous
 	 */
-	public function __construct($message = null, $code = null, $previous = null)
+	function __construct($message = null, $code = null, $previous = null)
 	{
 	}
-
+	
+	function __destruct()
+	{
+	}
+	
 	/**
 	 * automaticly create mysql exception
 	 * @param string details about the current mysql exception

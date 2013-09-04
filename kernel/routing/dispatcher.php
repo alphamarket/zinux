@@ -1,7 +1,7 @@
 <?php
-require_once ('..\..\baseiMVC.php');
-
 namespace iMVC\kernel\routing;
+
+require_once ('..\..\baseiMVC.php');
 
 
 /**

@@ -1,37 +1,31 @@
 <?php
-require_once ('..\..\baseiMVC.php');
-
 namespace iMVC\kernel\routing;
+
+require_once ('..\..\baseiMVC.php');
 
 
 /**
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:50:22
+ * @created 04-Sep-2013 17:13:38
  */
 class fakeRequest extends baseiMVC
 {
 
-	protected $$_backedup_vars;
-
-	function __construct()
-	{
-	}
-
-	function __destruct()
-	{
-	}
-
-
+	protected $_backedup_vars;
 
 	/**
-	 * construct a new fake request
-	 * 
-	 * @param uri
-	 * @param GET
-	 * @param POST
-	 */
-	public function __construct(string $uri, array $GET = array, array $POST = array)
+		 * construct a new fake request
+		 * 
+		 * @param uri
+		 * @param GET
+		 * @param POST
+		 */
+	function __construct(string $uri, array $GET = array(), array $POST = array())
+	{
+	}
+	
+	function __destruct()
 	{
 	}
 
@@ -48,17 +42,17 @@ class fakeRequest extends baseiMVC
 	protected function restoreVars()
 	{
 	}
-
+	
 	/**
 	 * send the fake request
 	 * 
 	 * @param auto_echo
 	 * @param throw_exception
 	 */
-	public function send(boolean $auto_echo = 1, boolean $throw_exception = 0)
+	public function send($auto_echo = 1, $throw_exception = 0)
 	{
 	}
-
+	
 	/**
 	 * set global vars for the fake request
 	 */
@@ -81,4 +75,3 @@ class fakeRequest extends baseiMVC
 	}
 
 }
-?>

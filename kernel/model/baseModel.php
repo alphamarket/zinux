@@ -1,7 +1,7 @@
 <?php
-require_once ('..\..\baseiMVC.php');
-
 namespace iMVC\kernel\model;
+
+require_once ('..\..\baseiMVC.php');
 
 
 /**

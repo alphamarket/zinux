@@ -1,7 +1,7 @@
 <?php
-require_once ('kernel\security\security.php');
-
 namespace iMVC;
+
+require_once ('kernel\security\security.php');
 
 
 /**
@@ -38,9 +38,6 @@ abstract class baseiMVC extends stdClass
 	/**
 	 * The initiation works on loading class
 	 */
-	abstract public function Initiate()
-	{
-	}
-
+	abstract public function Initiate();
 }
 ?>

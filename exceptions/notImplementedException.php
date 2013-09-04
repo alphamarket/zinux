@@ -1,7 +1,7 @@
 <?php
-require_once ('appException.php');
-
 namespace iMVC\exceptions;
+
+require_once ('appException.php');
 
 
 /**
@@ -14,16 +14,6 @@ class notImplementedException extends appException
 
 	private $error_code;
 
-	function __construct()
-	{
-	}
-
-	function __destruct()
-	{
-	}
-
-
-
 	/**
 	 * 
 	 * @param message
@@ -31,6 +21,10 @@ class notImplementedException extends appException
 	 * @param previous
 	 */
 	public function __construct($message = null, $code = null, $previous = null)
+	{
+	}
+	
+	function __destruct()
 	{
 	}
 

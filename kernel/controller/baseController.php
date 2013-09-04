@@ -1,8 +1,8 @@
 <?php
+namespace iMVC\kernel\controller;
+
 require_once ('..\routing\request.php');
 require_once ('..\..\baseiMVC.php');
-
-namespace iMVC\kernel\controller;
 
 
 /**
@@ -34,11 +34,7 @@ abstract class baseController extends baseiMVC
 	{
 	}
 
-
-
-	abstract public function IndexAction()
-	{
-	}
+	abstract public function IndexAction();
 
 }
 ?>

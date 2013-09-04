@@ -1,7 +1,7 @@
 <?php
-require_once ('accessDeniedException.php');
-
 namespace iMVC\exceptions;
+
+require_once ('accessDeniedException.php');
 
 
 /**
@@ -13,16 +13,6 @@ namespace iMVC\exceptions;
 class permissionDeniedException extends accessDeniedException
 {
 
-	function __construct()
-	{
-	}
-
-	function __destruct()
-	{
-	}
-
-
-
 	/**
 	 * 
 	 * @param message
@@ -30,6 +20,10 @@ class permissionDeniedException extends accessDeniedException
 	 * @param previous
 	 */
 	public function __construct($message = null, $code = null, $previous = null)
+	{
+	}
+	
+	function __destruct()
 	{
 	}
 

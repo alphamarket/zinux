@@ -1,16 +1,16 @@
 <?php
-require_once ('..\..\baseiMVC.php');
-
 namespace iMVC\kernel\security;
 
+require_once ('..\..\baseiMVC.php');
 
-/**
- * This will provide operations on security in request with will provide the
- * secure GET/POST in target destination
- * @author dariush
- * @version 1.0
- * @created 04-Sep-2013 15:50:24
- */
+
+	/**
+	 * This will provide operations on security in request with will provide the
+	 * secure GET/POST in target destination
+	 * @author dariush
+	 * @version 1.0
+	 * @updated 04-Sep-2013 17:23:16
+	 */
 class security extends baseiMVC
 {
 
@@ -46,7 +46,7 @@ class security extends baseiMVC
 	 * @param verbose_exception    check if when throwing exceptions the message
 	 * should be verbose or not
 	 */
-	public static function IsSecure(array $target_array, array $existance_array = array(), array $check_opt_array = array(), array() $check_sum_array = array(), $throw_exception = 1, $verbose_exception = 0)
+	public static function IsSecure(array $target_array, array $existance_array = array(), array $check_opt_array = array(), array $check_sum_array = array(), $throw_exception = 1, $verbose_exception = 0)
 	{
 	}
 

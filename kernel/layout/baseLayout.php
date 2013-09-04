@@ -1,13 +1,13 @@
 <?php
-require_once ('..\..\baseiMVC.php');
-
 namespace iMVC\kernel\layout;
+
+require_once ('..\..\baseiMVC.php');
 
 
 /**
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:50:21
+ * @created 04-Sep-2013 17:10:15
  */
 class baseLayout extends baseiMVC
 {
@@ -59,7 +59,7 @@ class baseLayout extends baseiMVC
 	 * @param overwrite_on_existance    check if your want to overwrite on existance
 	 * of current css' name
 	 */
-	public function AddCSS(string $URI, string $name = "", boolean $overwrite_on_existance = 0)
+	public function AddCSS(string $URI, string $name = NULL, $overwrite_on_existance = 0)
 	{
 	}
 
@@ -71,7 +71,7 @@ class baseLayout extends baseiMVC
 	 * @param overwrite_on_existance    check if your want to overwrite on existance
 	 * of current js' name
 	 */
-	public function AddJS(string $URI, string $name = "", boolean $overwrite_on_existance = 0)
+	public function AddJS(string $URI, string $name = NULL, $overwrite_on_existance = 0)
 	{
 	}
 
@@ -84,7 +84,7 @@ class baseLayout extends baseiMVC
 	 * @param overwrite_on_existance    check if your want to overwrite on existance
 	 * of current meta' name
 	 */
-	public function AddMeta(string $name, string $content, string $http_equiv = "", boolean $overwrite_on_existance = 0)
+	public function AddMeta(string $name, string $content, string $http_equiv = NULL, $overwrite_on_existance = 0)
 	{
 	}
 
@@ -211,4 +211,3 @@ class baseLayout extends baseiMVC
 	}
 
 }
-?>

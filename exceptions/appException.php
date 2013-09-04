@@ -1,6 +1,4 @@
 <?php
-
-
 namespace iMVC\exceptions;
 
 
@@ -14,27 +12,21 @@ class appException extends Exception
 
 	private $stack_trace;
 	private $error_code;
-
-	function __construct()
-	{
-	}
-
-	function __destruct()
-	{
-	}
-
-
-
+	
 	/**
 	 * 
 	 * @param message
 	 * @param code
 	 * @param previous
 	 */
-	public function __construct($message, $code, $previous)
+	function __construct($message = null, $code = null, $previous = null)
 	{
 	}
-
+	
+	function __destruct()
+	{
+	}
+	
 	/**
 	 * 
 	 * @param code

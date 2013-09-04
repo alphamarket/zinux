@@ -1,0 +1,16 @@
+#!/bin/bash
+clear
+for i in $( find . -type f -name "*.php" -o -name "*.inc" -o -name "*.phtml"| xargs ls -ld | cut -d '.' -f2); do
+	FNAME=".${i}.php";
+	#if [[ $(echo $i | cut -d '/' -f2 ) == "db" ]]; then
+	#	continue;
+	#fi
+	NAME=${FNAME##*/};
+	echo "Syntax checking on $FNAME";
+	RES=$(php -l ${FNAME});
+	needle='error:'
+	if [[ "$RES" == *"$needle"* ]]; then
+	  echo $RES;
+	  exit;
+	fi
+done
