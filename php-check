@@ -60,7 +60,7 @@ for FNAME in $( find . -type f -name "*.php" -o -name "*.inc" -o -name "*.phtml"
 	  ECOUNT=$(($ECOUNT + 1))
     else
 	  if [[ $VERBOSE -eq 1 ]]; then
-		echo -e "\e[32m[ OK ] Syntax checking on \e[39m$FNAME";
+		echo -e "\e[32m[ OK ]\e[39m$FNAME";
 	  else
 		echo -e "\e[32m.\c";
 	  fi
