@@ -21,7 +21,7 @@ class fakeRequest extends \iMVC\baseiMVC
 		 * @param GET
 		 * @param POST
 		 */
-	function __construct(string $uri, array $GET = array(), array $POST = array())
+	function __construct($uri, array $GET = array(), array $POST = array())
 	{
 	}
 	
