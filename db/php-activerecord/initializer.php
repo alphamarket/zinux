@@ -1,6 +1,6 @@
 <?php
 namespace ActiveRecord;
-
+require_once 'vendor/ActiveRecord.php';
 
 /**
  * Description of php-activerecord initializer
@@ -8,7 +8,7 @@ namespace ActiveRecord;
  * @version 1.0
  * @updated 04-Sep-2013 17:42:31
  */
-class initializer extends BaseMVC
+class initializer
 {
 
 	function __construct()
