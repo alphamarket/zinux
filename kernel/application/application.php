@@ -1,5 +1,5 @@
 <?php
-require_once ('..\..\BaseiMVC.php');
+require_once ('..\..\baseiMVC.php');
 
 namespace iMVC\kernel\application;
 
@@ -7,9 +7,9 @@ namespace iMVC\kernel\application;
 /**
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:35:06
+ * @created 04-Sep-2013 15:50:20
  */
-class application extends BaseiMVC
+class application extends baseiMVC
 {
 
 	function __construct()

@@ -7,7 +7,7 @@ namespace iMVC\utilities;
 /**
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:35:08
+ * @created 04-Sep-2013 15:50:22
  */
 class debug
 {

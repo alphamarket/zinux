@@ -8,7 +8,7 @@ namespace iMVC\utilities;
  * Some handy string operation goes here
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:35:10
+ * @created 04-Sep-2013 15:50:24
  */
 class String
 {

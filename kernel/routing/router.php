@@ -1,6 +1,6 @@
 <?php
 require_once ('request.php');
-require_once ('..\..\BaseiMVC.php');
+require_once ('..\..\baseiMVC.php');
 
 namespace iMVC\kernel\routing;
 
@@ -8,9 +8,9 @@ namespace iMVC\kernel\routing;
 /**
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:35:10
+ * @created 04-Sep-2013 15:50:24
  */
-class router extends BaseiMVC
+class router extends baseiMVC
 {
 
 	function __construct()

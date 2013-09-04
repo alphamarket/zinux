@@ -1,7 +1,7 @@
 <?php
 require_once ('..\layout\baseLayout.php');
 require_once ('..\helper\baseHelper.php');
-require_once ('..\..\BaseiMVC.php');
+require_once ('..\..\baseiMVC.php');
 
 namespace iMVC\kernel\view;
 
@@ -9,9 +9,9 @@ namespace iMVC\kernel\view;
 /**
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:35:07
+ * @created 04-Sep-2013 15:50:21
  */
-class baseView extends BaseiMVC
+class baseView extends baseiMVC
 {
 
 	/**

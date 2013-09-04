@@ -1,5 +1,5 @@
 <?php
-
+require_once ('..\..\baseiMVC.php');
 
 namespace iMVC\kernel\helper;
 
@@ -7,9 +7,9 @@ namespace iMVC\kernel\helper;
 /**
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:35:06
+ * @created 04-Sep-2013 15:50:21
  */
-class baseHelper
+class baseHelper extends baseiMVC
 {
 
 	/**
