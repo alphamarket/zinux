@@ -1,9 +1,9 @@
 <?php
 namespace iMVC\kernel\view;
 
-require_once ('..\layout\baseLayout.php');
-require_once ('..\helper\baseHelper.php');
-require_once ('..\..\baseiMVC.php');
+require_once (dirname(__FILE__).'/../layout/baseLayout.php');
+require_once (dirname(__FILE__).'/../helper/baseHelper.php');
+require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
 /**
@@ -11,7 +11,7 @@ require_once ('..\..\baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 17:24:30
  */
-class baseView extends baseiMVC
+class baseView extends \iMVC\baseiMVC
 {
 
 	/**
@@ -38,7 +38,15 @@ class baseView extends baseiMVC
 	function __destruct()
 	{
 	}
-
+    
+        public function Initiate()
+        {
+            ;
+        }
+        public function Dispose()
+        {
+            parent::Dispose();
+        }
 
 
 	/**

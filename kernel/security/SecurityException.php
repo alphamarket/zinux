@@ -7,7 +7,7 @@ namespace iMVC\kernel\security;
  * @version 1.0
  * @created 04-Sep-2013 15:50:24
  */
-class SecurityException extends Exception
+class SecurityException extends \Exception
 {
 
 	function __construct()

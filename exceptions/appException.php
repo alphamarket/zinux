@@ -7,7 +7,7 @@ namespace iMVC\exceptions;
  * @version 1.0
  * @created 04-Sep-2013 15:50:20
  */
-class appException extends Exception
+class appException extends \Exception
 {
 
 	private $stack_trace;

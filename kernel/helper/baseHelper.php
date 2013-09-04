@@ -1,7 +1,7 @@
 <?php
 namespace iMVC\kernel\helper;
 
-require_once ('..\..\baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
 /**
@@ -9,7 +9,7 @@ require_once ('..\..\baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:21
  */
-class baseHelper extends baseiMVC
+class baseHelper extends \iMVC\baseiMVC
 {
 
 	/**
@@ -25,6 +25,14 @@ class baseHelper extends baseiMVC
 	{
 	}
 
+        public function Initiate()
+        {
+            ;
+        }
+        public function Dispose()
+        {
+            parent::Dispose();
+        }
 
 
 	/**

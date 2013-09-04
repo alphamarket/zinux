@@ -1,7 +1,7 @@
 <?php
 namespace iMVC\kernel\routing;
 
-require_once ('..\..\baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
 /**
@@ -9,7 +9,7 @@ require_once ('..\..\baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:24
  */
-class request extends baseiMVC
+class request extends \iMVC\baseiMVC
 {
 
 	/**
@@ -56,6 +56,14 @@ class request extends baseiMVC
 	{
 	}
 
+        public function Initiate()
+        {
+            ;
+        }
+        public function Dispose()
+        {
+            parent::Dispose();
+        }
 
 
 	/**

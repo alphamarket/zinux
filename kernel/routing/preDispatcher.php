@@ -1,7 +1,8 @@
 <?php
 namespace iMVC\kernel\routing;
 
-require_once ('..\..\baseiMVC.php');
+require_once 'request.php';
+require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
 /**
@@ -9,7 +10,7 @@ require_once ('..\..\baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:23
  */
-class preDispatcher extends baseiMVC
+class preDispatcher extends \iMVC\baseiMVC
 {
 
 	function __construct()
@@ -20,7 +21,14 @@ class preDispatcher extends baseiMVC
 	{
 	}
 
-
+        public function Initiate()
+        {
+            ;
+        }
+        public function Dispose()
+        {
+            parent::Dispose();
+        }
 
 	/**
 	 * Initiate the pre-dispacther processes

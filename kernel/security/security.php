@@ -1,17 +1,17 @@
 <?php
 namespace iMVC\kernel\security;
 
-require_once ('..\..\baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
-	/**
-	 * This will provide operations on security in request with will provide the
-	 * secure GET/POST in target destination
-	 * @author dariush
-	 * @version 1.0
-	 * @updated 04-Sep-2013 17:23:16
-	 */
-class security extends baseiMVC
+/**
+ * This will provide operations on security in request with will provide the
+ * secure GET/POST in target destination
+ * @author dariush
+ * @version 1.0
+ * @updated 04-Sep-2013 17:23:16
+ */
+class security
 {
 
 	function __construct()

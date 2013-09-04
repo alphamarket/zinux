@@ -1,7 +1,6 @@
 <?php
 namespace iMVC\kernel\layout;
-
-require_once ('..\..\baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
 /**
@@ -9,7 +8,7 @@ require_once ('..\..\baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 17:10:15
  */
-class baseLayout extends baseiMVC
+class baseLayout extends \iMVC\baseiMVC
 {
 
 	/**
@@ -49,6 +48,14 @@ class baseLayout extends baseiMVC
 	{
 	}
 
+        public function Initiate()
+        {
+            ;
+        }
+        public function Dispose()
+        {
+            parent::Dispose();
+        }
 
 
 	/**

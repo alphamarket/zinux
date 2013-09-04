@@ -1,7 +1,7 @@
 <?php
 namespace iMVC\kernel\application;
 
-require_once ('..\..\baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
 /**
@@ -9,7 +9,7 @@ require_once ('..\..\baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:20
  */
-class application extends baseiMVC
+class application extends \iMVC\baseiMVC
 {
 
 	function __construct()
@@ -19,7 +19,15 @@ class application extends baseiMVC
 	function __destruct()
 	{
 	}
-
+    
+        public function Initiate()
+        {
+            ;
+        }
+        public function Dispose()
+        {
+            parent::Dispose();
+        }
 
 
 	/**

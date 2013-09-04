@@ -1,8 +1,8 @@
 <?php
 namespace iMVC\kernel\controller;
 
-require_once ('..\routing\request.php');
-require_once ('..\..\baseiMVC.php');
+require_once (dirname(__FILE__).'/../routing/request.php');
+require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
 /**
@@ -10,7 +10,7 @@ require_once ('..\..\baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:20
  */
-abstract class baseController extends baseiMVC
+abstract class baseController extends \iMVC\baseiMVC
 {
 
 	/**
@@ -33,6 +33,15 @@ abstract class baseController extends baseiMVC
 	function __destruct()
 	{
 	}
+   
+        public function Initiate()
+        {
+            ;
+        }
+        public function Dispose()
+        {
+            parent::Dispose();
+        }
 
 	abstract public function IndexAction();
 

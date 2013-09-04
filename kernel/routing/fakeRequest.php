@@ -1,7 +1,7 @@
 <?php
 namespace iMVC\kernel\routing;
 
-require_once ('..\..\baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
 /**
@@ -9,7 +9,7 @@ require_once ('..\..\baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 17:13:38
  */
-class fakeRequest extends baseiMVC
+class fakeRequest extends \iMVC\baseiMVC
 {
 
 	protected $_backedup_vars;
@@ -28,6 +28,15 @@ class fakeRequest extends baseiMVC
 	function __destruct()
 	{
 	}
+    
+        public function Initiate()
+        {
+            ;
+        }
+        public function Dispose()
+        {
+            parent::Dispose();
+        }
 
 	/**
 	 * backs up variables at global scope

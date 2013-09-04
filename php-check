@@ -33,13 +33,19 @@ while test $# -gt 0; do
         esac
 done
 EARRAY=()
-echo "Syntax checking initiated ..."
+echo "php checking initiated ..."
 for FNAME in $( find . -type f -name "*.php" -o -name "*.inc" -o -name "*.phtml" | rev | cut -d " " -f1 | rev); do
 	if ! [ -e $FNAME ]; then
 		continue;
 	fi
-	NAME=${FNAME##*/};
-	RES=$(php -l ${FNAME} 2>&1);
+    ROOT=$(dirname $FNAME | cut -d "/" -f2);
+	case "$ROOT" in
+		"TEST"|"db")
+			continue;
+		;;
+	esac
+    NAME=${FNAME##*/};
+	RES=$(php ${FNAME} 2>&1);
 	needle='error:'
 	if [[ "$RES" == *"$needle"* ]]; then	
 	  if ! [[ $VERBOSE -eq 1 ]]; then
