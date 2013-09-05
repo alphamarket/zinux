@@ -9,17 +9,6 @@ namespace iMVC\utilities;
  */
 class debug
 {
-
-	function __construct()
-	{
-	}
-
-	function __destruct()
-	{
-	}
-
-
-
 	/**
 	 * Debug passed varibale
 	 * @param $mixed $param
@@ -32,6 +21,11 @@ class debug
 	 */
 	public static function _var($param, $die = 0, $var_dump = 0)
 	{
+            echo '<pre>';
+            $var_dump?var_dump($param):print_r($param);
+            echo '</pre>';
+            if($die)
+                die();
 	}
 
 	/**
@@ -42,6 +36,18 @@ class debug
 	 */
 	public static function stack_trace($die = 0)
 	{
+            try
+            {
+                throw new \Exception();
+            }
+            catch(\Exception $e)
+            {
+                $p = explode("\n", $e->getTraceAsString());
+                $s = "";
+                for($i=1;$i<count($p);$i++)
+                    $s .= $p[$i].'<br />';
+                self::_var($s,$die);
+            }
 	}
 
 	/**
@@ -49,6 +55,7 @@ class debug
 	 */
 	public function backtrace()
 	{
+            self::_var(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),1);
 	}
 
 }
