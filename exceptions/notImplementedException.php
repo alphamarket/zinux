@@ -11,34 +11,19 @@ require_once ('appException.php');
  */
 class notImplementedException extends appException
 {
-
-	private $error_code;
-
 	/**
 	 * 
 	 * @param message
 	 * @param code
 	 * @param previous
 	 */
-	public function __construct($message = null, $code = null, $previous = null)
-	{
-	}
-	
-	function __destruct()
-	{
-	}
-
-	/**
-	 * 
-	 * @param code
-	 */
-	public function SendErrorCode($code = NULL)
-	{
-	}
-
-	public function GetErrorCode()
-	{
-	}
+	public function __construct($message=null, $code=null, $previous=null) 
+        {
+            if(!isset($message) || !strlen($message))
+                    $message = "The method has not implemented...";
+            parent::__construct(isset($message) && strlen($message)?$message:"Page <b>".$_SERVER['REQUEST_URI']."</b> not found.", $code, $previous);
+            $this->SendErrorCode(404);
+        }
 
 }
 ?>

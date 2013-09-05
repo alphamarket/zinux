@@ -21,11 +21,12 @@ class permissionDeniedException extends accessDeniedException
 	 */
 	public function __construct($message = null, $code = null, $previous = null)
 	{
-	}
-	
-	function __destruct()
-	{
-	}
+            if(!isset($message) || !strlen($message))
+            {
+                $message = "You <b>do not</b> have permission to view this page!";
+            }
+            parent::__construct($message, $code, $previous);
+        }
 
 }
 ?>

@@ -19,10 +19,8 @@ class accessDeniedException extends appException
 	 */
 	function __construct($message = null, $code = null, $previous = null)
 	{
-	}
-	
-	function __destruct()
-	{
+            parent::__construct(strlen($message)?$message:"Access denied to <b>".$_SERVER['REQUEST_URI']."</b>.", $code, $previous);
+            $this->SendErrorCode(403);
 	}
 
 }

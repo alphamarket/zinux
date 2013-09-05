@@ -20,10 +20,8 @@ class invalideArgumentException extends appException
 	 */
 	function __construct($message = null, $code = null, $previous = null)
 	{
-	}
-	
-	function __destruct()
-	{
+            parent::__construct(isset($message) && strlen($message)?$message:"Invalid Argument.", $code, $previous);
+            $this->SendErrorCode(500);
 	}
 
 }

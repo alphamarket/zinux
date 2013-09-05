@@ -21,6 +21,19 @@ class appException extends \Exception
 	 */
 	function __construct($message = null, $code = null, $previous = null)
 	{
+            parent::__construct($message, $code, $previous);
+            try
+            {
+                throw new \Exception();
+            }
+            catch(\Exception $e)
+            {
+                $p = explode("\n", $e->getTraceAsString());
+                $s = "";
+                for($i=1;$i<count($p);$i++)
+                    $s .= $p[$i].'<br />';
+                $this->stack_trace = $s;
+            }
 	}
 	
 	function __destruct()
@@ -33,15 +46,18 @@ class appException extends \Exception
 	 */
 	public function SendErrorCode($code = NULL)
 	{
+            if($code)
+                $this->error_code = $code;
+            if(!headers_sent ())
+            {
+                header('HTTP/1.1 '.$this->error_code);
+                return true;
+            }
+            return false;
 	}
 
-	public function GetErrorCode()
-	{
-	}
-
-	public function GetErrorTraceAsString()
-	{
-	}
+        public function GetErrorCode(){return $this->error_code;}
+        public function GetErrorTraceAsString(){return $this->stack_trace;}
 
 }
 ?>

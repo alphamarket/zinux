@@ -20,10 +20,8 @@ class notFoundException extends appException
 	 */
 	public function __construct($message = null, $code = null, $previous = null)
 	{
-	}
-	
-	function __destruct()
-	{
+            parent::__construct(isset($message) && strlen($message)?$message:"Page <b>".$_SERVER['REQUEST_URI']."</b> not found.", $code, $previous);
+            $this->SendErrorCode(404);
 	}
 
 }

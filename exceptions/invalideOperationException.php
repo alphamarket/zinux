@@ -20,11 +20,9 @@ class invalideOperationException extends appException
 	 */
 	function __construct($message = null, $code = null, $previous = null)
 	{
-	}
-	
-	function __destruct()
-	{
-	}
+            parent::__construct(isset($message) && strlen($message)?$message:"Invalide Operation.", $code, $previous);
+            $this->SendErrorCode(500);
+        }
 	
 }
 ?>
