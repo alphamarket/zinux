@@ -1,5 +1,5 @@
 <?php
-namespace ActiveRecord;
+namespace iMVC\db\ActiveRecord;
 
 require_once 'vendor/ActiveRecord.php';
 
@@ -10,19 +10,7 @@ require_once 'vendor/ActiveRecord.php';
  * @updated 04-Sep-2013 17:42:31
  */
 class initializer
-{
-
-	function __construct()
-	{
-	}
-
-	function __destruct()
-	{
-	}
-
-
-	public function Initiate(){ }
-    
+{    
     public function InitActiveRecord(\iMVC\Routing\Request &$request)
     { 
         if(!isset($GLOBALS[CONFIGS]['db']))
