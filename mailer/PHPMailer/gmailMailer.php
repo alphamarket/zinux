@@ -1,8 +1,8 @@
 <?php
-namespace iMVC\mailer;
+namespace iMVC\mailer\PHPMailer;
 
 require_once 'mailer.php';
-class gmailMailer extends mailer
+class gmailMailer extends \iMVC\mailer\PHPMailer\mailer
 {
     protected $mail;
     protected $default_date_TZ_backup;

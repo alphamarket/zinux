@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\mailer;
+namespace iMVC\mailer\PHPMailer;
 require_once 'vendor/class.phpmailer.php';
 
 abstract  class  mailer

@@ -76,4 +76,4 @@ if ! [ $ECOUNT -eq 0 ]; then
 	echo -e "\e[31m[ $ECOUNT failure ]"
 	exit;
 fi 
-echo -e "\e[32m[ All OK ]"
+echo -e "\e[32m[ All OK ] $SCOUNT files"

@@ -1,13 +1,15 @@
 <?php
 namespace iMVC\kernel\security;
 
+require_once ('securityException.php');
+
 
 /**
  * @author dariush
  * @version 1.0
- * @created 04-Sep-2013 15:50:24
+ * @created 04-Sep-2013 15:50:23
  */
-class SecurityException extends \Exception
+class invalidCookieException extends SecurityException
 {
 
 	function __construct()
