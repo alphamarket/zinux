@@ -141,18 +141,18 @@ class baseView extends \iMVC\baseiMVC
 	public function GetViewPath()
 	{
             $p = "";
-            # extract the caching params
-            extract(array(
-                            'root'=>'imvc',
-                            'path'=>__METHOD__."@{$this->request->module}::{$this->request->controller}", 
-                            'name' => $this->request->action.$this->request->type));
+            # create a caching signature based on provided request
+            $cach_sig =__METHOD__."@{$this->request->module}::{$this->request->controller}::{$this->request->action}::{$this->request->type}";
             
             # check cach system
-            if(\iMVC\kernel\security\caching::contains($root, $path, $name))
+            $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
+            if($fc->isCached(\iMVC\kernel\security\hash::Generate($cach_sig)))
             {
-                $p = \iMVC\kernel\security\caching::get($root, $path, $name);
+                $p = $fc->retrieve($cach_sig);
                 # if catch is valid return it
                 if(file_exists($p)) return $p;
+                # if the file does not exist delete it from cache system and try to recover new one
+                $fc->erase($cach_sig);
             }
             # view directory
             $p = MODULE_PATH.$this->request->module.'/views/view/'.$this->request->controller.'/';
@@ -175,7 +175,7 @@ class baseView extends \iMVC\baseiMVC
                 }
                 # if all file processed 
                 # then the view didnt find in fs
-                \iMVC\kernel\security\caching::delete($root, $path, $name);
+                $fc->erase($cach_sig);
                 closedir($handle);
                 throw new \iMVC\Exceptions\NotFoundException("The view '".$this->GetViewName()."' not found!");
             }
@@ -183,7 +183,7 @@ class baseView extends \iMVC\baseiMVC
                 throw new \iMVC\Exceptions\InvalideOperationException("Could not open directory '$p'");
         __END:
             # catch the result
-            \iMVC\kernel\security\caching::set($root, $path, $name, $p);
+            $fc->store($cach_sig, $p);
             return $p;
 	}
 
