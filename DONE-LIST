@@ -7,3 +7,4 @@
 + kernel/controller/*
 + kernel/layout/*
 + kernel/view/*
++ kernel/security/*
