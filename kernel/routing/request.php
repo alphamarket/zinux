@@ -148,7 +148,7 @@ class request extends \iMVC\baseiMVC
 	 * @throws \iMVC\Exceptions\NotFoundException 
 	 */
 	protected function RetrieveModuleName()
-	{
+	{return;
             extract(array('root'=>'imvc', 'path'=>__METHOD__, 'name'=>'module'));
             require_once iMVC_ROOT.'kernel/caching/fileCache.php';
             $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);

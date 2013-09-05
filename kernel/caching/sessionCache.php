@@ -24,14 +24,9 @@ class sessionCache extends cache
      * @param string [optional] $config
      * @return void
      */
-    public function __construct($cache_name = null) {
-        if (true === isset($cache_name )) {
-            if (is_string($cache_name )) {
-                $this->setCache($cache_name);
-            }
-            else
-                throw new \InvalidArgumentException("cache_name is invalid");
-        }
+    public function __construct($cache_name = 'default') {
+        if(isset($cache_name) &&strlen($cache_name))
+            $this->setCache($cache_name);
     }
 
     protected function _saveData(array $cacheData){

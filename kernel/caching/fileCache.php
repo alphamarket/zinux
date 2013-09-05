@@ -5,12 +5,6 @@ require_once 'cache.php';
 class fileCache extends cache
 {
     /**
-     * The path to the cache file folder
-     *
-     * @var string
-     */
-    protected $_cachepath = 'cache/';
-    /**
      * The cache file extension
      *
      * @var string
@@ -23,16 +17,11 @@ class fileCache extends cache
      * @param string|array [optional] $config
      * @return void
      */
-    public function __construct($config = null){
-        if (true === isset($config)) {
-            if (is_string($config)) {
-                $this->setCache($config);
-            } else if (is_array($config)) {
-                $this->setCache($config['name']);
-                $this->setCachePath($config['path']);
-                $this->setExtension($config['extension']);
-            }
-        }
+    public function __construct($name = "default", $path = "cache/", $extension = ".cache"){
+        if(isset($name) &&strlen($name))
+            $this->setCache($name);
+        $this->setCachePath($path);
+        $this->setExtension($extension);
     }
 
     /**
@@ -145,11 +134,12 @@ class fileCache extends cache
      * @return boolean
      */
     protected function _checkCacheDir() {
+        throw new \iMVC\exceptions\notImplementedException("THIS IS BUGGY ".__METHOD__);
         if (!is_dir($this->getCachePath()) && !mkdir($this->getCachePath(), 0775, true)) {
-            throw new Exception('Unable to create cache directory ' . $this->getCachePath());
+            throw new \Exception('Unable to create cache directory ' . $this->getCachePath());
         } elseif (!is_readable($this->getCachePath()) || !is_writable($this->getCachePath())) {
             if (!chmod($this->getCachePath(), 0775)) {
-                throw new Exception($this->getCachePath() . ' must be readable and writeable');
+                throw new \Exception($this->getCachePath() . ' must be readable and writeable');
             }
         }
         return true;
