@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\utilities\caching;
+namespace iMVC\kernel\caching;
 require_once 'cache.php';
 
 class fileCache extends cache

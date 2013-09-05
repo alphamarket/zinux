@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\utilities\caching;
+namespace iMVC\kernel\caching;
 /**
  * Simple Cache class
  * API Documentation: https://github.com/cosenary/Simple-PHP-Cache
@@ -63,9 +63,7 @@ abstract class cache {
      */
     public function isCached($key) {
         $cachedData = $this->_loadCache();
-        if (!$cachedData) {
-            return isset($cachedData[$key]['data']);
-        }
+        return isset($cachedData[$key]['data']);
     }
 
     /**
