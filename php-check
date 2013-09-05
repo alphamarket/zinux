@@ -1,6 +1,6 @@
 #!/bin/bash
 clear
-CERROR=1
+CERROR=0
 VERBOSE=0
 SCOUNT=0
 ECOUNT=0
@@ -51,9 +51,11 @@ for FNAME in $( find . -type f -name "*.php" -o -name "*.inc" -o -name "*.phtml"
 	  if ! [[ $VERBOSE -eq 1 ]]; then
 	  	echo -e "\e[31mF\c";
 	  fi
-	  EARRAY+=("\e[31m[ Failed ] $RES");
+      EARRAY+=("\e[31m[ FAILED ]\e[39m$FNAME");
+	  EARRAY+=("\e[31m$RES\n");
 
 	  if [ $CERROR -eq 0 ]; then
+        echo -e "\n\e[31m[ FAILED ]\e[39m$FNAME";
 	  	echo -e "\e[31m[ Failed ] $RES";
 		exit 1;
 	  fi
@@ -69,11 +71,11 @@ for FNAME in $( find . -type f -name "*.php" -o -name "*.inc" -o -name "*.phtml"
 done
 echo " "
 for E in "${EARRAY[@]}"; do
-	echo -e $E"\n";
+	echo -e $E;
 done;
 if ! [ $ECOUNT -eq 0 ]; then
-	echo -e "\e[32m[ $SCOUNT successed ]"
 	echo -e "\e[31m[ $ECOUNT failure ]"
+	echo -e "\e[32m[ $SCOUNT successed ]"
 	exit;
 fi 
 echo -e "\e[32m[ All OK ] $SCOUNT files"

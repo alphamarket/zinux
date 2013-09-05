@@ -13,8 +13,14 @@ class baseLayout extends \iMVC\baseiMVC
 
 	/**
 	 * View object related to layout
+         * @var \iMVC\kernel\view\baseView  
 	 */
 	public $view;
+        /**
+         *  holds layout name
+         * @var string 
+         */
+        public $layout_name;
 	/**
 	 * Options settings
 	 */
@@ -22,35 +28,42 @@ class baseLayout extends \iMVC\baseiMVC
 	/**
 	 * CSS tags collection
 	 */
-	protected static $CSSImports;
+	protected $CSSImports;
 	/**
 	 * JS tags collection
 	 */
-	protected static $JSImports;
+	protected $JSImports;
 	/**
 	 * check if layout has rendered or not
 	 */
-	protected static $layout_rendered = 0;
+	protected $layout_rendered = 0;
 	/**
 	 * meta tags collection
 	 */
-	protected static $MetaImports;
+	protected $MetaImports;
 	/**
 	 * check if layout has suppressed
 	 */
-	protected static $suppress_layout = 0;
+	protected $suppress_layout = 0;
 
 	function __construct()
 	{
+            $this->Initiate();
 	}
 
 	function __destruct()
 	{
+            $this->Dispose();
 	}
 
         public function Initiate()
         {
-            ;
+            $this->view = new \iMVC\kernel\view\baseView;
+            $this->options = new \stdClass();
+            $this->CSSImports = array();
+            $this->JSImports = array();
+            $this->MetaImports = array();
+            $this->SetDefaultLayout();
         }
         public function Dispose()
         {
@@ -66,8 +79,12 @@ class baseLayout extends \iMVC\baseiMVC
 	 * @param overwrite_on_existance    check if your want to overwrite on existance
 	 * of current css' name
 	 */
-	public function AddCSS(string $URI, string $name = NULL, $overwrite_on_existance = 0)
+	public function AddCSS(string $URI, string $name = NULL, $options = array(), $overwrite_on_existance = 0)
 	{
+            if(!isset($name))
+                $name = sha1($URI);
+            if(isset($this->CSSImports[$name]) && !$overwrite_on_existance) return;
+            $this->CSSImports[$name] = array('uri' => $URI, 'options' => $options);
 	}
 
 	/**
@@ -78,8 +95,12 @@ class baseLayout extends \iMVC\baseiMVC
 	 * @param overwrite_on_existance    check if your want to overwrite on existance
 	 * of current js' name
 	 */
-	public function AddJS(string $URI, string $name = NULL, $overwrite_on_existance = 0)
+	public function AddJS(string $URI, string $name = NULL, $options = array(), $overwrite_on_existance = 0)
 	{
+            if(!isset($name))
+                $name = sha1($URI);
+            if(isset($this->JSImports[$name]) && !$overwrite_on_existance) return;
+            $this->JSImports[$name] = array('uri' => $URI, 'options' => $options);
 	}
 
 	/**
@@ -91,8 +112,10 @@ class baseLayout extends \iMVC\baseiMVC
 	 * @param overwrite_on_existance    check if your want to overwrite on existance
 	 * of current meta' name
 	 */
-	public function AddMeta(string $name, string $content, string $http_equiv = NULL, $overwrite_on_existance = 0)
+	public function AddMeta(string $name, string $content, $options = array(), $overwrite_on_existance = 0)
 	{
+            if(isset($this->MetaImports[$name]) && !$overwrite_on_existance) return;
+            $this->MetaImports[$name] = array('content' =>$content, 'options' => $options);
 	}
 
 	/**
@@ -100,6 +123,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function GetLayoutName()
 	{
+            return $this->layout_name;
 	}
 
 	/**
@@ -107,6 +131,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function GetLayoutPath()
 	{
+            return MODULE_PATH.$this->view->request->module.'/views/layout/'.$this->GetLayoutName().'.phtml';
 	}
 
 	/**
@@ -114,6 +139,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function IsLayoutSuppressed()
 	{
+            return $this->suppress_layout;
 	}
 
 	/**
@@ -123,6 +149,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function RemoveCSS(string $name)
 	{
+            unset($this->CSSImports[$name]);
 	}
 
 	/**
@@ -132,6 +159,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function RemoveJS(string $name)
 	{
+            unset($this->JSImports[$name]);
 	}
 
 	/**
@@ -141,6 +169,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function RemoveMeta(string $name)
 	{
+            unset($this->MetaImports[$name]);
 	}
 
 	/**
@@ -148,6 +177,8 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function Render()
 	{
+            $this->RenderView();
+            $this->RenderLayout();
 	}
 
 	/**
@@ -155,6 +186,16 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	protected function RenderCSSImports()
 	{
+            foreach($this->CSSImports as $css)
+            {
+                if(!isset($css['options']) || !is_array($css['options'])) $css['options'] = array(); 
+                echo "<link rel='stylesheet' type='text/css' href='${css['uri']}'";
+                foreach($css['options'] as $key=> $value)
+                {
+                    echo " $key='$value'";
+                }
+                echo ">";
+            }
 	}
 
 	/**
@@ -162,13 +203,26 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	protected function RenderImports()
 	{
+           $this->RenderMetaImports();
+           $this->RenderJSImports();
+           $this->RenderCSSImports();
 	}
 
 	/**
 	 * Renders JS tags which has been imports to html doc.
 	 */
 	protected function RenderJSImports()
-	{
+	{ 
+            foreach($this->JSImports as $js)
+            {
+                if(!isset($js['options']) || !is_array($js['options'])) $js['options'] = array(); 
+                echo "<script type='text/javascript' src='${js['uri']}'";
+                foreach($js['options'] as $key=> $value)
+                {
+                    echo " $key='$value'";
+                }
+                echo "></script>";
+            }
 	}
 
 	/**
@@ -176,6 +230,25 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	protected function RenderLayout()
 	{
+            if(!$this->layout_rendered)
+            {
+                if(!file_exists($this->GetLayoutPath()))
+                {
+                    echo "<center><h2>Layout not loaded ...<br />The layout '".$this->GetLayoutName ()."' not found!</center></h2>";
+                    $this->SuppressLayout();
+                }
+                if(!$this->view->IsViewSuppressed() && !$this->IsLayoutSuppressed())
+                {
+                    require $this->GetLayoutPath();
+                }
+                else
+                    echo $this->content;
+                $this->layout_rendered = true;
+            }
+            else
+            {
+                throw new \Exceptions\AppException("The view has been rendered already...");
+            }
 	}
 
 	/**
@@ -183,6 +256,16 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	protected function RenderMetaImports()
 	{
+            foreach($this->MetaImports as $name => $meta)
+            {
+                if(!isset($meta['options']) || !is_array($meta['options'])) $meta['options'] = array(); 
+                echo "<meta name='$name' content='${meta['content']}'";
+                foreach($meta['options'] as $key=> $value)
+                {
+                    echo " $key='$value'";
+                }
+                echo ">";
+            }
 	}
 
 	/**
@@ -190,6 +273,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	protected function RenderView()
 	{
+            $this->content = $this->view->Render(0);
 	}
 
 	/**
@@ -197,6 +281,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function SetDefaultLayout()
 	{
+            $this->SetLayout('default');
 	}
 
 	/**
@@ -206,6 +291,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function SetLayout(string $name)
 	{
+            $this->layout_name = str_replace(".phtml","", $name);
 	}
 
 	/**
@@ -215,6 +301,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function SuppressLayout($should_suppress = 1)
 	{
+            $this->suppress_layout = $should_suppress;
 	}
 
 }

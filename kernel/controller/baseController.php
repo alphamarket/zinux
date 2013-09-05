@@ -1,7 +1,6 @@
 <?php
 namespace iMVC\kernel\controller;
 
-require_once (dirname(__FILE__).'/../routing/request.php');
 require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 
@@ -32,15 +31,21 @@ abstract class baseController extends \iMVC\baseiMVC
 
 	function __destruct()
 	{
+            $this->Dispose();
 	}
    
         public function Initiate()
         {
-            ;
+            $this->layout =  new \iMVC\kernel\layout\baseLayout();
+            $this->request = new \iMVC\kernel\routing\request();
+            $this->view = new \iMVC\kernel\view\baseView();
         }
         public function Dispose()
         {
-            parent::Dispose();
+            $this->request->Dispose();
+            $this->view->Dispose();
+            $this->layout->Dispose();
+            parent::Dispose();   
         }
 
 	abstract public function IndexAction();

@@ -1,1 +1,9 @@
-# baseiMVC
++ baseiMVC
++ utilities/*
++ mailer/*
++ exceptions/*
++ db/*
++ kernel/application/*
++ kernel/controller/*
++ kernel/layout/*
++ kernel/view/*
