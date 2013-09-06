@@ -17,13 +17,15 @@ class fileCache extends cache
      * @param string|array [optional] $config
      * @return void
      */
-    public function __construct($name = "default", $path = "", $extension = ".cache"){
+    public function __construct($name = "default"){
         if(isset($name) &&strlen($name))
             $this->setCache($name);
+        $path = self::$_cachepath;
         if(!isset($path) || !is_string($path) || !strlen($path))
+        {
             $path = sys_get_temp_dir()."/php-cache";
-        $this->setCachePath($path);
-        $this->setExtension($extension);
+            $this->setCachePath($path);
+        }
     }
 
     /**
@@ -51,7 +53,7 @@ class fileCache extends cache
     }
     protected function _saveData(array $cacheData)
     {
-          self::$_soft_cache = $cacheData;
+          self::$_soft_cache[$this->getCache()] = $cacheData;
           $cacheData['hash-sum'] = $this->_getHash(serialize($cacheData));
           $cacheData = serialize($cacheData);
           file_put_contents($this->getCacheDir(), $cacheData);
@@ -63,8 +65,10 @@ class fileCache extends cache
      */
     public function eraseAll() {
         $cacheDir = $this->getCacheDir();
+        # delete the cache file
         unlink($cacheDir);
-        self::$_soft_cache = NULL;
+        # free the soft cache
+        unset(self::$_soft_cache[$this->getCache()]);
         return $this;
     }
 
@@ -74,24 +78,26 @@ class fileCache extends cache
      * @return mixed
      */
       protected function _loadCache() {
-            if(self::$_soft_cache)
-                return self::$_soft_cache;
-
+            # relative caching 
+            if(isset(self::$_soft_cache[$this->getCache()]))
+                return self::$_soft_cache[$this->getCache()];
             if (true === file_exists($this->getCacheDir())) {
                 $file = file_get_contents($this->getCacheDir());
                 $u = unserialize($file);
                 if(!isset($u['hash-sum']))
                 {
                     unlink($this->getCacheDir());
-                    die("cache data miss-hashed, cache file deleted...");
+                    trigger_error("cache data miss-hashed, cache file deleted...");
                 }
                 $h = $u['hash-sum'];
                 unset($u['hash-sum']);
                 if($h != $this->_getHash(serialize($u)))
                 {
                     unlink($this->getCacheDir());
-                    die("cache data miss-hashed, cache file deleted...");
+                    trigger_error("cache data miss-hashed, cache file deleted...");
                 }  
+                # cache the cache!
+                self::$_soft_cache[$this->getCache()] = $u;
                 return $u;
               }
               else {
@@ -161,5 +167,19 @@ class fileCache extends cache
      */
     public function getExtension() {
         return $this->_extension;
+    }
+    
+    public static function RegisterCacheDir($path)
+    {
+        if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
+            $path = $path.DIRECTORY_SEPARATOR;
+        self::$_cachepath = $path;
+    }
+    
+    public function setCachePath($path)
+    {
+        if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
+            $path = $path.DIRECTORY_SEPARATOR;
+        return parent::setCachePath($path);
     }
 }

@@ -47,21 +47,20 @@ class sessionCache extends cache
         if(!isset($u['hash-sum']))
         {
             unset($_SESSION[$this->_cachepath][$this->_cachename]);
-            die("cache data miss-hashed, cache file deleted...");
+            trigger_error("cache data miss-hashed, cache file deleted...");
         }
         $h = $u['hash-sum'];
         unset($u['hash-sum']);
         if($h != $this->_getHash(serialize($u)))
         {
             unset($_SESSION[$this->_cachepath][$this->_cachename]);
-            die("cache data miss-hashed, cache file deleted...");
+            trigger_error("cache data miss-hashed, cache file deleted...");
         }  
         return $u;
     }
 
     public function eraseAll()
     {
-        self::$_soft_cache = NULL;
         unset($_SESSION[$this->_cachepath][$this->_cachename]);
     }
 }
