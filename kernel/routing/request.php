@@ -318,18 +318,26 @@ __FETCHING_MODULES:
 	protected function RetrieveActionName()
 	{
             $this->action = new entity("index", "indexAction", $this->namespace."\\controller");
+            # get controller class string
             $controller = "{$this->action->namespace}\\{$this->controller->name}controller";
+            # the class' file required when trying locating controller
+            # so it should exists now
             if(!class_exists($controller))
                 throw new \iMVC\exceptions\notFoundException("`$controller` not found!");
+            # create new instance of target class
             $co = new $controller;
+            # check for method existance
             if(isset($this->_parts[0]) && method_exists($co, "{$this->_parts[0]}Action"))
             {
+                # update action info
                 $this->action->name = $this->_parts[0];
                 $this->action->path = "{$this->_parts[0]}Action";
                 array_shift($this->_parts);
             }
+            # if also the index method does not exists 
             elseif(!method_exists($co, "indexAction"))
             {
+                # throw exception
                 throw new \iMVC\exceptions\notFoundException("Ambiguous action call");
             }
 	}
@@ -339,6 +347,7 @@ __FETCHING_MODULES:
         */
 	protected function RetrieveViewName()
 	{
+            # we will gain view's info by info fetched for action 
             $this->view = new entity($this->action->name, 
                     "{$this->module->path}/views/view/{$this->controller->name}/{$this->action->name}View.pthml", 
                     $this->namespace."\\view");
@@ -351,22 +360,29 @@ __FETCHING_MODULES:
 	{
             $this->GET = $_GET;
             $this->POST = $_POST;
+            # merging $_GET, $_POST into $params
             $this->params = $_GET;
             $this->params = array_merge($this->params, $_POST);
+            # balancing the parts' count
             if(count($this->_parts) % 2 == 1)
                 $this->_parts[] = NULL;
+            # while there are parts
             while(count($this->_parts))
             {
+                # add to the $params
                 $this->params[$this->_parts[0]] = $this->_parts[1];
+                # add to indexed params
                 $this->indexed_param[] = $this->_parts[0];
                 # due to opration in `if` statement before current `while`
                 # if NULL appears, should appears in secondary part 
                 # so we only check this 
                 if($this->_parts[1])
                     $this->indexed_param[] = $this->_parts[1];
+                # remove fetched parts
                 array_shift($this->_parts);
                 array_shift($this->_parts);
             }
+            # we don't need this var anymore >:)
             unset($this->_parts);
 	}
     
