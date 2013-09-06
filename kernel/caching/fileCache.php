@@ -88,6 +88,7 @@ class fileCache extends cache
                 {
                     unlink($this->getCacheDir());
                     trigger_error("cache data miss-hashed, cache file deleted...");
+                    return false;
                 }
                 $h = $u['hash-sum'];
                 unset($u['hash-sum']);
@@ -95,6 +96,7 @@ class fileCache extends cache
                 {
                     unlink($this->getCacheDir());
                     trigger_error("cache data miss-hashed, cache file deleted...");
+                    return false;
                 }  
                 # cache the cache!
                 self::$_soft_cache[$this->getCache()] = $u;

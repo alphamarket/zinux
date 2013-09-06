@@ -5,13 +5,6 @@ require_once 'cache.php';
 class sessionCache extends cache
 {
     /**
-     * The path to the cache file folder
-     *
-     * @var string
-     */
-    protected $_cachepath = 'cache';
-
-    /**
      * The name of the default cache file
      *
      * @var string
@@ -27,6 +20,7 @@ class sessionCache extends cache
     public function __construct($cache_name = 'default') {
         if(isset($cache_name) &&strlen($cache_name))
             $this->setCache($cache_name);
+        $this->setCachePath('cache');
     }
 
     protected function _saveData(array $cacheData){
@@ -48,6 +42,7 @@ class sessionCache extends cache
         {
             unset($_SESSION[$this->_cachepath][$this->_cachename]);
             trigger_error("cache data miss-hashed, cache file deleted...");
+            return false;
         }
         $h = $u['hash-sum'];
         unset($u['hash-sum']);
@@ -55,6 +50,7 @@ class sessionCache extends cache
         {
             unset($_SESSION[$this->_cachepath][$this->_cachename]);
             trigger_error("cache data miss-hashed, cache file deleted...");
+            return false;
         }  
         return $u;
     }
