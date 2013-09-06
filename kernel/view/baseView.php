@@ -1,11 +1,7 @@
 <?php
 namespace iMVC\kernel\view;
 
-require_once (dirname(__FILE__).'/../layout/baseLayout.php');
-require_once (dirname(__FILE__).'/../helper/baseHelper.php');
 require_once (dirname(__FILE__).'/../../baseiMVC.php');
-require_once (dirname(__FILE__).'/../../utilities/caching.php');
-
 
 /**
  * @author dariush
