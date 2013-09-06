@@ -61,10 +61,8 @@ class fileCache extends cache
      */
     public function eraseAll() {
         $cacheDir = $this->getCacheDir();
-        if (true === file_exists($cacheDir)) {
-            $cacheFile = fopen($cacheDir, 'w');
-            fclose($cacheFile);
-        }
+        unlink($cacheDir);
+        self::$_soft_cache = NULL;
         return $this;
     }
 
@@ -134,7 +132,6 @@ class fileCache extends cache
      * @return boolean
      */
     protected function _checkCacheDir() {
-        throw new \iMVC\exceptions\notImplementedException("THIS IS BUGGY ".__METHOD__);
         if (!is_dir($this->getCachePath()) && !mkdir($this->getCachePath(), 0775, true)) {
             throw new \Exception('Unable to create cache directory ' . $this->getCachePath());
         } elseif (!is_readable($this->getCachePath()) || !is_writable($this->getCachePath())) {

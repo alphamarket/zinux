@@ -97,6 +97,7 @@ abstract class cache {
      * @return string
      */
     public function retrieve($key, $timestamp = false) {
+        $this->eraseExpired();
         $cachedData = $this->_loadCache();
         (false === $timestamp) ? $type = 'data' : $type = 'time';
         if(!isset($cachedData[$key][$type])) return NULL;
@@ -110,6 +111,7 @@ abstract class cache {
      * @return array
      */
     public function retrieveAll($meta = false) {
+        $this->eraseExpired();
         if ($meta === false) {
             $results = array();
             $cachedData = $this->_loadCache();
@@ -137,7 +139,7 @@ abstract class cache {
                 unset($cacheData[$key]);
                 $this->_saveData($cacheData);
             } else {
-                throw new Exception("Error: erase() - Key '{$key}' not found.");
+                throw new \Exception("Error: erase() - Key '{$key}' not found.");
             }
         }
         return $this;
@@ -197,6 +199,8 @@ abstract class cache {
      * @return object
      */
     public function setCachePath($path) {
+        if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
+            $path = $path.DIRECTORY_SEPARATOR;
         $this->_cachepath = $path;
         return $this;
     }

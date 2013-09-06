@@ -61,6 +61,7 @@ class sessionCache extends cache
 
     public function eraseAll()
     {
+        self::$_soft_cache = NULL;
         unset($_SESSION[$this->_cachepath][$this->_cachename]);
     }
 }
