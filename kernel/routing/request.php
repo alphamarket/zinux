@@ -14,15 +14,21 @@ class entity
      */
     public $name;
     /**
+     * the entity's namespace
+     * @var string
+     */
+    public $namespace;
+    /**
      * the entity's path
      * @var string
      */
     public $path;
         
-    public function __construct($name, $path)
+    public function __construct($name, $path, $namespace = "")
     {
         $this->name = $name;
         $this->path = $path;
+        $this->namespace = $namespace;
     }
 }
 /**
@@ -138,10 +144,10 @@ class request extends \iMVC\baseiMVC
 	{
             $this->DepartURI();
             $this->RetrieveModuleName();
-            $this->RetrieveNamespace();
             $this->RetrieveControllerName();
             $this->RetrieveActionName();
             $this->RetrieveViewName();
+            $this->RetrieveNamespace();
             $this->RetriveParams();
 	}
 
@@ -220,7 +226,12 @@ __LOAD_MODULES:
             foreach($modules as $module)
             {
                 # add current module into our module collections
-                $mc->modules[] = new entity(basename($module), realpath($module));;
+                # except default module every other module
+                # has namespace with the module's name prefix
+                $mc->modules[] = new entity(
+                                                            basename($module), 
+                                                            realpath($module), 
+                                                            strtolower(basename($module))=='default'?"":basename($module));
             }
             # now module collection is ready
             # caching module collections data
@@ -242,8 +253,10 @@ __FETCHING_MODULES:
                     }
                     # saving target modules
                     $this->module = $module;
+                    $this->namespace = $this->module->namespace;
                     # removing modules name from URI parts
                     array_shift($this->_parts);
+                    break;
                 }
             }
 	}
@@ -253,11 +266,10 @@ __FETCHING_MODULES:
         */
 	protected function RetrieveNamespace()
         {
-            # except default module every other module
-            # has namespace with the module's name prefix
-            $this->namespace = "";
-            if($this->module->name != "default")
-                $this->namespace = $this->module->name;
+            $this->namespace = $this->module->namespace;
+            $this->controller->namespace = $this->namespace."\\controller";
+            $this->action->namespace = $this->namespace."\\controller";
+            $this->view->namespace = $this->namespace."\\view";
         }
 
         /**
@@ -266,9 +278,7 @@ __FETCHING_MODULES:
 	protected function RetrieveControllerName()
 	{
             # default controller
-            $this->controller = new entity("index", "{$this->module->path}/controllers/indexController.php");
-            # if no URI provided return
-            if(!count($this->_parts)) return;
+            $this->controller = new entity("index", "{$this->module->path}/controllers/indexController.php", $this->namespace."\\controller");
             # controller directory name
             $controller_dir = dirname($this->controller->path)."/";
             # foreach file in controller's directory
@@ -277,23 +287,29 @@ __FETCHING_MODULES:
                 # we are looking for files
                 if(!is_file($controller_dir.$file)) continue;
                 # we now processing a file
-                if(strtolower($this->_parts[0]."controller.php") == strtolower($file))
+                if(isset($this->_parts[0]) && strtolower($this->_parts[0]."controller.php") == strtolower($file))
                 {
                     # updating target controller's info
                     $this->controller->name = $this->_parts[0];
                     $this->controller->path = dirname($this->controller->path)."/$file";
-                    # we found target file
-                    # checking for class declaration
-                    require_once $this->controller->path;
-                    $namespace = "{$this->namespace}\\controller";
-                    if(!class_exists("$namespace\\{$this->controller->name}controller"))
-                    {
-                        # we don't have our class
-                        throw new \iMVC\exceptions\notFoundException("The controller `{$this->controller->name}` does not exists");
-                    }
-                    array_shift($this->_parts);
+                    break;
+                    
+                }
+                # try to locate the actual indexController IO address
+                elseif(strtolower("indexcontroller.php") == strtolower($file))
+                {
+                    $this->controller->path = dirname($this->controller->path)."/$file";  
                 }
             }
+            # we found target file
+            # checking for class declaration
+            require_once $this->controller->path;
+            if(!class_exists("{$this->controller->namespace}\\{$this->controller->name}controller"))
+            {
+                # we don't have our class
+                throw new \iMVC\exceptions\notFoundException("The controller `{$this->controller->name}` does not exists");
+            }
+            array_shift($this->_parts);
 	}
 
         /**
@@ -301,19 +317,27 @@ __FETCHING_MODULES:
         */
 	protected function RetrieveActionName()
 	{
-            $this->action = new entity("index", "indexAction");
-            # if no URI provided return
-            if(!count($this->_parts)) return;
-            $controller = "{$this->namespace}\\controller\\{$this->controller->name}controller";
+            $this->action = new entity("index", "indexAction", $this->namespace."\\controller");
+            # get controller class string
+            $controller = "{$this->action->namespace}\\{$this->controller->name}controller";
+            # the class' file required when trying locating controller
+            # so it should exists now
+            if(!class_exists($controller))
+                throw new \iMVC\exceptions\notFoundException("`$controller` not found!");
+            # create new instance of target class
             $co = new $controller;
-            if(method_exists($co, "{$this->_parts[0]}Action"))
+            # check for method existance
+            if(isset($this->_parts[0]) && method_exists($co, "{$this->_parts[0]}Action"))
             {
+                # update action info
                 $this->action->name = $this->_parts[0];
                 $this->action->path = "{$this->_parts[0]}Action";
                 array_shift($this->_parts);
             }
+            # if also the index method does not exists 
             elseif(!method_exists($co, "indexAction"))
             {
+                # throw exception
                 throw new \iMVC\exceptions\notFoundException("Ambiguous action call");
             }
 	}
@@ -323,8 +347,10 @@ __FETCHING_MODULES:
         */
 	protected function RetrieveViewName()
 	{
-            $this->view->name = $this->action->name;
-            $this->view->path = "{$this->module->path}/views/view/{$this->controller->name}/{$this->action->name}View.pthml";
+            # we will gain view's info by info fetched for action 
+            $this->view = new entity($this->action->name, 
+                    "{$this->module->path}/views/view/{$this->controller->name}/{$this->action->name}View.pthml", 
+                    $this->namespace."\\view");
 	}
 
 	/**
@@ -334,22 +360,29 @@ __FETCHING_MODULES:
 	{
             $this->GET = $_GET;
             $this->POST = $_POST;
+            # merging $_GET, $_POST into $params
             $this->params = $_GET;
             $this->params = array_merge($this->params, $_POST);
+            # balancing the parts' count
             if(count($this->_parts) % 2 == 1)
                 $this->_parts[] = NULL;
+            # while there are parts
             while(count($this->_parts))
             {
+                # add to the $params
                 $this->params[$this->_parts[0]] = $this->_parts[1];
+                # add to indexed params
                 $this->indexed_param[] = $this->_parts[0];
                 # due to opration in `if` statement before current `while`
                 # if NULL appears, should appears in secondary part 
                 # so we only check this 
                 if($this->_parts[1])
                     $this->indexed_param[] = $this->_parts[1];
+                # remove fetched parts
                 array_shift($this->_parts);
                 array_shift($this->_parts);
             }
+            # we don't need this var anymore >:)
             unset($this->_parts);
 	}
     
