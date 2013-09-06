@@ -3,6 +3,9 @@ namespace iMVC\kernel\routing;
 
 require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
+/**
+ * A class that holds MVC entities info
+ */
 class entity
 {
     /**
@@ -50,22 +53,27 @@ class request extends \iMVC\baseiMVC
         */
 	public $view;
         /**
-         * relative namespace with current request
-         * @var string
-         */
+        * relative namespace with current request
+        * @var string
+        */
         public $namespace;
 	/**
-	 * Get requested uri string
-	 */
+        * Get requested uri string
+        */
 	public $requested_uri;
 	/**
-	 * Holds $_GET's value
-	 */
+        * Holds $_GET's value
+        */
 	public $GET;
 	/**
-	 * Holds $_POST's value
-	 */
+        * Holds $_POST's value
+        */
 	public $POST;
+        /**
+         *  Holds params sended by $_POST, $_GET, URI 
+         * @var array
+         */
+        public $params;
 	/**
 	 * Contains type of request
 	 * @example
@@ -73,7 +81,11 @@ class request extends \iMVC\baseiMVC
 	 * the $type would be 'json'
 	 */
 	public $type;
-
+        /**
+        * hold params by index
+        */
+        protected $indexed_param;
+         
 	function __construct()
 	{
             $this->Initiate();
@@ -83,7 +95,9 @@ class request extends \iMVC\baseiMVC
 	{
             $this->Dispose();
 	}
-
+        /**
+         * Initializing the instance
+         */
         public function Initiate()
         {
             $this->SetURI($_SERVER['REQUEST_URI']);
@@ -92,45 +106,35 @@ class request extends \iMVC\baseiMVC
             $this->action = new entity("index", "indexAction");
             $this->view = new entity("index", "{$this->module->path}/views/view/{$this->module->name}/indexView.phtml");
             $this->type = "html";
-            // defines how many part of URI is matched with pattern
-            $this->_URI_Accept_Level = 0;
-            // defines URI index processed by the request handler
-            $this->_process_level = 0;
-            $this->partial_params = array();
             $this->params = array();
         }
-        public function Dispose()
-        {
-            parent::Dispose();
-        }
-
 
 	/**
-	 * Set requested URI
-	 */
+        * Set requested URI
+        */
 	public function SetURI($uri)
 	{
             $this->requested_uri = $uri;
 	}
-	/**
-	 * Get requested URI
-	 */
+        /**
+        * Get requested URI
+        */
 	public function GetURI()
 	{
             return $this->requested_uri;
 	}
 
 	/**
-	 * Processes the Request.
-	 * Extract the currect value of following attributes:
-	 *   Requested Module's Name
-	 *   Requested Controller's Name
-	 *   Requested Actions's Name
-	 *   Requested View's Name
-	 *   Sended GET/POST params
-	 * Check for final validation
-	 */
-	public function ProcessRequest()
+        * Processes the Request.
+        * Extract the currect value of following attributes:
+        *   Requested Module's Name
+        *   Requested Controller's Name
+        *   Requested Actions's Name
+        *   Requested View's Name
+        *   Sended GET/POST params
+        * Check for final validation
+        */
+	public function Process()
 	{
             $this->DepartURI();
             $this->RetrieveModuleName();
@@ -139,41 +143,40 @@ class request extends \iMVC\baseiMVC
             $this->RetrieveActionName();
             $this->RetrieveViewName();
             $this->RetriveParams();
-            #$this->Checkpoint();
 	}
 
 	/**
-	 * Depart and normalize the requested URI
-	 */
+        * Depart and normalize the requested URI
+        */
 	protected function DepartURI()
 	{
-            $parts = array_filter(\explode('?', $this->requested_uri));
-            if(count($parts)===0)
+            $this->_parts = array_filter(\explode('?', $this->requested_uri));
+            if(count($this->_parts)===0)
             {
                 $this->_parts = array();
                 return;
             }
-            $parts = \explode('/', $parts[0]);
+            $this->_parts = \explode('/', $this->_parts[0]);
             /*
-             * Normalizing the $parts arrays
+             * Normalizing the $this->_parts arrays
              */
-            $parts = array_filter($parts, 'strlen');
-            $parts = count($parts)? array_chunk($parts, count($parts)) : array();
-            $parts = count($parts)? $parts[0] : array();
+            $this->_parts = array_filter($this->_parts, 'strlen');
+            $this->_parts = count($this->_parts)? array_chunk($this->_parts, count($this->_parts)) : array();
+            $this->_parts = count($this->_parts)? $this->_parts[0] : array();
             # fetch page type
-            if(count($parts) && \iMVC\utilities\string::Contains($parts[count($parts)-1], "."))
+            if(count($this->_parts) && \iMVC\utilities\string::Contains($this->_parts[count($this->_parts)-1], "."))
             {
-                $dpos = strpos($parts[count($parts)-1], ".");
-                $this->type = substr($parts[count($parts)-1], $dpos+ 1);
-                $parts[count($parts)-1] = substr($parts[count($parts)-1], 0, $dpos);
+                $dpos = strpos($this->_parts[count($this->_parts)-1], ".");
+                $this->type = substr($this->_parts[count($this->_parts)-1], $dpos+ 1);
+                $this->_parts[count($this->_parts)-1] = substr($this->_parts[count($this->_parts)-1], 0, $dpos);
             }
-            $this->_parts = $parts;
-	}
+        }
 
-	/**
-	 * Fetch module name according to URI
-	 * @throws \iMVC\Exceptions\NotFoundException 
-	 */
+        /**
+        * Fetch module name according to URI
+        * @return type
+        * @throws \iMVC\exceptions\notFoundException
+        */
 	protected function RetrieveModuleName()
 	{
 __LOADING_CACHE:
@@ -244,7 +247,10 @@ __FETCHING_MODULES:
                 }
             }
 	}
-    
+        /**
+        * Fetch relative namespace according to module's name
+        * @note the <b>default</b> module has no prefix namespace since the <i>default</i> is a keywork
+        */
 	protected function RetrieveNamespace()
         {
             # except default module every other module
@@ -254,13 +260,15 @@ __FETCHING_MODULES:
                 $this->namespace = $this->module->name;
         }
 
-	/**
-	 * Fetch controller name according to URI
-	 */
+        /**
+        * Fetch controller name according to URI
+        */
 	protected function RetrieveControllerName()
 	{
             # default controller
             $this->controller = new entity("index", "{$this->module->path}/controllers/indexController.php");
+            # if no URI provided return
+            if(!count($this->_parts)) return;
             # controller directory name
             $controller_dir = dirname($this->controller->path)."/";
             # foreach file in controller's directory
@@ -288,18 +296,21 @@ __FETCHING_MODULES:
             }
 	}
 
-	/**
-	 * Fetch action name according to URI
-	 */
+        /**
+        * Fetch action name according to URI
+        */
 	protected function RetrieveActionName()
 	{
             $this->action = new entity("index", "indexAction");
+            # if no URI provided return
+            if(!count($this->_parts)) return;
             $controller = "{$this->namespace}\\controller\\{$this->controller->name}controller";
             $co = new $controller;
             if(method_exists($co, "{$this->_parts[0]}Action"))
             {
                 $this->action->name = $this->_parts[0];
                 $this->action->path = "{$this->_parts[0]}Action";
+                array_shift($this->_parts);
             }
             elseif(!method_exists($co, "indexAction"))
             {
@@ -307,9 +318,9 @@ __FETCHING_MODULES:
             }
 	}
 
-	/**
-	 * Fetch view name according to action's name
-	 */
+        /**
+        * Fetch view name according to action's name
+        */
 	protected function RetrieveViewName()
 	{
             $this->view->name = $this->action->name;
@@ -317,24 +328,57 @@ __FETCHING_MODULES:
 	}
 
 	/**
-	 * Fetch params according to URI
-	 */
+        * Fetch params according to URI
+        */
 	protected function RetriveParams()
 	{
+            $this->GET = $_GET;
+            $this->POST = $_POST;
+            $this->params = $_GET;
+            $this->params = array_merge($this->params, $_POST);
+            if(count($this->_parts) % 2 == 1)
+                $this->_parts[] = NULL;
+            while(count($this->_parts))
+            {
+                $this->params[$this->_parts[0]] = $this->_parts[1];
+                $this->indexed_param[] = $this->_parts[0];
+                # due to opration in `if` statement before current `while`
+                # if NULL appears, should appears in secondary part 
+                # so we only check this 
+                if($this->_parts[1])
+                    $this->indexed_param[] = $this->_parts[1];
+                array_shift($this->_parts);
+                array_shift($this->_parts);
+            }
+            unset($this->_parts);
 	}
+    
+        /**
+        * Get URI params base on its index
+        * @param integer $index
+        * @return string
+        */
+        public function GetIndexedParam($index)
+        {
+            if(!is_integer($index)) throw new \iMVC\exceptions\invalideArgumentException;
+            return $this->indexed_param[$index];
+        }
 
 	/**
-	 * Check if the current request has $_POST values
-	 */
+        * Check if the current request has $_POST values
+        */
 	public function IsPOST()
 	{
+            return isset($_POST) && count($_POST);
 	}
 
 	/**
-	 * check if it is a GET request or not
-	 */
+        * check if it is a GET request or not
+        */
 	public function IsGET()
 	{
+            # if it is not a POST the it is a GET
+            return !$this->IsPOST();
 	}
 
 }
