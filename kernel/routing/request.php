@@ -3,7 +3,25 @@ namespace iMVC\kernel\routing;
 
 require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
-
+class entity
+{
+    /**
+     * the entity's name
+     * @var string
+     */
+    public $name;
+    /**
+     * the entity's path
+     * @var string
+     */
+    public $path;
+        
+    public function __construct($name, $path)
+    {
+        $this->name = $name;
+        $this->path = $path;
+    }
+}
 /**
  * @author dariush
  * @version 1.0
@@ -11,23 +29,31 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  */
 class request extends \iMVC\baseiMVC
 {
-
-	/**
-	 * hold relative module name with requested URI
-	 */
+        /**
+        * hold relative module name with requested URI
+        * @var entity
+        */
 	public $module;
-	/**
-	 * hold relative controller name with requested URI
-	 */
+        /**
+        * hold relative controller name with requested URI
+        * @var entity
+        */
 	public $controller;
 	/**
-	 * hold relative action name with requested URI
-	 */
+        * hold relative action name with requested URI
+        * @var entity
+        */
 	public $action;
-	/**
-	 * Holds correspond view's name
-	 */
+        /**
+        * Holds correspond view's name
+        * @var entity
+        */
 	public $view;
+        /**
+         * relative namespace with current request
+         * @var string
+         */
+        public $namespace;
 	/**
 	 * Get requested uri string
 	 */
@@ -61,9 +87,10 @@ class request extends \iMVC\baseiMVC
         public function Initiate()
         {
             $this->SetURI($_SERVER['REQUEST_URI']);
-            $this->module = "default";
-            $this->controller = "indexController";
-            $this->action = "indexAction";
+            $this->module = new entity("default", iMVC_ROOT."../modules");
+            $this->controller = new entity("index", "{$this->module->path}/controllers/indexController.php");
+            $this->action = new entity("index", "indexAction");
+            $this->view = new entity("index", "{$this->module->path}/views/view/{$this->module->name}/indexView.phtml");
             $this->type = "html";
             // defines how many part of URI is matched with pattern
             $this->_URI_Accept_Level = 0;
@@ -85,7 +112,6 @@ class request extends \iMVC\baseiMVC
 	{
             $this->requested_uri = $uri;
 	}
-
 	/**
 	 * Get requested URI
 	 */
@@ -108,6 +134,7 @@ class request extends \iMVC\baseiMVC
 	{
             $this->DepartURI();
             $this->RetrieveModuleName();
+            $this->RetrieveNamespace();
             $this->RetrieveControllerName();
             $this->RetrieveActionName();
             $this->RetrieveViewName();
@@ -148,27 +175,117 @@ class request extends \iMVC\baseiMVC
 	 * @throws \iMVC\Exceptions\NotFoundException 
 	 */
 	protected function RetrieveModuleName()
-	{return;
-            extract(array('root'=>'imvc', 'path'=>__METHOD__, 'name'=>'module'));
-            require_once iMVC_ROOT.'kernel/caching/fileCache.php';
+	{
+__LOADING_CACHE:
+            # all folders in ../modules folders considered a module folder
+            $this->module = new entity("default", iMVC_ROOT."../modules/default");
+            $module_dir = dirname($this->module->path);
+            # module collection instance
+            $mc = new \stdClass();
+            # fail-safe for module dir existance
+            if(!file_exists($module_dir))
+                die("Couldn't find modules directory");
+            # fetch all modules directory paths
+            $modules = glob($module_dir."/*",GLOB_ONLYDIR);
+            # fail-safe for module lackness
+            if(!count($modules))
+                die("No module found.");
+            # if not parts provided picking up default module
+            if(!count($this->_parts)) return;
+            # checking if modules has been cached or not
             $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
             if($fc->isCached(__METHOD__))
             {
                 # catch maintaining optz. 
+                $mc = $fc->retrieve(__METHOD__);
+                # if the module directory has been updated
+                if($mc->modified_time !=filemtime($module_dir))
+                {
+                    # update the catch data
+                    goto __LOAD_MODULES;
+                    
+                }
+                goto __FETCHING_MODULES;
             }
-            # all folders in ../modules folders considered a module folder
-            $module_dir = iMVC_ROOT."../modules";
-            # fail-safe for module dir existance
-            if(!file_exists($module_dir))
-                die("Couldn't find modules directory");
-            
+            # loading modules directories from hard drive
+__LOAD_MODULES:
+            # modules collections
+            $mc->modules = array();
+            # save directory modified time
+            $mc->modified_time = filemtime($module_dir);
+            # foreach module found 
+            foreach($modules as $module)
+            {
+                # add current module into our module collections
+                $mc->modules[] = new entity(basename($module), realpath($module));;
+            }
+            # now module collection is ready
+            # caching module collections data
+            $fc->store(__METHOD__, $mc);
+            # fetching related modules accoring to requested URI
+__FETCHING_MODULES:
+            foreach($mc->modules as $module)
+            {
+                # checking if first part of URI matches with any modules
+                if(strtolower($module->name)==strtolower($this->_parts[0]))
+                {
+                    # this is should NEVER ever MATCH TRUE condition
+                    if(!file_exists($module->path))
+                    {
+                        # delete cached data
+                        $fc->eraseAll();
+                        # throw exception
+                        throw new \iMVC\exceptions\notFoundException("Wired! `{$module->module_name}` not found at `{$module->module_path}`");
+                    }
+                    # saving target modules
+                    $this->module = $module;
+                    # removing modules name from URI parts
+                    array_shift($this->_parts);
+                }
+            }
 	}
+    
+	protected function RetrieveNamespace()
+        {
+            # except default module every other module
+            # has namespace with the module's name prefix
+            $this->namespace = "";
+            if($this->module->name != "default")
+                $this->namespace = $this->module->name;
+        }
 
 	/**
 	 * Fetch controller name according to URI
 	 */
 	protected function RetrieveControllerName()
 	{
+            # default controller
+            $this->controller = new entity("index", "{$this->module->path}/controllers/indexController.php");
+            # controller directory name
+            $controller_dir = dirname($this->controller->path)."/";
+            # foreach file in controller's directory
+            foreach (array_diff(scandir($controller_dir), array(".", "..")) as $file)
+            {
+                # we are looking for files
+                if(!is_file($controller_dir.$file)) continue;
+                # we now processing a file
+                if(strtolower($this->_parts[0]."controller.php") == strtolower($file))
+                {
+                    # updating target controller's info
+                    $this->controller->name = $this->_parts[0];
+                    $this->controller->path = dirname($this->controller->path)."/$file";
+                    # we found target file
+                    # checking for class declaration
+                    require_once $this->controller->path;
+                    $namespace = "{$this->namespace}\\controller";
+                    if(!class_exists("$namespace\\{$this->controller->name}controller"))
+                    {
+                        # we don't have our class
+                        throw new \iMVC\exceptions\notFoundException("The controller `{$this->controller->name}` does not exists");
+                    }
+                    array_shift($this->_parts);
+                }
+            }
 	}
 
 	/**
@@ -176,6 +293,18 @@ class request extends \iMVC\baseiMVC
 	 */
 	protected function RetrieveActionName()
 	{
+            $this->action = new entity("index", "indexAction");
+            $controller = "{$this->namespace}\\controller\\{$this->controller->name}controller";
+            $co = new $controller;
+            if(method_exists($co, "{$this->_parts[0]}Action"))
+            {
+                $this->action->name = $this->_parts[0];
+                $this->action->path = "{$this->_parts[0]}Action";
+            }
+            elseif(!method_exists($co, "indexAction"))
+            {
+                throw new \iMVC\exceptions\notFoundException("Ambiguous action call");
+            }
 	}
 
 	/**
@@ -183,6 +312,8 @@ class request extends \iMVC\baseiMVC
 	 */
 	protected function RetrieveViewName()
 	{
+            $this->view->name = $this->action->name;
+            $this->view->path = "{$this->module->path}/views/view/{$this->controller->name}/{$this->action->name}View.pthml";
 	}
 
 	/**
