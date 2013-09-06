@@ -17,9 +17,11 @@ class fileCache extends cache
      * @param string|array [optional] $config
      * @return void
      */
-    public function __construct($name = "default", $path = "cache/", $extension = ".cache"){
+    public function __construct($name = "default", $path = "", $extension = ".cache"){
         if(isset($name) &&strlen($name))
             $this->setCache($name);
+        if(!isset($path) || !is_string($path) || !strlen($path))
+            $path = sys_get_temp_dir()."/php-cache";
         $this->setCachePath($path);
         $this->setExtension($extension);
     }
