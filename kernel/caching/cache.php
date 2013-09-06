@@ -17,7 +17,7 @@ abstract class cache {
      *
      * @var string
      */
-    protected $_cachepath = 'cache';
+    protected static $_cachepath = '';
 
     /**
      * The name of the default cache file
@@ -29,15 +29,7 @@ abstract class cache {
      * uses for internal cache upgrading
      * @var type 
      */
-    protected static $_soft_cache = NULL;
-
-    /**
-     * Default constructor
-     *
-     * @param string|array [optional] $config
-     * @return void
-     */
-    public abstract function __construct($config = null);
+    protected static $_soft_cache = array();
     /**
      * saves cache data 
      */
@@ -54,7 +46,6 @@ abstract class cache {
      * @return object
      */
     public abstract function eraseAll();
-
     /**
      * Check whether data accociated with a key
      *
@@ -199,9 +190,7 @@ abstract class cache {
      * @return object
      */
     public function setCachePath($path) {
-        if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
-            $path = $path.DIRECTORY_SEPARATOR;
-        $this->_cachepath = $path;
+        self::$_cachepath = $path;
         return $this;
     }
 
@@ -211,7 +200,7 @@ abstract class cache {
      * @return string
      */
     public function getCachePath() {
-        return $this->_cachepath;
+        return self::$_cachepath;
     }
 
     /**
