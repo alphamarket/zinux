@@ -27,6 +27,7 @@ class fileSystem extends \iMVC\baseiMVC
         # create a cache signiture
         $cache_sig = __METHOD__."@$path";
         # open the cache file
+        require_once 'kernel/caching/xCache.php';
         $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
         # check cache file and validate it
         if($xc->isCached($cache_sig) && file_exists($xc->retrieve($cache_sig)))
@@ -38,10 +39,12 @@ class fileSystem extends \iMVC\baseiMVC
         $is_absolute_path = ($path[0] == DIRECTORY_SEPARATOR);
         # depart the path
         # normalizing array's parts
+        require_once '_array.php';
         $path_parts = _array::array_normalize(explode(DIRECTORY_SEPARATOR, strtolower($path)));
         # UNIX fs style
         $resolved_path = $is_absolute_path ? "" : ".";
         # WINNT fs style
+        require_once 'string.php';
         if(string::Contains($path_parts[0], ":"))
         {
             $is_absolute_path = 1;

@@ -36,7 +36,7 @@ class helper extends mvc
 
     public function GetNameSpace()
     {
-        return $this->relative_module->GetNameSpace()."\\helper";
+        return $this->relative_module->GetNameSpace()."\\views\\helper";
     }
     
     public function CheckHelperExists()

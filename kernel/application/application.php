@@ -13,9 +13,14 @@ class application extends \iMVC\baseiMVC
 {
     protected static $config_file_address = NULL;
 
-    function __construct()
+    function __construct($module_path = "")
     {
             $this->Initiate();
+            
+            if(!file_exists(\iMVC\kernel\utilities\fileSystem::resolve_path($module_path)))
+                die("Module directory not found!");
+            
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path($module_path."/"));
     }
 
     public function Initiate()
@@ -88,7 +93,7 @@ class application extends \iMVC\baseiMVC
             $c = new \iMVC\kernel\utilities\config($config_file_address);
             $c->Load(RUNNING_ENV, true);
     __END:
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(iMVC_ROOT.'/../modules/')."/");
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(IMVC_ROOT.'/../modules/')."/");
             $this->_startup_invoked = true;
             return $this;
     }

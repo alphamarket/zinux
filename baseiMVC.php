@@ -1,33 +1,23 @@
 <?php
 namespace iMVC;
 
-if(!defined("iMVC_INCLUDE_PATH_SET"))
+if(!defined("IMVC_ROOT") || !defined('PROJECT_ROOT'))
 {
-    define("iMVC_INCLUDE_PATH_SET",1);
-    ini_set('include_path', implode(PATH_SEPARATOR, array(ini_get('include_path'),  realpath(dirname(__FILE__)))));
-    define("iMVC_ROOT", dirname(__FILE__)."/");
-}
-
-if(!defined("IMVC_AUTOLOAD"))
-{
-    define("IMVC_AUTOLOAD", 1);
+    # define iMVC ROOT
+    define("IMVC_ROOT", dirname(__FILE__)."/");
+    # dfine project ROOT
+    defined("PROJECT_ROOT") || define("PROJECT_ROOT", dirname(IMVC_ROOT).DIRECTORY_SEPARATOR);
+    # set include path to project root
+    # every class' namespace should be a map from project root
+    ini_set('include_path', implode(PATH_SEPARATOR, array(ini_get('include_path'),  PROJECT_ROOT)));
+    
     spl_autoload_register(
         function ($class) {
-            $r = explode("\\", $class);
-            unset($r[0]);
-            $c = implode(DIRECTORY_SEPARATOR, $r);
-            require_once iMVC_ROOT.'kernel/utilities/fileSystem.php';
-            $f = kernel\utilities\fileSystem::resolve_path(iMVC_ROOT."$c.php");
-            if(!file_exists($f))
-            {
-                # it does not has iMVC substring 
-                # maybe there is an other loader for this
-                if(strpos($class, "iMVC")===false) return;
-                $msg = "could not find `$class` file";
-                echo ($msg."<br />");
-                \iMVC\kernel\utilities\debug::stack_trace(1);
-            }
-            require_once $f;
+            # fetch relative path using namespace map
+            $c = str_replace("\\", DIRECTORY_SEPARATOR, $class);
+            require_once 'kernel/utilities/fileSystem.php';
+            # include once the class' file using dynamic path finder!
+            include_once kernel\utilities\fileSystem::resolve_path(PROJECT_ROOT.$c.".php");
         },1,1);
 }
 

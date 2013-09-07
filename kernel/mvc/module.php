@@ -24,6 +24,6 @@ class module extends mvc
 
     public function GetNameSpace()
     {
-        return $this->full_name;
+        return "modules\\{$this->full_name}";
     }
 }
