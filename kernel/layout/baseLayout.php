@@ -16,11 +16,16 @@ class baseLayout extends \iMVC\baseiMVC
          * @var \iMVC\kernel\view\baseView  
 	 */
 	public $view;
-        /**
-         *  holds layout name
-         * @var string 
+	/**
+	 * Holds the current request instance 
+         * @var \iMVC\kernel\routing\request
          */
-        public $layout_name;
+	public $request;
+        /**
+         *  holds layout instance
+         * @var \iMVC\kernel\mvc\layout 
+         */
+        public $layout;
 	/**
 	 * Options settings
 	 */
@@ -46,19 +51,15 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	protected $suppress_layout = 0;
 
-	function __construct()
+	function __construct(\iMVC\kernel\view\baseView $view)
 	{
+            $this->view = $view;
+            $this->request = $view->request;
             $this->Initiate();
-	}
-
-	function __destruct()
-	{
-            $this->Dispose();
 	}
 
         public function Initiate()
         {
-            $this->view = new \iMVC\kernel\view\baseView;
             $this->options = new \stdClass();
             $this->CSSImports = array();
             $this->JSImports = array();
@@ -79,7 +80,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 * @param overwrite_on_existance    check if your want to overwrite on existance
 	 * of current css' name
 	 */
-	public function AddCSS(string $URI, string $name = NULL, $options = array(), $overwrite_on_existance = 0)
+	public function AddCSS($URI, $name = NULL, $options = array(), $overwrite_on_existance = 0)
 	{
             if(!isset($name))
                 $name = sha1($URI);
@@ -95,7 +96,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 * @param overwrite_on_existance    check if your want to overwrite on existance
 	 * of current js' name
 	 */
-	public function AddJS(string $URI, string $name = NULL, $options = array(), $overwrite_on_existance = 0)
+	public function AddJS($URI, $name = NULL, $options = array(), $overwrite_on_existance = 0)
 	{
             if(!isset($name))
                 $name = sha1($URI);
@@ -112,26 +113,17 @@ class baseLayout extends \iMVC\baseiMVC
 	 * @param overwrite_on_existance    check if your want to overwrite on existance
 	 * of current meta' name
 	 */
-	public function AddMeta(string $name, string $content, $options = array(), $overwrite_on_existance = 0)
+	public function AddMeta($name, $content, $options = array(), $overwrite_on_existance = 0)
 	{
             if(isset($this->MetaImports[$name]) && !$overwrite_on_existance) return;
             $this->MetaImports[$name] = array('content' =>$content, 'options' => $options);
 	}
-
-	/**
-	 * Get layout's file's name
-	 */
-	public function GetLayoutName()
-	{
-            return $this->layout_name;
-	}
-
 	/**
 	 * Get layout full path
 	 */
 	public function GetLayoutPath()
 	{
-            return MODULE_PATH.$this->view->request->module.'/views/layout/'.$this->GetLayoutName().'.phtml';
+            return $this->layout->GetPath();
 	}
 
 	/**
@@ -147,7 +139,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 * 
 	 * @param name
 	 */
-	public function RemoveCSS(string $name)
+	public function RemoveCSS($name)
 	{
             unset($this->CSSImports[$name]);
 	}
@@ -157,7 +149,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 * 
 	 * @param name
 	 */
-	public function RemoveJS(string $name)
+	public function RemoveJS($name)
 	{
             unset($this->JSImports[$name]);
 	}
@@ -167,7 +159,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 * 
 	 * @param name
 	 */
-	public function RemoveMeta(string $name)
+	public function RemoveMeta($name)
 	{
             unset($this->MetaImports[$name]);
 	}
@@ -289,10 +281,14 @@ class baseLayout extends \iMVC\baseiMVC
 	 * 
 	 * @param name
 	 */
-	public function SetLayout(string $name)
+	public function SetLayout($name)
 	{
-            $this->layout_name = str_replace(".phtml","", $name);
+            $this->layout = new \iMVC\kernel\mvc\layout($name, $this->request->module);
 	}
+        public function GetLayoutName ()
+        {
+            return $this->layout->full_name;
+        }
 
 	/**
 	 * change layout suppression status
