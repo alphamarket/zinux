@@ -158,7 +158,10 @@ class request extends \iMVC\baseiMVC
 	{
 __LOADING_CACHE:
             # all folders in ../modules folders considered a module folder
-            $this->module = new \iMVC\kernel\mvc\module("default", iMVC_ROOT."../modules/defaultModule");
+            # define module root dir
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(iMVC_ROOT.'/../modules/')."/");
+            # define default module
+            $this->module = new \iMVC\kernel\mvc\module("default", MODULE_ROOT."defaultModule");
             $module_dir = dirname($this->module->GetPath());
             # module collection instance
             $mc = new \stdClass();
@@ -171,11 +174,11 @@ __LOADING_CACHE:
             if(!count($modules))
                 die("No module found.");
             # checking if modules has been cached or not
-            $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
-            if($fc->isCached(__METHOD__))
+            $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
+            if($xc->isCached(__METHOD__))
             {
                 # catch maintaining optz. 
-                $mc = $fc->retrieve(__METHOD__);
+                $mc = $xc->retrieve(__METHOD__);
                 # if the module directory has been updated
                 if($mc->modified_time !=filemtime($module_dir))
                 {
@@ -200,14 +203,10 @@ __LOAD_MODULES:
                 $m = new \iMVC\kernel\mvc\module(basename($module));
                 $m->SetPath(realpath($module));
                 $mc->modules[] = $m;
-                /*new entity(
-                                                            basename($module), 
-                                                            realpath($module), 
-                                                            strtolower(basename($module))=='default'?"":basename($module));*/
             }
             # now module collection is ready
             # caching module collections data
-            $fc->store(__METHOD__, $mc);
+            $xc->store(__METHOD__, $mc);
             # fetching related modules accoring to requested URI
 __FETCHING_MODULES:
             # if not parts provided picking up default module
@@ -221,7 +220,7 @@ __FETCHING_MODULES:
                     if(!file_exists($module->GetPath()))
                     {
                         # delete cached data
-                        $fc->eraseAll();
+                        $xc->eraseAll();
                         # throw exception
                         throw new \iMVC\exceptions\notFoundException("Wired! `{$module->module_name}` not found at `{$module->module_path}`");
                     }
@@ -369,7 +368,7 @@ __FETCHING_MODULES:
         */
 	public function IsPOST()
 	{
-            return isset($_POST) && count($_POST);
+            return strtoupper($_SERVER['REQUEST_METHOD']) === "POST";
 	}
 
 	/**
@@ -377,8 +376,7 @@ __FETCHING_MODULES:
         */
 	public function IsGET()
 	{
-            # if it is not a POST the it is a GET
-            return !$this->IsPOST();
+            return strtoupper($_SERVER['REQUEST_METHOD']) === "GET";
 	}
         /**
          * Get instance of current related controller 

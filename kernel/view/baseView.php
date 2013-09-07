@@ -144,28 +144,16 @@ class baseView extends \iMVC\baseiMVC
             $cache_sig =__METHOD__."@{$this->request->module->full_name}::{$this->request->controller->full_name}
                 ::{$this->request->action->full_name}::{$this->request->type}";
             
-            # check session cache system
-            $sc = new \iMVC\kernel\caching\sessionCache(__CLASS__);
-            if($sc->isCached(sha1($cache_sig)))
+            # check session and file cache system
+            $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
+            if($xc->isCached(sha1($cache_sig)))
             {
-                $p = $sc->retrieve($cache_sig);
+                $p = $xc->retrieve($cache_sig);
                 # if catch is valid return it
                 if(file_exists($p)) goto __RETURN;
                 # if the file does not exist delete it from cache system and try to recover new one
-                $sc->erase($cache_sig);
+                $xc->erase($cache_sig);
             }
-            
-            # check file cache system
-            $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
-            if($fc->isCached(sha1($cache_sig)))
-            {
-                $p = $fc->retrieve($cache_sig);
-                # if catch is valid return it
-                if(file_exists($p)) goto __RETURN;
-                # if the file does not exist delete it from cache system and try to recover new one
-                $fc->erase($cache_sig);
-            }
-            
             # view directory
             $p = $this->request->view->GetRootDirectory();
             
@@ -192,7 +180,7 @@ class baseView extends \iMVC\baseiMVC
                 }
                 # if all file processed 
                 # then the view didnt find in fs
-                $fc->erase($cache_sig);
+                $xc->erase($cache_sig);
                 closedir($handle);
                 throw new \iMVC\exceptions\notFoundException("The view '".$this->GetViewName().$this->request->view->GetExtention()."' not found!");
             }
@@ -200,7 +188,7 @@ class baseView extends \iMVC\baseiMVC
                 throw new \iMVC\exceptions\invalideOperationException("Could not open directory '$p'");
         __END:
             # catch the result
-            $fc->store($cache_sig, $p);
+            $xc->store($cache_sig, $p);
         __RETURN:
             $this->_view_path = $p;
             return $p;

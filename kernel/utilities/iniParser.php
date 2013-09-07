@@ -103,7 +103,7 @@ class iniParser extends \iMVC\baseiMVC
                     if (isset(self::$_result[$section_name])) {
                         return self::$_result[$section_name];
                     } else {
-                        throw new \Exception('Section ' . $section_name . ' not found in the ini file');
+                        return array();
                     }
                 }
             }
