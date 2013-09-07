@@ -32,7 +32,7 @@ class baseView extends \iMVC\baseiMVC
 	/**
 	 * related layout instance
 	 */
-	protected $layout;
+	public $layout;
 	/**
 	 * a helper loader 
 	 */
@@ -41,9 +41,6 @@ class baseView extends \iMVC\baseiMVC
     
         public function Initiate()
         {
-            $this->request = new \iMVC\kernel\routing\request();
-            $this->layout = new \iMVC\kernel\layout\baseLayout;
-            $this->helper = new \iMVC\kernel\helper\baseHelper;
             $this->suppress_view = 0;
             $this->view_rendered = 0;
             $this->view_name = "";
@@ -52,9 +49,11 @@ class baseView extends \iMVC\baseiMVC
 	/**
 	 * Construct a view instance according to passed request
 	 */
-	public function __construct()
+	public function __construct(\iMVC\kernel\routing\request $request)
 	{
+            $request->Process();
             $this->Initiate();
+            $this->request = $request;
 	}
 
 	function __destruct()
@@ -104,7 +103,8 @@ class baseView extends \iMVC\baseiMVC
 	{
             if($this->suppress_view)
                 return;
-
+            if(!file_exists($this->GetViewPath()))
+                throw new \iMVC\exceptions\notFoundException("The view `{$this->GetViewName()}` not found at `{$this->GetViewPath()}`");
             if(!$this->view_rendered)
             {
                 ob_start();
@@ -128,7 +128,7 @@ class baseView extends \iMVC\baseiMVC
 	 */
 	public function GetViewName()
 	{
-            return $this->view_name."View";
+            return $this->request->view->full_name;
 	}
 
 	/**
@@ -136,33 +136,54 @@ class baseView extends \iMVC\baseiMVC
 	 */
 	public function GetViewPath()
 	{
+            # try RAM cache first
+            if(isset($this->_view_path) && file_exists($this->_view_path))
+                return $this->_view_path;
             $p = "";
             # create a caching signature based on provided request
-            $cach_sig =__METHOD__."@{$this->request->module}::{$this->request->controller}::{$this->request->action}::{$this->request->type}";
+            $cache_sig =__METHOD__."@{$this->request->module->full_name}::{$this->request->controller->full_name}
+                ::{$this->request->action->full_name}::{$this->request->type}";
             
-            # check cach system
-            $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
-            if($fc->isCached(\iMVC\kernel\security\hash::Generate($cach_sig)))
+            # check session cache system
+            $sc = new \iMVC\kernel\caching\sessionCache(__CLASS__);
+            if($sc->isCached(sha1($cache_sig)))
             {
-                $p = $fc->retrieve($cach_sig);
+                $p = $sc->retrieve($cache_sig);
                 # if catch is valid return it
-                if(file_exists($p)) return $p;
+                if(file_exists($p)) goto __RETURN;
                 # if the file does not exist delete it from cache system and try to recover new one
-                $fc->erase($cach_sig);
+                $sc->erase($cache_sig);
             }
-            # view directory
-            $p = MODULE_PATH.$this->request->module.'/views/view/'.$this->request->controller.'/';
-            # try straight locating 
-            if(file_exists("{$p}{$this->GetViewName()}.phtml")) 
+            
+            # check file cache system
+            $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
+            if($fc->isCached(sha1($cache_sig)))
             {
-                $p = "{$p}{$this->GetViewName()}.phtml";
+                $p = $fc->retrieve($cache_sig);
+                # if catch is valid return it
+                if(file_exists($p)) goto __RETURN;
+                # if the file does not exist delete it from cache system and try to recover new one
+                $fc->erase($cache_sig);
+            }
+            
+            # view directory
+            $p = $this->request->view->GetRootDirectory();
+            
+            # try straight locating 
+            if(file_exists($p.$this->GetViewName().$this->request->view->GetExtention())) 
+            {
+                $p = $p.$this->GetViewName().$this->request->view->GetExtention();
                 goto __END;
             }
+            if(!file_exists($p))
+                throw new \iMVC\exceptions\notFoundException("The view '".$this->GetViewName().$this->request->view->GetExtention()."' not found!");
             # if straight locating didn't work
-            if (($handle = opendir($p))) {
+            if (($handle = opendir($p))) 
+            {
                 # try normalized file search
-                while (false !== ($file = readdir($handle))) {
-                    if(strtolower($file) == strtolower($this->GetViewName().".phtml"))
+                while (false !== ($file = readdir($handle))) 
+                {
+                    if(strtolower($file) == strtolower($this->GetViewName().$this->request->view->GetExtention()))
                     {
                         closedir($handle);
                         $p = $p.$file;
@@ -171,15 +192,17 @@ class baseView extends \iMVC\baseiMVC
                 }
                 # if all file processed 
                 # then the view didnt find in fs
-                $fc->erase($cach_sig);
+                $fc->erase($cache_sig);
                 closedir($handle);
-                throw new \iMVC\Exceptions\NotFoundException("The view '".$this->GetViewName()."' not found!");
+                throw new \iMVC\exceptions\notFoundException("The view '".$this->GetViewName().$this->request->view->GetExtention()."' not found!");
             }
             else
-                throw new \iMVC\Exceptions\InvalideOperationException("Could not open directory '$p'");
+                throw new \iMVC\exceptions\invalideOperationException("Could not open directory '$p'");
         __END:
             # catch the result
-            $fc->store($cach_sig, $p);
+            $fc->store($cache_sig, $p);
+        __RETURN:
+            $this->_view_path = $p;
             return $p;
 	}
 

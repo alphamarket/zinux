@@ -35,20 +35,22 @@ class dispatcher extends \iMVC\baseiMVC
 	 */
 	public function Process(request $request)
 	{
+            $request->Process();
             // init this
             $this->Initiate();
             // create new controller
-            $c = new $request->controller;
+            $c = $request->controller->GetInstance();
             // set request as a property in controller
             $c->request = $request;
             // set view object
-            $c->view = new \iMVC\View\BaseView($request);
+            $c->view = new \iMVC\kernel\view\baseView($request);
             // set layout object
-            $c->layout = new \iMVC\Layout\BaseLayout($c->view);
+            $c->layout = new \iMVC\kernel\layout\baseLayout($c->view);
+            $c->view->layout = $c->layout;
             // init controller
             $c->Initiate();
             // call the action method
-            $c->{$request->action}();
+            $c->request->action->InvokeAction($c);
             // render : layout ~> view
             $c->layout->Render();
             // dispose controller

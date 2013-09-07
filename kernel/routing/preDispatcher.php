@@ -37,35 +37,7 @@ class preDispatcher extends \iMVC\baseiMVC
 	 */
 	public function Process(request $request)
 	{
+            $request->Process();
 	}
-
-	/**
-	 * Runs every function in {MODULE}\BootStrap.php function which end with 'Init' in
-	 * postfix in its name.
-	 * 
-	 * @param request
-	 */
-	public function RunBootstraps(request $request)
-	{
-	}
-
-	/**
-	 * Runs ini config file's methods
-	 * 
-	 * @param request
-	 */
-	public function RunINI(request $request)
-	{
-	}
-
-	/**
-	 * Runs reserved URI
-	 * 
-	 * @param request
-	 */
-	public function RunReservedURI(request $request)
-	{
-	}
-
 }
 ?>

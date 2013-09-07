@@ -38,6 +38,16 @@ class router extends \iMVC\baseiMVC
 	 */
 	public function Run(request $request)
 	{
+            $request->Process();
+            // pre-dispatcher
+            $predisp = new preDispatcher();
+            $predisp->Process($request);
+            // dispatcher
+            $disp = new dispatcher();
+            $disp->Process($request);
+            // post-dispatcher
+            $postdisp = new postDispatcher();
+            $postdisp->Process($request);  
 	}
 
 }

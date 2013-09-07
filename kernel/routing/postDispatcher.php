@@ -36,6 +36,7 @@ class postDispatcher extends \iMVC\baseiMVC
 	 */
 	public function Process(request $request)
 	{
+            $request->Process();
 	}
 
 }
