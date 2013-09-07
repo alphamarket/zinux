@@ -11,61 +11,71 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  */
 class application extends \iMVC\baseiMVC
 {
+    protected static $config_file_address = NULL;
 
-	function __construct()
-	{
+    function __construct()
+    {
             $this->Initiate();
-	}
-    
-        public function Initiate()
-        {
-            $this->_startup_invoked = false;
-        }
+    }
 
-	/**
-	 * Run the application
-	 */
-	public function Run()
-	{
+    public function Initiate()
+    {
+        $this->_startup_invoked = false;
+    }
+
+    /**
+     * Run the application
+     */
+    public function Run()
+    {
             if(!$this->_startup_invoked)
             {
-                trigger_error ("Application is not started up. running without configurations... ");
+                trigger_error ("Application has not started up. running without configurations...");
                 $this->Startup ("");
             }
             $r = new \iMVC\kernel\routing\router();
 
             $req = new \iMVC\kernel\routing\request();
 
-            $dbi = new \iMVC\db\ActiveRecord\initializer();
+            #$dbi = new \iMVC\db\ActiveRecord\initializer();
 
-            $dbi->InitActiveRecord($req);
+            #$dbi->InitActiveRecord($req);
 
             $r->Run($req);
-	}
+            return $this;
+    }
 
-	/**
-	 * Shutdowns application
-	 */
-	public function Shutdown()
-	{
+    /**
+     * Shutdowns application
+     */
+    public function Shutdown()
+    {
             $this->Dispose();
-	}
+            return $this;
+    }
 
-	/**
-	 * Startup and making application's ready with passed configuration file
-	 * 
-	 * @param config_file_address
-	 */
-	public function Startup($config_file_address = NULL)
-	{
+    /**
+     * Startup and making application's ready with passed configuration file
+     * 
+     * @param config_file_address
+     */
+    public function Startup($config_file_address = NULL)
+    {
             if(!$config_file_address) 
             {
-                trigger_error ("No config file supplied.");
-                goto __END;
+                if(\iMVC\kernel\utilities\fileSystem::resolve_path(self::$config_file_address))
+                {
+                    $config_file_address = self::$config_file_address;
+                }
+                else
+                {
+                    trigger_error ("No config file supplied.");
+                    goto __END;
+                }
             }
-            $config_file_address = realpath($config_file_address);
+            $this->SetConfigFile($config_file_address);
 
-            if(!file_exists($config_file_address))
+            if(!file_exists($config_file_address) || !is_file($config_file_address))
             {
                 trigger_error ("$config_file_address config file does not exists... ");
                 goto __END;
@@ -74,21 +84,22 @@ class application extends \iMVC\baseiMVC
             {
                 trigger_error ("RUNNING_ENV is not defined; autosetting to DEVELOPMENT.");
                 define('RUNNING_ENV', "DEVELOPMENT");
-
             }
-            $this->config_file_address = $config_file_address;
-            $c = new \iMVC\Tools\Config();
+            $c = new \iMVC\kernel\utilities\config();
             $c->Load($config_file_address, true, RUNNING_ENV);
     __END:
-            if(!isset($GLOBALS[CONFIGS]['imvc']['modules']['path']))
-                $mp = IMVC_PATH.'/../modules/';
-            else 
-            {
-                $mp = IMVC_PATH."/../".$GLOBALS[CONFIGS]['imvc']['modules']['path'];
-            }
-            defined('MODULE_PATH') || define('MODULE_PATH', realpath($mp)."/");
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(iMVC_ROOT.'/../modules/')."/");
             $this->_startup_invoked = true;
-	}
-
+            return $this;
+    }
+    
+    public function SetConfigFile($address)
+    {
+        $address = \iMVC\kernel\utilities\fileSystem::resolve_path($address);
+        if(!$address)
+            throw new \iMVC\exceptions\notFoundException("Config file does not exists ...");
+        self::$config_file_address = $address;
+        return $this;
+    }
 }
 ?>
