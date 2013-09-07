@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\exceptions;
+namespace iMVC\kernel\exceptions;
 require_once 'appException.php';
 
 /**

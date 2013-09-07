@@ -15,7 +15,7 @@ class config extends \iMVC\baseiMVC
     public function __construct($file_address)
     {
         if(!($file_address = fileSystem::resolve_path($file_address)))
-            throw new \iMVC\exceptions\notFoundException("The config file does not exists...");
+            throw new \iMVC\kernel\exceptions\notFoundException("The config file does not exists...");
         $this->file_address = $file_address;
     }
     /**
@@ -58,7 +58,7 @@ __RETURN:
     {
         $xf = new \iMVC\kernel\caching\xCache(__CLASS__);
         if(!$xf->isCached(self::$load_cache_sig))
-            throw new \iMVC\exceptions\invalideOperationException("The config file has not been loaded");
+            throw new \iMVC\kernel\exceptions\invalideOperationException("The config file has not been loaded");
         $c = $xf->retrieve(self::$load_cache_sig);
         return $c->config;
     }

@@ -150,7 +150,7 @@ class request extends \iMVC\baseiMVC
         /**
         * Fetch module name according to URI
         * @return type
-        * @throws \iMVC\exceptions\notFoundException
+        * @throws \iMVC\kernel\exceptions\notFoundException
         */
 	protected function RetrieveModuleName()
 	{
@@ -198,8 +198,7 @@ __LOAD_MODULES:
                 # add current module into our module collections
                 # except default module every other module
                 # has namespace with the module's name prefix
-                $m = new \iMVC\kernel\mvc\module(basename($module));
-                $m->SetPath(realpath($module));
+                $m = new \iMVC\kernel\mvc\module(basename($module), $module);
                 $mc->modules[] = $m;
             }
             # now module collection is ready
@@ -220,7 +219,7 @@ __FETCHING_MODULES:
                         # delete cached data
                         $xc->eraseAll();
                         # throw exception
-                        throw new \iMVC\exceptions\notFoundException("Wired! `{$module->module_name}` not found at `{$module->module_path}`");
+                        throw new \iMVC\kernel\exceptions\notFoundException("Wired! `{$module->module_name}` not found at `{$module->module_path}`");
                     }
                     # saving target modules
                     $this->module = $module;
@@ -255,7 +254,7 @@ __FETCHING_MODULES:
             if(!$this->controller->Load() || !$this->controller->CheckControllerExists())
             {
                 # we don't have our class
-                throw new \iMVC\exceptions\notFoundException("The controller `{$this->controller->full_name}` does not exists");
+                throw new \iMVC\kernel\exceptions\notFoundException("The controller `{$this->controller->full_name}` does not exists");
             }
             if(!$this->controller->IsValid())
             {
@@ -282,12 +281,12 @@ __FETCHING_MODULES:
             elseif(!method_exists($this->controller->GetInstance(), "indexAction"))
             {
                 # throw exception
-                throw new \iMVC\exceptions\notFoundException("Ambiguous action call");
+                throw new \iMVC\kernel\exceptions\notFoundException("Ambiguous action call");
             }
             # validating the action
             if(!$this->action->IsActionCallable())
             {
-                throw new \iMVC\exceptions\invalideOperationException("The action `{$this->action->full_name}` is not callable!");
+                throw new \iMVC\kernel\exceptions\invalideOperationException("The action `{$this->action->full_name}` is not callable!");
             }
 	}
 
@@ -340,7 +339,7 @@ __FETCHING_MODULES:
         */
         public function GetIndexedParam($index)
         {
-            if(!is_integer($index)) throw new \iMVC\exceptions\invalideArgumentException;
+            if(!is_integer($index)) throw new \iMVC\kernel\exceptions\invalideArgumentException;
             return $this->indexed_param[$index];
         }
 

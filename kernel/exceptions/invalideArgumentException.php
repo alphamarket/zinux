@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\exceptions;
+namespace iMVC\kernel\exceptions;
 
 require_once ('appException.php');
 
@@ -9,7 +9,7 @@ require_once ('appException.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:23
  */
-class invalideOperationException extends appException
+class invalideArgumentException extends appException
 {
 
 	/**
@@ -20,9 +20,9 @@ class invalideOperationException extends appException
 	 */
 	function __construct($message = null, $code = null, $previous = null)
 	{
-            parent::__construct(isset($message) && strlen($message)?$message:"Invalide Operation.", $code, $previous);
+            parent::__construct(isset($message) && strlen($message)?$message:"Invalid Argument.", $code, $previous);
             $this->SendErrorCode(500);
-        }
-	
+	}
+
 }
 ?>
