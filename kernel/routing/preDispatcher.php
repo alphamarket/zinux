@@ -13,31 +13,69 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
 class preDispatcher extends \iMVC\baseiMVC
 {
 
-	function __construct()
-	{
-	}
+    function __construct()
+    {
+    }
 
-	function __destruct()
-	{
-	}
+    function __destruct()
+    {
+    }
 
-        public function Initiate()
+    public function Initiate()
+    {
+        ;
+    }
+    public function Dispose()
+    {
+        parent::Dispose();
+    }
+
+    /**
+     * Initiate the pre-dispacther processes
+     * 
+     * @param request
+     */
+    public function Process(request $request)
+    {
+        $request->Process();
+        $this->RunBootstarp($request);
+    }
+    /**
+     * Runs every function in {MODULE}\BootStrap.php function which end with 'Init' or starts with 'pre_' in function's name
+     * @param Request $request 
+     */
+    protected function RunBootstarp(request &$request)
+    {
+        # both possible naming for bootstrap
+        $bsfiles_path = array();
+        $bsfiles_path[] = array($request->module->full_name, $request->module->GetPath()."/{$request->module->full_name}Bootstrap.php");
+        $bsfiles_path[] = array($request->module->name, $request->module->GetPath()."/{$request->module->name}Bootstrap.php");
+        foreach($bsfiles_path as $bs)
         {
-            ;
+            $bs[1] = \iMVC\kernel\utilities\fileSystem::resolve_path($bs[1]);
+            if(file_exists($bs[1]))
+            {
+                require_once $bs[1];
+                $cname = "{$request->module->GetNameSpace()}\\{$bs[0]}Bootstrap";
+                if(class_exists($cname))
+                {
+                    $c = new $cname;
+                    $m = get_class_methods($c);
+                    foreach($m as $method)
+                    {
+                        if(\iMVC\kernel\utilities\string::endsWith(strtoupper($method), "INIT") || \iMVC\kernel\utilities\string::startsWith(strtoupper($method),"PRE_"))
+                        {
+                            if(!is_callable(array($c, $method)))
+                            {
+                                trigger_error("The method $method found in bootstrap file `{$bs[1]}` but is not callable");
+                            }
+                            else
+                                $c->$method($request);
+                        }
+                    }
+                }
+            }  
         }
-        public function Dispose()
-        {
-            parent::Dispose();
-        }
-
-	/**
-	 * Initiate the pre-dispacther processes
-	 * 
-	 * @param request
-	 */
-	public function Process(request $request)
-	{
-            $request->Process();
-	}
+    }
 }
 ?>
