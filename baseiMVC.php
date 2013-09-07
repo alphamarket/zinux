@@ -11,16 +11,14 @@ if(!defined("iMVC_INCLUDE_PATH_SET"))
 if(!defined("IMVC_AUTOLOAD"))
 {
     define("IMVC_AUTOLOAD", 1);
-    //chdir(realpath(dirname(__FILE__)));
-    
     spl_autoload_register(
         function ($class) {
             if(strpos($class, "iMVC")===false) return;
             $r = explode("\\", $class);
             unset($r[0]);
             $c = implode(DIRECTORY_SEPARATOR, $r);
-            $f=iMVC_ROOT."$c.php";
-            require_once $f;
+            require_once iMVC_ROOT.'kernel/utilities/fileSystem.php';
+            require_once kernel\utilities\fileSystem::resolve_path(iMVC_ROOT."$c.php");
         },1,1);
 }
 
@@ -32,12 +30,6 @@ if(!defined("IMVC_AUTOLOAD"))
  */
 abstract class baseiMVC extends \stdClass
 {
-
-	/**
-	 * A security class instance
-	 */
-	protected $security;
-
 	function __construct()
 	{
 	}
@@ -45,8 +37,6 @@ abstract class baseiMVC extends \stdClass
 	function __destruct()
 	{
 	}
-
-
 
 	/**
 	 * This will dispose any temp attributes which added by __set()
