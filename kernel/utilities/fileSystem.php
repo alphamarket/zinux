@@ -18,12 +18,12 @@ class fileSystem extends \iMVC\baseiMVC
         # create a cache signiture
         $cache_sig = __METHOD__."@$path";
         # open the cache file
-        $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
+        $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
         # check cache file and validate it
-        if($fc->isCached($cache_sig) && file_exists($fc->retrieve($cache_sig)))
+        if($xc->isCached($cache_sig) && file_exists($xc->retrieve($cache_sig)))
         {
             # it was a HIT!
-            return $fc->retrieve($cache_sig);
+            return $xc->retrieve($cache_sig);
         }
         # if it is ab
         $is_absolute_path = ($path[0] == DIRECTORY_SEPARATOR);
@@ -71,7 +71,7 @@ class fileSystem extends \iMVC\baseiMVC
             }
         }
         # cache the result
-        $fc->store($cache_sig, $resolved_path);
+        $xc->store($cache_sig, $resolved_path);
         # retrun the resolved path
         return $resolved_path;
     }
