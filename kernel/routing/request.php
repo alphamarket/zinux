@@ -137,9 +137,7 @@ class request extends \iMVC\baseiMVC
             /*
              * Normalizing the $this->_parts arrays
              */
-            $this->_parts = array_filter($this->_parts, 'strlen');
-            $this->_parts = count($this->_parts)? array_chunk($this->_parts, count($this->_parts)) : array();
-            $this->_parts = count($this->_parts)? $this->_parts[0] : array();
+            \iMVC\kernel\utilities\_array::array_normalize($this->_parts);
             # fetch page type
             if(count($this->_parts) && \iMVC\kernel\utilities\string::Contains($this->_parts[count($this->_parts)-1], "."))
             {
