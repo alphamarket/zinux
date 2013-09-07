@@ -86,7 +86,7 @@ class application extends \iMVC\baseiMVC
                 define('RUNNING_ENV', "DEVELOPMENT");
             }
             $c = new \iMVC\kernel\utilities\config($config_file_address);
-            $c->Load(RUNNING_ENV);
+            $c->Load(RUNNING_ENV, true);
     __END:
             defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(iMVC_ROOT.'/../modules/')."/");
             $this->_startup_invoked = true;

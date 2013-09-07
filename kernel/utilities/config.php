@@ -27,7 +27,7 @@ class config extends \iMVC\baseiMVC
      */
     public function Load($section_name = null, $process_sections = false)
     {
-        self::$load_cache_sig = __METHOD__."@".\iMVC\kernel\security\hash::Generate($this->file_address.$process_sections.$section_name);
+        self::$load_cache_sig = __METHOD__."@".$section_name.\iMVC\kernel\security\hash::Generate($this->file_address.$process_sections);
          # open cache
         $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
         if($xc->isCached(self::$load_cache_sig))
