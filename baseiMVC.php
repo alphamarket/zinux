@@ -13,14 +13,20 @@ if(!defined("IMVC_AUTOLOAD"))
     define("IMVC_AUTOLOAD", 1);
     spl_autoload_register(
         function ($class) {
-            if(strpos($class, "iMVC")===false) return;
             $r = explode("\\", $class);
             unset($r[0]);
             $c = implode(DIRECTORY_SEPARATOR, $r);
             require_once iMVC_ROOT.'kernel/utilities/fileSystem.php';
             $f = kernel\utilities\fileSystem::resolve_path(iMVC_ROOT."$c.php");
             if(!file_exists($f))
-                die("could not found `$class` file");
+            {
+                # it does not has iMVC substring 
+                # maybe there is an other loader for this
+                if(strpos($class, "iMVC")===false) return;
+                $msg = "could not find `$class` file";
+                echo ($msg."<br />");
+                \iMVC\kernel\utilities\debug::stack_trace(1);
+            }
             require_once $f;
         },1,1);
 }

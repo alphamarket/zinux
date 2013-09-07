@@ -9,6 +9,15 @@ require_once dirname(__FILE__).'/../../baseiMVC.php';
  */
 class fileSystem extends \iMVC\baseiMVC
 {
+    /**
+     * Get all stored all data that cached buy this class
+     * @return array
+     */
+    public static function GetCaches()
+    {
+        $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
+        return $fc->retrieveAll();
+    }
     public static function resolve_path($path)
     {
         # check if string is valid
@@ -28,10 +37,8 @@ class fileSystem extends \iMVC\baseiMVC
         # if it is ab
         $is_absolute_path = ($path[0] == DIRECTORY_SEPARATOR);
         # depart the path
-        $path_parts = array_filter(explode(DIRECTORY_SEPARATOR, strtolower($path)));
         # normalizing array's parts
-        $path_parts = count($path_parts)? array_chunk($path_parts, count($path_parts)) : array();
-        $path_parts = count($path_parts[0])?$path_parts[0]:array();
+        $path_parts = _array::array_normalize(explode(DIRECTORY_SEPARATOR, strtolower($path)));
         # UNIX fs style
         $resolved_path = $is_absolute_path ? "" : ".";
         # WINNT fs style

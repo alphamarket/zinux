@@ -54,4 +54,9 @@ class view extends mvc
     {
         return $this->relative_module->GetNameSpace()."\\view";
     }
+    
+    public function Load()
+    {
+        return require $this->GetPath();
+    }
 }

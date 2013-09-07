@@ -45,9 +45,15 @@ abstract class mvc extends \iMVC\baseiMVC
     
     public function GetExtention(){ return $this->extension; }
     
-    public function  SetPath($path)
+    public function  SetPath($path, $validate = 1)
     {
         $this->path = \iMVC\kernel\utilities\fileSystem::resolve_path($path);
+        if($validate && !file_exists($this->path))
+        {
+            throw new \iMVC\exceptions\notFoundException("`{$path}` does not exists ...");
+        }
     }
     public function GetPath(){ return $this->path; }
+    
+    public function Load(){ return require_once $this->GetPath(); }
 }

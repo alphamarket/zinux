@@ -43,6 +43,10 @@ class controller extends mvc
     {
         return $this->GetNameSpace()."\\".$this->full_name;
     }
+    public function IsValid()
+    {
+        return ($this->CheckControllerExists() && $this->GetInstance() instanceof \iMVC\kernel\controller\baseController);
+    }
     /**
      * 
      * @return \iMVC\kernel\controller\baseController

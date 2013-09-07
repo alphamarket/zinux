@@ -25,7 +25,7 @@ class baseLayout extends \iMVC\baseiMVC
          *  holds layout instance
          * @var \iMVC\kernel\mvc\layout 
          */
-        public $layout;
+        public $meta;
 	/**
 	 * Options settings
 	 */
@@ -118,14 +118,6 @@ class baseLayout extends \iMVC\baseiMVC
             if(isset($this->MetaImports[$name]) && !$overwrite_on_existance) return;
             $this->MetaImports[$name] = array('content' =>$content, 'options' => $options);
 	}
-	/**
-	 * Get layout full path
-	 */
-	public function GetLayoutPath()
-	{
-            return $this->layout->GetPath();
-	}
-
 	/**
 	 * Check status of view suppression
 	 */
@@ -224,14 +216,16 @@ class baseLayout extends \iMVC\baseiMVC
 	{
             if(!$this->layout_rendered)
             {
-                if(!file_exists($this->GetLayoutPath()))
+                if(!file_exists($this->metadata->GetPath()))
                 {
-                    echo "<center><h2>Layout not loaded ...<br />The layout '".$this->GetLayoutName ()."' not found!</center></h2>";
+                    echo "<center><h2>Layout not loaded ...<br />The layout '".$this->metadata->full_name."' not found!</center></h2>";
                     $this->SuppressLayout();
                 }
                 if(!$this->view->IsViewSuppressed() && !$this->IsLayoutSuppressed())
                 {
-                    require $this->GetLayoutPath();
+                    # we cannot use $this->metadata->Load(); 'cause then the layout's 
+                    # file would operate unser \iMVC\kernel\mvc\layout instance!!
+                    require $this->metadata->GetPath();
                 }
                 else
                     echo $this->content;
@@ -283,13 +277,8 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function SetLayout($name)
 	{
-            $this->layout = new \iMVC\kernel\mvc\layout($name, $this->request->module);
+            $this->metadata =  new \iMVC\kernel\mvc\layout($name, $this->request->module);
 	}
-        public function GetLayoutName ()
-        {
-            return $this->layout->full_name;
-        }
-
 	/**
 	 * change layout suppression status
 	 * 
