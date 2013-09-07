@@ -13,25 +13,26 @@ abstract class baseController extends \iMVC\baseiMVC
 {
 
 	/**
-	 * Holds current layout handler's instance
-	 */
-	protected $layout;
+        * Holds current layout handler's instance
+        *
+        * @var \iMVC\kernel\layout\baseLayout
+        */
+	public $layout;
 	/**
-	 * Holds current request instance
-	 */
-	protected $request;
+        * Holds current request instance
+        *
+        * @var \iMVC\kernel\routing\request
+        */
+	public $request;
 	/**
-	 * Holds current view handler's instance
-	 */
-	protected $view;
+        * Holds current view handler's instance
+        *
+        * @var \iMVC\kernel\view\baseView
+        */
+	public $view;
 
 	function __construct()
 	{
-	}
-
-	function __destruct()
-	{
-            $this->Dispose();
 	}
    
         public function Initiate()
@@ -42,7 +43,6 @@ abstract class baseController extends \iMVC\baseiMVC
         }
         public function Dispose()
         {
-            $this->request->Dispose();
             $this->view->Dispose();
             $this->layout->Dispose();
             parent::Dispose();   
