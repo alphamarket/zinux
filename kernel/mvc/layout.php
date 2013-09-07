@@ -32,11 +32,16 @@ class layout extends mvc
             DIRECTORY_SEPARATOR.
             "layout".
             DIRECTORY_SEPARATOR.
-            "{$this->full_name}{$this->extension}");
+            "{$this->full_name}{$this->extension}", 0);
     }
 
     public function GetNameSpace()
     {
         return $this->relative_module->GetNameSpace()."\\layout";
+    }
+    
+    public function Load()
+    {
+        require $this->GetPath();
     }
 }
