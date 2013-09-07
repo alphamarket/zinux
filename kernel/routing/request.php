@@ -237,44 +237,27 @@ __FETCHING_MODULES:
 	protected function RetrieveControllerName()
 	{
             # default controller
-            $this->controller = new \iMVC\kernel\mvc\controller("index", $this->module);
-            # controller directory name
-            $controller_dir = $this->controller->GetRootDirectory();
-            # foreach file in controller's directory
-            foreach (array_diff(scandir($controller_dir), array(".", "..")) as $file)
+            $this->controller = new \iMVC\kernel\mvc\controller("Index", $this->module);
+            # head for locating controller
+            if(isset($this->_parts[0]) &&
+                ($file = \iMVC\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory().$this->_parts[0]."Controller.php")))
             {
-                # we are looking for files
-                if(!is_file($controller_dir.$file)) continue;
-                # we now processing a file
-                if(isset($this->_parts[0]) && (strtolower($this->_parts[0]."controller.php") == strtolower($file)))
-                {
-                    
-                    # updating target controller's info
-                    $this->controller = new \iMVC\kernel\mvc\controller(preg_replace('/controller.php/i',"", $file), $this->module);
-                    $this->controller->full_name = preg_replace('/.php/i',"", $file);
-                    
-                    # this is break is imprtant 
-                    # otherwise the controller info can get 
-                    # overwritten  by following `elseif` statement
-                    break;  
-                }
-                # try to locate the actual indexController IO address
-                elseif(strtolower("indexcontroller.php") == strtolower($file))
-                {
-                    $this->controller = new \iMVC\kernel\mvc\controller(preg_replace('/controller.php/i',"", $file), $this->module);
-                    $this->controller->full_name = preg_replace('/.php/i',"", $file);
-                }
+                # updating target controller's info
+                $this->controller = new \iMVC\kernel\mvc\controller($this->_parts[0], $this->module);
+            }
+            # try to locate the actual indexController IO address
+            elseif(($file = \iMVC\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory()."IndexController.php")))
+            {
+                $this->controller = new \iMVC\kernel\mvc\controller("Index", $this->module);
             }
             # we found target file
-            # checking for class declaration
-            require_once $this->controller->GetPath();
             # validating controller
-            if(!$this->controller->CheckControllerExists())
+            if(!$this->controller->Load() || !$this->controller->CheckControllerExists())
             {
                 # we don't have our class
                 throw new \iMVC\exceptions\notFoundException("The controller `{$this->controller->full_name}` does not exists");
             }
-            if(!($this->controller->GetInstance() instanceof \iMVC\kernel\controller\baseController))
+            if(!$this->controller->IsValid())
             {
                 throw new \ReflectionException("The controller `{$this->controller->full_name}` is not instanceof `\iMVC\kernel\controller\baseController`");
             }
