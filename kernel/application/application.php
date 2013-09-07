@@ -102,7 +102,7 @@ class application extends \iMVC\baseiMVC
     {
         $address = \iMVC\kernel\utilities\fileSystem::resolve_path($address);
         if(!$address)
-            throw new \iMVC\exceptions\notFoundException("Config file does not exists ...");
+            throw new \iMVC\kernel\exceptions\notFoundException("Config file does not exists ...");
         self::$config_file_address = $address;
         return $this;
     }

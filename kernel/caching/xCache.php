@@ -48,9 +48,9 @@ class xCache extends cache
      * 
      * @return mixed
      */
-    protected function _loadCache() { throw new \iMVC\exceptions\notImplementedException; }
+    protected function _loadCache() { throw new \iMVC\kernel\exceptions\notImplementedException; }
 
-    protected function _saveData(array $cacheData){ throw new \iMVC\exceptions\notImplementedException; }
+    protected function _saveData(array $cacheData){ throw new \iMVC\kernel\exceptions\notImplementedException; }
     
     public function store($key, $data, $expiration = 0)
     {

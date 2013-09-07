@@ -118,7 +118,7 @@ class baseView extends \iMVC\baseiMVC
             }
             else
             {
-                throw new iMVC\Exceptions\AppException("The view has been rendered previously...");
+                throw new iMVC\kernel\exceptions\AppException("The view has been rendered previously...");
             }
             $this->view_rendered = true;
 	}
@@ -132,7 +132,7 @@ class baseView extends \iMVC\baseiMVC
 	public function RenderPartial(string $view_name, array $partial_view_params = array())
 	{
             if($view_name == $this->request->view)
-                throw new \iMVC\Exceptions\InvalideOperationException("Cannot partially load the currently loaded view...");
+                throw new \iMVC\kernel\exceptions\InvalideOperationException("Cannot partially load the currently loaded view...");
 
             // create a fake view handler
             $nv = new \iMVC\View\BaseView($this->request);

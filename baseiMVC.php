@@ -17,7 +17,9 @@ if(!defined("IMVC_ROOT") || !defined('PROJECT_ROOT'))
             $c = str_replace("\\", DIRECTORY_SEPARATOR, $class);
             require_once 'kernel/utilities/fileSystem.php';
             # include once the class' file using dynamic path finder!
-            include_once kernel\utilities\fileSystem::resolve_path(PROJECT_ROOT.$c.".php");
+            $path = kernel\utilities\fileSystem::resolve_path(PROJECT_ROOT.$c.".php");
+            if($path)
+                include_once $path;
         },1,1);
 }
 
