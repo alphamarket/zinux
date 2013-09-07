@@ -8,4 +8,4 @@
 + kernel/layout/*
 + kernel/view/*
 + kernel/security/*
-+ kernel/routing/request.php
++ kernel/routing/*
