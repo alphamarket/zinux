@@ -157,7 +157,7 @@ class request extends \iMVC\baseiMVC
 __LOADING_CACHE:
             # all folders in ../modules folders considered a module folder
             # define module root dir
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(iMVC_ROOT.'/../modules/')."/");
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(IMVC_ROOT.'/../modules/')."/");
             # define default module
             $this->module = new \iMVC\kernel\mvc\module("default", MODULE_ROOT."defaultModule");
             $module_dir = dirname($this->module->GetPath());
