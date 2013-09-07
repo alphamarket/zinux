@@ -22,18 +22,7 @@ class appException extends \Exception
 	function __construct($message = null, $code = null, $previous = null)
 	{
             parent::__construct($message, $code, $previous);
-            try
-            {
-                throw new \Exception();
-            }
-            catch(\Exception $e)
-            {
-                $p = explode("\n", $e->getTraceAsString());
-                $s = "";
-                for($i=1;$i<count($p);$i++)
-                    $s .= $p[$i].'<br />';
-                $this->stack_trace = $s;
-            }
+            $this->stack_trace = preg_replace("/\n/i", "<br />", parent::getTraceAsString());
 	}
 	
 	function __destruct()
