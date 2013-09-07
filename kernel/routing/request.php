@@ -4,34 +4,6 @@ namespace iMVC\kernel\routing;
 require_once (dirname(__FILE__).'/../../baseiMVC.php');
 
 /**
- * A class that holds MVC entities info
- */
-class entity
-{
-    /**
-     * the entity's name
-     * @var string
-     */
-    public $name;
-    /**
-     * the entity's namespace
-     * @var string
-     */
-    public $namespace;
-    /**
-     * the entity's path
-     * @var string
-     */
-    public $path;
-        
-    public function __construct($name, $path, $namespace = "")
-    {
-        $this->name = $name;
-        $this->path = $path;
-        $this->namespace = $namespace;
-    }
-}
-/**
  * @author dariush
  * @version 1.0
  * @created 04-Sep-2013 15:50:24
@@ -40,29 +12,24 @@ class request extends \iMVC\baseiMVC
 {
         /**
         * hold relative module name with requested URI
-        * @var entity
+        * @var \iMVC\kernel\mvc\module
         */
 	public $module;
         /**
         * hold relative controller name with requested URI
-        * @var entity
+        * @var \iMVC\kernel\mvc\controller
         */
 	public $controller;
 	/**
         * hold relative action name with requested URI
-        * @var entity
+        * @var \iMVC\kernel\mvc\action
         */
 	public $action;
         /**
         * Holds correspond view's name
-        * @var entity
+        * @var \iMVC\kernel\mvc\view
         */
 	public $view;
-        /**
-        * relative namespace with current request
-        * @var string
-        */
-        public $namespace;
 	/**
         * Get requested uri string
         */
@@ -91,6 +58,11 @@ class request extends \iMVC\baseiMVC
         * hold params by index
         */
         protected $indexed_param;
+        /**
+         * check if current instance has been proccessed or not
+         * @var boolean
+         */
+        protected $is_proccessed;
          
 	function __construct()
 	{
@@ -107,12 +79,9 @@ class request extends \iMVC\baseiMVC
         public function Initiate()
         {
             $this->SetURI($_SERVER['REQUEST_URI']);
-            $this->module = new entity("default", iMVC_ROOT."../modules");
-            $this->controller = new entity("index", "{$this->module->path}/controllers/indexController.php");
-            $this->action = new entity("index", "indexAction");
-            $this->view = new entity("index", "{$this->module->path}/views/view/{$this->module->name}/indexView.phtml");
             $this->type = "html";
             $this->params = array();
+            $this->is_proccessed = false;
         }
 
 	/**
@@ -142,13 +111,15 @@ class request extends \iMVC\baseiMVC
         */
 	public function Process()
 	{
+            if($this->is_proccessed) 
+                return;
             $this->DepartURI();
             $this->RetrieveModuleName();
             $this->RetrieveControllerName();
             $this->RetrieveActionName();
             $this->RetrieveViewName();
-            $this->RetrieveNamespace();
             $this->RetriveParams();
+            $this->is_proccessed = true;
 	}
 
 	/**
@@ -170,7 +141,7 @@ class request extends \iMVC\baseiMVC
             $this->_parts = count($this->_parts)? array_chunk($this->_parts, count($this->_parts)) : array();
             $this->_parts = count($this->_parts)? $this->_parts[0] : array();
             # fetch page type
-            if(count($this->_parts) && \iMVC\utilities\string::Contains($this->_parts[count($this->_parts)-1], "."))
+            if(count($this->_parts) && \iMVC\kernel\utilities\string::Contains($this->_parts[count($this->_parts)-1], "."))
             {
                 $dpos = strpos($this->_parts[count($this->_parts)-1], ".");
                 $this->type = substr($this->_parts[count($this->_parts)-1], $dpos+ 1);
@@ -187,20 +158,18 @@ class request extends \iMVC\baseiMVC
 	{
 __LOADING_CACHE:
             # all folders in ../modules folders considered a module folder
-            $this->module = new entity("default", iMVC_ROOT."../modules/default");
-            $module_dir = dirname($this->module->path);
+            $this->module = new \iMVC\kernel\mvc\module("default", iMVC_ROOT."../modules/defaultModule");
+            $module_dir = dirname($this->module->GetPath());
             # module collection instance
             $mc = new \stdClass();
             # fail-safe for module dir existance
             if(!file_exists($module_dir))
                 die("Couldn't find modules directory");
-            # fetch all modules directory paths
+            # fetch all modules directory paths$name
             $modules = glob($module_dir."/*",GLOB_ONLYDIR);
             # fail-safe for module lackness
             if(!count($modules))
                 die("No module found.");
-            # if not parts provided picking up default module
-            if(!count($this->_parts)) return;
             # checking if modules has been cached or not
             $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
             if($fc->isCached(__METHOD__))
@@ -228,23 +197,28 @@ __LOAD_MODULES:
                 # add current module into our module collections
                 # except default module every other module
                 # has namespace with the module's name prefix
-                $mc->modules[] = new entity(
+                $m = new \iMVC\kernel\mvc\module(basename($module));
+                $m->SetPath(realpath($module));
+                $mc->modules[] = $m;
+                /*new entity(
                                                             basename($module), 
                                                             realpath($module), 
-                                                            strtolower(basename($module))=='default'?"":basename($module));
+                                                            strtolower(basename($module))=='default'?"":basename($module));*/
             }
             # now module collection is ready
             # caching module collections data
             $fc->store(__METHOD__, $mc);
             # fetching related modules accoring to requested URI
 __FETCHING_MODULES:
+            # if not parts provided picking up default module
+            if(!count($this->_parts)) return;
             foreach($mc->modules as $module)
             {
                 # checking if first part of URI matches with any modules
                 if(strtolower($module->name)==strtolower($this->_parts[0]))
                 {
                     # this is should NEVER ever MATCH TRUE condition
-                    if(!file_exists($module->path))
+                    if(!file_exists($module->GetPath()))
                     {
                         # delete cached data
                         $fc->eraseAll();
@@ -253,24 +227,12 @@ __FETCHING_MODULES:
                     }
                     # saving target modules
                     $this->module = $module;
-                    $this->namespace = $this->module->namespace;
                     # removing modules name from URI parts
                     array_shift($this->_parts);
                     break;
                 }
             }
 	}
-        /**
-        * Fetch relative namespace according to module's name
-        * @note the <b>default</b> module has no prefix namespace since the <i>default</i> is a keywork
-        */
-	protected function RetrieveNamespace()
-        {
-            $this->namespace = $this->module->namespace;
-            $this->controller->namespace = $this->namespace."\\controller";
-            $this->action->namespace = $this->namespace."\\controller";
-            $this->view->namespace = $this->namespace."\\view";
-        }
 
         /**
         * Fetch controller name according to URI
@@ -278,36 +240,46 @@ __FETCHING_MODULES:
 	protected function RetrieveControllerName()
 	{
             # default controller
-            $this->controller = new entity("index", "{$this->module->path}/controllers/indexController.php", $this->namespace."\\controller");
+            $this->controller = new \iMVC\kernel\mvc\controller("index", $this->module);
             # controller directory name
-            $controller_dir = dirname($this->controller->path)."/";
+            $controller_dir = $this->controller->GetRootDirectory();
             # foreach file in controller's directory
             foreach (array_diff(scandir($controller_dir), array(".", "..")) as $file)
             {
                 # we are looking for files
                 if(!is_file($controller_dir.$file)) continue;
                 # we now processing a file
-                if(isset($this->_parts[0]) && strtolower($this->_parts[0]."controller.php") == strtolower($file))
+                if(isset($this->_parts[0]) && (strtolower($this->_parts[0]."controller.php") == strtolower($file)))
                 {
-                    # updating target controller's info
-                    $this->controller->name = $this->_parts[0];
-                    $this->controller->path = dirname($this->controller->path)."/$file";
-                    break;
                     
+                    # updating target controller's info
+                    $this->controller = new \iMVC\kernel\mvc\controller(preg_replace('/controller.php/i',"", $file), $this->module);
+                    $this->controller->full_name = preg_replace('/.php/i',"", $file);
+                    
+                    # this is break is imprtant 
+                    # otherwise the controller info can get 
+                    # overwritten  by following `elseif` statement
+                    break;  
                 }
                 # try to locate the actual indexController IO address
                 elseif(strtolower("indexcontroller.php") == strtolower($file))
                 {
-                    $this->controller->path = dirname($this->controller->path)."/$file";  
+                    $this->controller = new \iMVC\kernel\mvc\controller(preg_replace('/controller.php/i',"", $file), $this->module);
+                    $this->controller->full_name = preg_replace('/.php/i',"", $file);
                 }
             }
             # we found target file
             # checking for class declaration
-            require_once $this->controller->path;
-            if(!class_exists("{$this->controller->namespace}\\{$this->controller->name}controller"))
+            require_once $this->controller->GetPath();
+            # validating controller
+            if(!$this->controller->CheckControllerExists())
             {
                 # we don't have our class
-                throw new \iMVC\exceptions\notFoundException("The controller `{$this->controller->name}` does not exists");
+                throw new \iMVC\exceptions\notFoundException("The controller `{$this->controller->full_name}` does not exists");
+            }
+            if(!($this->controller->GetInstance() instanceof \iMVC\kernel\controller\baseController))
+            {
+                throw new \ReflectionException("The controller `{$this->controller->full_name}` is not instanceof `\iMVC\kernel\controller\baseController`");
             }
             array_shift($this->_parts);
 	}
@@ -317,28 +289,25 @@ __FETCHING_MODULES:
         */
 	protected function RetrieveActionName()
 	{
-            $this->action = new entity("index", "indexAction", $this->namespace."\\controller");
-            # get controller class string
-            $controller = "{$this->action->namespace}\\{$this->controller->name}controller";
-            # the class' file required when trying locating controller
-            # so it should exists now
-            if(!class_exists($controller))
-                throw new \iMVC\exceptions\notFoundException("`$controller` not found!");
-            # create new instance of target class
-            $co = new $controller;
+            $this->action = new \iMVC\kernel\mvc\action("Index", $this->controller);
+            # the class is safe and loaded & checked in RetrieveControllerName
             # check for method existance
-            if(isset($this->_parts[0]) && method_exists($co, "{$this->_parts[0]}Action"))
+            if(isset($this->_parts[0]) && method_exists($this->controller->GetInstance(), "{$this->_parts[0]}Action"))
             {
                 # update action info
-                $this->action->name = $this->_parts[0];
-                $this->action->path = "{$this->_parts[0]}Action";
+                $this->action = new \iMVC\kernel\mvc\action("{$this->_parts[0]}Action", $this->controller);
                 array_shift($this->_parts);
             }
             # if also the index method does not exists 
-            elseif(!method_exists($co, "indexAction"))
+            elseif(!method_exists($this->controller->GetInstance(), "indexAction"))
             {
                 # throw exception
                 throw new \iMVC\exceptions\notFoundException("Ambiguous action call");
+            }
+            # validating the action
+            if(!$this->action->IsActionCallable())
+            {
+                throw new \iMVC\exceptions\invalideOperationException("The action `{$this->action->full_name}` is not callable!");
             }
 	}
 
@@ -348,9 +317,7 @@ __FETCHING_MODULES:
 	protected function RetrieveViewName()
 	{
             # we will gain view's info by info fetched for action 
-            $this->view = new entity($this->action->name, 
-                    "{$this->module->path}/views/view/{$this->controller->name}/{$this->action->name}View.pthml", 
-                    $this->namespace."\\view");
+            $this->view = new \iMVC\kernel\mvc\view($this->action->name, $this->action);
 	}
 
 	/**
@@ -413,6 +380,19 @@ __FETCHING_MODULES:
             # if it is not a POST the it is a GET
             return !$this->IsPOST();
 	}
-
+        /**
+         * Get instance of current related controller 
+         * @return \iMVC\kernel\controller\baseController
+         */
+        public function GetControllerInstance()
+        {
+            $r = $this;
+            $c = $r->controller->namespace.'\\'.$r->controller->name."Controller";
+            return new $c;
+        }
+        public function InvokeAction()
+        {
+            $c = $this->GetControllerInstance();
+            $c->$this->action->GetPath();
+        }
 }
-?>
