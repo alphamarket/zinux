@@ -1,13 +1,14 @@
 <?php
-namespace iMVC\utilities;
+namespace iMVC\kernel\utilities;
 
+require_once dirname(__FILE__).'/../../baseiMVC.php';
 
 /**
  * @author dariush
  * @version 1.0
  * @created 04-Sep-2013 15:50:21
  */
-class config
+class config extends \iMVC\baseiMVC
 {
 	/**
 	 * Fetch config file's values
@@ -22,5 +23,5 @@ class config
             return $GLOBALS[CONFIGS];
         }
 
+    public function Initiate(){}
 }
-?>

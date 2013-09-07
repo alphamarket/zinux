@@ -1,6 +1,7 @@
 <?php
-namespace iMVC\utilities;
+namespace iMVC\kernel\utilities;
 
+require_once dirname(__FILE__).'/../../baseiMVC.php';
 
 /**
 * Allows for multi-dimensional ini files.
@@ -47,7 +48,7 @@ namespace iMVC\utilities;
  * @version 1.0
  * @created 04-Sep-2013 15:50:22
  */
-class iniParser
+class iniParser extends \iMVC\baseiMVC
 {
 
 	/**
@@ -226,5 +227,6 @@ class iniParser
 
             return $a;
         }
+
+    public function Initiate(){}
 }
-?>

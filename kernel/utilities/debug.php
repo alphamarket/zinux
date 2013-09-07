@@ -1,13 +1,13 @@
 <?php
-namespace iMVC\utilities;
+namespace iMVC\kernel\utilities;
 
-
+require_once dirname(__FILE__).'/../../baseiMVC.php';
 /**
  * @author dariush
  * @version 1.0
  * @created 04-Sep-2013 15:50:22
  */
-class debug
+class debug extends \iMVC\baseiMVC
 {
 	/**
 	 * Debug passed varibale
@@ -42,21 +42,18 @@ class debug
             }
             catch(\Exception $e)
             {
-                $p = explode("\n", $e->getTraceAsString());
-                $s = "";
-                for($i=1;$i<count($p);$i++)
-                    $s .= $p[$i].'<br />';
-                self::_var($s,$die);
+                self::_var(preg_replace("/\n/i", "<br />", $e->getTraceAsString()),$die);
             }
 	}
 
 	/**
 	 * Do do back trace.
 	 */
-	public function backtrace()
+	public static function backtrace()
 	{
             self::_var(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),1);
 	}
 
+    public function Initiate(){}
 }
 ?>

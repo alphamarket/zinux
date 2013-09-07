@@ -1,6 +1,7 @@
 <?php
-namespace iMVC\utilities;
+namespace iMVC\kernel\utilities;
 
+require_once dirname(__FILE__).'/../../baseiMVC.php';
 
 /**
  * Some handy string operation goes here
@@ -8,7 +9,7 @@ namespace iMVC\utilities;
  * @version 1.0
  * @created 04-Sep-2013 15:50:24
  */
-class string
+class string extends \iMVC\baseiMVC
 {
      /**
         * Check if $haystack starts with $needle
@@ -18,7 +19,7 @@ class string
         */
        public static function startsWith($haystack, $needle)
        {
-           return !strncmp($haystack, $needle, strlen($needle));
+            return substr($haystack, 0, strlen($needle)) == $needle;
        }
        /**
         * Check if $haystack ends with $needle
@@ -26,14 +27,14 @@ class string
         * @param string $needle
         * @return boolean
         */
-       public static function endsWith($haystack, $needle)
+       public static function endsWith($haystack, $needle, $case_sensitive = 1)
        {
-           $length = strlen($needle);
-           if ($length == 0) {
-               return true;
-           }
-
-           return (substr($haystack, -$length) === $needle);
+            if(!$case_sensitive)
+            {
+                $haystack = strtolower($haystack);
+                $needle = strtolower($needle);
+            }
+            return substr($haystack, strlen($haystack) - strlen($needle)) == $needle;
        }
        /**
         * Check if $haystack contains $needle
@@ -46,5 +47,5 @@ class string
            return (strpos($haystack, $needle) !== false);
        }
 
+    public function Initiate(){}  
 }
-?>
