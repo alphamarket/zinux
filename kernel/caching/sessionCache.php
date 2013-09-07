@@ -5,6 +5,17 @@ require_once 'cache.php';
 class sessionCache extends cache
 {
     /**
+     * The path to the cache file folder
+     *
+     * @var string
+     */
+    protected static $_cachepath = '';
+    /**
+     * uses for internal cache upgrading
+     * @var type 
+     */
+    protected static $_soft_cache = array();
+    /**
      * The name of the default cache file
      *
      * @var string
@@ -35,6 +46,7 @@ class sessionCache extends cache
      * @return mixed
      */
     protected function _loadCache() {
+        $this->_cachepath = self::$_cachepath;
         if(!isset($_SESSION[$this->_cachepath][$this->_cachename]))
             return  false;
         $u = unserialize($_SESSION[$this->_cachepath][$this->_cachename]);
@@ -58,5 +70,25 @@ class sessionCache extends cache
     public function eraseAll()
     {
         unset($_SESSION[$this->_cachepath][$this->_cachename]);
+    }
+
+    /**
+     * Cache path Setter
+     * 
+     * @param string $path
+     * @return object
+     */
+    public function setCachePath($path) {
+        self::$_cachepath = $path;
+        return $this;
+    }
+
+    /**
+     * Cache path Getter
+     * 
+     * @return string
+     */
+    public function getCachePath() {
+        return self::$_cachepath;
     }
 }

@@ -5,11 +5,22 @@ require_once 'cache.php';
 class fileCache extends cache
 {
     /**
+     * The path to the cache file folder
+     *
+     * @var string
+     */
+    protected static $_cachepath = '';
+    /**
      * The cache file extension
      *
      * @var string
      */
     protected $_extension = '.cache';
+    /**
+     * uses for internal cache upgrading
+     * @var type 
+     */
+    protected static $_soft_cache = array();
 
     /**
      * Default constructor
@@ -23,7 +34,7 @@ class fileCache extends cache
         $path = self::$_cachepath;
         if(!isset($path) || !is_string($path) || !strlen($path))
         {
-            $path = sys_get_temp_dir()."/php-cache";
+            $path = sys_get_temp_dir()."/iMVC-cache";
             $this->setCachePath($path);
         }
     }
@@ -175,13 +186,22 @@ class fileCache extends cache
     {
         if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
             $path = $path.DIRECTORY_SEPARATOR;
-        self::$_cachepath = $path;
+        self::$_cachepath=$path;
     }
     
     public function setCachePath($path)
     {
         if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
             $path = $path.DIRECTORY_SEPARATOR;
-        return parent::setCachePath($path);
+        self::$_cachepath=$path;
+    }
+
+    /**
+     * Cache path Getter
+     * 
+     * @return string
+     */
+    public function getCachePath() {
+        return self::$_cachepath;
     }
 }

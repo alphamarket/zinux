@@ -13,23 +13,11 @@ namespace iMVC\kernel\caching;
 
 abstract class cache {
     /**
-     * The path to the cache file folder
-     *
-     * @var string
-     */
-    protected static $_cachepath = '';
-
-    /**
      * The name of the default cache file
      *
      * @var string
      */
     protected $_cachename = 'default';
-    /**
-     * uses for internal cache upgrading
-     * @var type 
-     */
-    protected static $_soft_cache = array();
     /**
      * saves cache data 
      */
@@ -189,19 +177,14 @@ abstract class cache {
      * @param string $path
      * @return object
      */
-    public function setCachePath($path) {
-        self::$_cachepath = $path;
-        return $this;
-    }
+    public abstract function setCachePath($path);
 
     /**
      * Cache path Getter
      * 
      * @return string
      */
-    public function getCachePath() {
-        return self::$_cachepath;
-    }
+    public abstract function getCachePath();
 
     /**
      * Cache name Setter
