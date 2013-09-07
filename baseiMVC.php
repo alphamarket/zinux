@@ -18,7 +18,10 @@ if(!defined("IMVC_AUTOLOAD"))
             unset($r[0]);
             $c = implode(DIRECTORY_SEPARATOR, $r);
             require_once iMVC_ROOT.'kernel/utilities/fileSystem.php';
-            require_once kernel\utilities\fileSystem::resolve_path(iMVC_ROOT."$c.php");
+            $f = kernel\utilities\fileSystem::resolve_path(iMVC_ROOT."$c.php");
+            if(!file_exists($f))
+                die("could not found `$class` file");
+            require_once $f;
         },1,1);
 }
 
