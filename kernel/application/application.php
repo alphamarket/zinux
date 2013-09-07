@@ -85,8 +85,8 @@ class application extends \iMVC\baseiMVC
                 trigger_error ("RUNNING_ENV is not defined; autosetting to DEVELOPMENT.");
                 define('RUNNING_ENV', "DEVELOPMENT");
             }
-            $c = new \iMVC\kernel\utilities\config();
-            $c->Load($config_file_address, true, RUNNING_ENV);
+            $c = new \iMVC\kernel\utilities\config($config_file_address);
+            $c->Load(RUNNING_ENV, true);
     __END:
             defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(iMVC_ROOT.'/../modules/')."/");
             $this->_startup_invoked = true;
