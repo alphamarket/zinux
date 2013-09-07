@@ -97,7 +97,7 @@ class httpRequest extends \iMVC\baseiMVC
             if(!\iMVC\kernel\utilities\string::Contains($this->uri, "?"))
                 $this->uri .= "?";
             $this->uri .= "&".http_build_query($this->GET);
-            $this->COOKIE = http_build_query($this->COOKIE);
+            $this->COOKIE = str_replace("&", "; ", http_build_query($this->COOKIE));
             $this->POST = http_build_query($this->POST);
 	}
 
