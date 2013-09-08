@@ -18,7 +18,7 @@ class fileSystem extends \iMVC\baseiMVC
         $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
         return $fc->retrieveAll();
     }
-    public static function resolve_path($path)
+    public static function resolve_path($path, $convert_to_real_path = 1)
     {
         # check if string is valid
         if(!strlen($path)) return FALSE;
@@ -80,6 +80,8 @@ class fileSystem extends \iMVC\baseiMVC
                 }
             }
         }
+        if($convert_to_real_path)
+            $resolved_path = realpath($resolved_path);
         # cache the result
         $xc->store($cache_sig, $resolved_path);
         # retrun the resolved path
