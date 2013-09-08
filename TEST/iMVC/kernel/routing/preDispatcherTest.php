@@ -32,51 +32,13 @@ class preDispatcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers iMVC\kernel\routing\preDispatcher::__destruct
-     * @todo   Implement test__destruct().
-     */
-    public function test__destruct()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers iMVC\kernel\routing\preDispatcher::Initiate
-     * @todo   Implement testInitiate().
-     */
-    public function testInitiate()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers iMVC\kernel\routing\preDispatcher::Dispose
-     * @todo   Implement testDispose().
-     */
-    public function testDispose()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers iMVC\kernel\routing\preDispatcher::Process
      * @todo   Implement testProcess().
      */
     public function testProcess()
     {
         // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->markTestSkipped("Skipping test for ".__METHOD__);
     }
 
 }

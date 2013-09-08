@@ -11,22 +11,7 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  */
 class dispatcher extends \iMVC\baseiMVC
 {
-
-	function __construct()
-	{
-            $this->Initiate();
-	}
-
-	function __destruct()
-	{
-	}
-
         public function Initiate() {}
-        
-        public function Dispose()
-        {
-            parent::Dispose();
-        }
         
 	/**
 	 * Initiate the dispacther processes
