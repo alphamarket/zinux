@@ -74,10 +74,11 @@ class fileCache extends cache
      * 
      * @return object
      */
-    public function eraseAll() {
-        $cacheDir = $this->getCacheFile();
-        # delete the cache file
-        unlink($cacheDir);
+    public function deleteAll() {
+        $cache = $this->getCacheFile();
+        if(file_exists($cache))
+            # delete the cache file
+            unlink($cache);
         # free the soft cache
         unset(self::$_soft_cache[$this->getCacheName()]);
         return $this;
@@ -189,13 +190,13 @@ class fileCache extends cache
         if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
             $path = $path.DIRECTORY_SEPARATOR;
         self::$_cachedirectory=$path;
+        $c = new self;
+        $c->_checkCacheDir();
     }
     
     public function setCachePath($path)
     {
-        if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
-            $path = $path.DIRECTORY_SEPARATOR;
-        self::$_cachedirectory=$path;
+        self::RegisterCachePath($path);
     }
 
     /**
@@ -205,5 +206,10 @@ class fileCache extends cache
      */
     public function getCacheDirectory() {
         return self::$_cachedirectory;
+    }
+    
+    public function setCacheName($name)
+    {
+        parent::setCacheName($name);
     }
 }
