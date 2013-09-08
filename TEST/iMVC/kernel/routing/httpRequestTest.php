@@ -19,7 +19,7 @@ class httpRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new httpRequest;
+        $this->object = new httpRequest("/");
     }
 
     /**
@@ -28,7 +28,6 @@ class httpRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        
     }
 
     /**

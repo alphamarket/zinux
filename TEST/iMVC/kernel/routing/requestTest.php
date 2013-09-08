@@ -19,7 +19,13 @@ class requestTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        $_SERVER['REQUEST_URI'] = "/";
         $this->object = new request;
+        $_POST['POST'] = "VALUE";
+        $_GET['this'] = "is";
+        $_GET['GET'] = "";
+        $this->object->SetURI("/user/auth/login/saad/sada.json?&this=is&GET=");
+        $this->object->Process();
     }
 
     /**
@@ -32,39 +38,13 @@ class requestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers iMVC\kernel\routing\request::__destruct
-     * @todo   Implement test__destruct().
-     */
-    public function test__destruct()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers iMVC\kernel\routing\request::Initiate
-     * @todo   Implement testInitiate().
-     */
-    public function testInitiate()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers iMVC\kernel\routing\request::SetURI
      * @todo   Implement testSetURI().
      */
     public function testSetURI()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals("/user/auth/login/saad/sada.json?&this=is&GET=", $this->object->GetURI());
+        $this->assertNotEquals("^/some/uri^", $this->object->GetURI());
     }
 
     /**
@@ -73,10 +53,7 @@ class requestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetURI()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->testSetURI();
     }
 
     /**
@@ -85,10 +62,32 @@ class requestTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcess()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        # uri is : /user/auth/login/saad/sada.json?&this=is&GET=
+        # post is : POST=VALUE
+        $this->assertAttributeInstanceOf('\iMVC\kernel\mvc\module', 'module', $this->object);
+        $this->assertAttributeInstanceOf('\iMVC\kernel\mvc\controller', 'controller', $this->object);
+        $this->assertAttributeInstanceOf('\iMVC\kernel\mvc\action', 'action', $this->object);
+        $this->assertAttributeInstanceOf('\iMVC\kernel\mvc\view', 'view', $this->object);
+        $this->assertEquals("usermodule", strtolower($this->object->module->full_name));
+        $this->assertEquals("authcontroller", strtolower($this->object->controller->full_name));
+        $this->assertEquals("loginaction", strtolower($this->object->action->full_name));
+        $this->assertEquals("loginview", strtolower($this->object->view->full_name));
+        $this->assertEquals("json", $this->object->type);
+        $this->assertNotEquals(".json", $this->object->type);
+        $this->assertNotEquals("some_other_type", $this->object->type);
+        $this->assertArrayHasKey("saad", $this->object->params);
+        $this->assertArrayHasKey("POST", $this->object->params);
+        $this->assertArrayHasKey("this", $this->object->params);
+        $this->assertArrayHasKey("GET", $this->object->params);
+        $this->assertEquals($this->object->params['saad'], "sada");
+        $this->assertEquals($this->object->params['POST'], "VALUE");
+        $this->assertEquals($this->object->params['this'], "is");
+        $this->assertEquals($this->object->params['GET'], "");
+        $this->assertNotContains('saad', $this->object->GET);
+        $this->assertNotContains('saad', $this->object->POST);
+        $this->assertEquals($this->object->POST['POST'], "VALUE");
+        $this->assertEquals($this->object->GET['this'], "is");
+        $this->assertEquals($this->object->GET['GET'], "");
     }
 
     /**
@@ -97,10 +96,14 @@ class requestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetIndexedParam()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals("saad", $this->object->GetIndexedParam(0));
+        $this->assertEquals("sada", $this->object->GetIndexedParam(1));
+        $this->assertEquals("this", $this->object->GetIndexedParam(2));
+        $this->assertEquals("is", $this->object->GetIndexedParam(3));
+        $this->assertEquals("GET", $this->object->GetIndexedParam(4));
+        $this->assertEquals("", $this->object->GetIndexedParam(5));
+        $this->assertEquals("POST", $this->object->GetIndexedParam(6));
+        $this->assertEquals("VALUE", $this->object->GetIndexedParam(7));
     }
 
     /**
@@ -109,10 +112,13 @@ class requestTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsPOST()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $_SERVER['REQUEST_METHOD'] = "POST";
+        $this->assertTrue($this->object->IsPOST());
+        $_SERVER['REQUEST_METHOD'] = "GET";
+        $this->assertFalse($this->object->IsPOST());
+        $_SERVER['REQUEST_METHOD'] = "FOO";
+        $this->assertFalse($this->object->IsPOST());
+        $_SERVER['REQUEST_METHOD'] = "";
     }
 
     /**
@@ -121,34 +127,12 @@ class requestTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsGET()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $_SERVER['REQUEST_METHOD'] = "POST";
+        $this->assertFalse($this->object->IsGET());
+        $_SERVER['REQUEST_METHOD'] = "GET";
+        $this->assertTrue($this->object->IsGET());
+        $_SERVER['REQUEST_METHOD'] = "FOO";
+        $this->assertFalse($this->object->IsGET());
+        $_SERVER['REQUEST_METHOD'] = "";
     }
-
-    /**
-     * @covers iMVC\kernel\routing\request::GetControllerInstance
-     * @todo   Implement testGetControllerInstance().
-     */
-    public function testGetControllerInstance()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers iMVC\kernel\routing\request::InvokeAction
-     * @todo   Implement testInvokeAction().
-     */
-    public function testInvokeAction()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
 }

@@ -4,4 +4,4 @@ if ! [ $EUID -eq 0 ]; then
         exit 1
 fi
 clear
-sudo phpunit --colors --bootstrap ./bootstrap.php  $*
+sudo phpunit --colors --bootstrap bootstrap.php  $*
