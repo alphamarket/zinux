@@ -1,33 +1,33 @@
 <?php
-namespace iMVC\kernel\routing;
+namespace zinux\kernel\routing;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 /**
  * @author dariush
  * @version 1.0
  * @created 04-Sep-2013 15:50:24
  */
-class request extends \iMVC\baseiMVC
+class request extends \zinux\baseZinux
 {
         /**
         * hold relative module name with requested URI
-        * @var \iMVC\kernel\mvc\module
+        * @var \zinux\kernel\mvc\module
         */
 	public $module;
         /**
         * hold relative controller name with requested URI
-        * @var \iMVC\kernel\mvc\controller
+        * @var \zinux\kernel\mvc\controller
         */
 	public $controller;
 	/**
         * hold relative action name with requested URI
-        * @var \iMVC\kernel\mvc\action
+        * @var \zinux\kernel\mvc\action
         */
 	public $action;
         /**
         * Holds correspond view's name
-        * @var \iMVC\kernel\mvc\view
+        * @var \zinux\kernel\mvc\view
         */
 	public $view;
 	/**
@@ -68,7 +68,7 @@ class request extends \iMVC\baseiMVC
 	{
             $this->Initiate();
             if($request)
-                throw new \iMVC\kernel\exceptions\notImplementedException;
+                throw new \zinux\kernel\exceptions\notImplementedException;
 	}
         /**
          * Initializing the instance
@@ -134,9 +134,9 @@ class request extends \iMVC\baseiMVC
             /*
              * Normalizing the $this->_parts arrays
              */
-            \iMVC\kernel\utilities\_array::array_normalize($this->_parts);
+            \zinux\kernel\utilities\_array::array_normalize($this->_parts);
             # fetch page type
-            if(count($this->_parts) && \iMVC\kernel\utilities\string::Contains($this->_parts[count($this->_parts)-1], "."))
+            if(count($this->_parts) && \zinux\kernel\utilities\string::Contains($this->_parts[count($this->_parts)-1], "."))
             {
                 $dpos = strpos($this->_parts[count($this->_parts)-1], ".");
                 $this->type = substr($this->_parts[count($this->_parts)-1], $dpos+ 1);
@@ -147,16 +147,16 @@ class request extends \iMVC\baseiMVC
         /**
         * Fetch module name according to URI
         * @return type
-        * @throws \iMVC\kernel\exceptions\notFoundException
+        * @throws \zinux\kernel\exceptions\notFoundException
         */
 	protected function FetchModuleName()
 	{
 __LOADING_CACHE:
             # all folders in ../modules folders considered a module folder
             # define module root dir
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(IMVC_ROOT.'/../modules/')."/");
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(zinux_ROOT.'/../modules/')."/");
             # define default module
-            $this->module = new \iMVC\kernel\mvc\module("default", MODULE_ROOT."defaultModule");
+            $this->module = new \zinux\kernel\mvc\module("default", MODULE_ROOT."defaultModule");
             $module_dir = dirname($this->module->GetPath());
             # module collection instance
             $mc = new \stdClass();
@@ -169,7 +169,7 @@ __LOADING_CACHE:
             if(!count($modules))
                 die("No module found.");
             # checking if modules has been cached or not
-            $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
+            $xc = new \zinux\kernel\caching\xCache(__CLASS__);
             if($xc->isCached(__METHOD__))
             {
                 # catch maintaining optz. 
@@ -195,7 +195,7 @@ __LOAD_MODULES:
                 # add current module into our module collections
                 # except default module every other module
                 # has namespace with the module's name prefix
-                $m = new \iMVC\kernel\mvc\module(basename($module), $module);
+                $m = new \zinux\kernel\mvc\module(basename($module), $module);
                 $mc->modules[] = $m;
             }
             # now module collection is ready
@@ -216,7 +216,7 @@ __FETCHING_MODULES:
                         # delete cached data
                         $xc->eraseAll();
                         # throw exception
-                        throw new \iMVC\kernel\exceptions\notFoundException("Wired! `{$module->module_name}` not found at `{$module->module_path}`");
+                        throw new \zinux\kernel\exceptions\notFoundException("Wired! `{$module->module_name}` not found at `{$module->module_path}`");
                     }
                     # saving target modules
                     $this->module = $module;
@@ -233,29 +233,29 @@ __FETCHING_MODULES:
 	protected function FetchControllerName()
 	{
             # default controller
-            $this->controller = new \iMVC\kernel\mvc\controller("Index", $this->module);
+            $this->controller = new \zinux\kernel\mvc\controller("Index", $this->module);
             # head for locating controller
             if(isset($this->_parts[0]) &&
-                ($file = \iMVC\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory().$this->_parts[0]."Controller.php")))
+                ($file = \zinux\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory().$this->_parts[0]."Controller.php")))
             {
                 # updating target controller's info
-                $this->controller = new \iMVC\kernel\mvc\controller($this->_parts[0], $this->module);
+                $this->controller = new \zinux\kernel\mvc\controller($this->_parts[0], $this->module);
             }
             # try to locate the actual indexController IO address
-            elseif(($file = \iMVC\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory()."IndexController.php")))
+            elseif(($file = \zinux\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory()."IndexController.php")))
             {
-                $this->controller = new \iMVC\kernel\mvc\controller("Index", $this->module);
+                $this->controller = new \zinux\kernel\mvc\controller("Index", $this->module);
             }
             # we found target file
             # validating controller
             if(!$this->controller->Load() || !$this->controller->CheckControllerExists())
             {
                 # we don't have our class
-                throw new \iMVC\kernel\exceptions\notFoundException("The controller `{$this->controller->full_name}` does not exists");
+                throw new \zinux\kernel\exceptions\notFoundException("The controller `{$this->controller->full_name}` does not exists");
             }
             if(!$this->controller->IsValid())
             {
-                throw new \ReflectionException("The controller `{$this->controller->full_name}` is not instanceof `\iMVC\kernel\controller\baseController`");
+                throw new \ReflectionException("The controller `{$this->controller->full_name}` is not instanceof `\zinux\kernel\controller\baseController`");
             }
             array_shift($this->_parts);
 	}
@@ -265,25 +265,25 @@ __FETCHING_MODULES:
         */
 	protected function FetchActionName()
 	{
-            $this->action = new \iMVC\kernel\mvc\action("Index", $this->controller);
+            $this->action = new \zinux\kernel\mvc\action("Index", $this->controller);
             # the class is safe and loaded & checked in FetchControllerName
             # check for method existance
             if(isset($this->_parts[0]) && method_exists($this->controller->GetInstance(), "{$this->_parts[0]}Action"))
             {
                 # update action info
-                $this->action = new \iMVC\kernel\mvc\action("{$this->_parts[0]}Action", $this->controller);
+                $this->action = new \zinux\kernel\mvc\action("{$this->_parts[0]}Action", $this->controller);
                 array_shift($this->_parts);
             }
             # if also the index method does not exists 
             elseif(!method_exists($this->controller->GetInstance(), "indexAction"))
             {
                 # throw exception
-                throw new \iMVC\kernel\exceptions\notFoundException("Ambiguous action call");
+                throw new \zinux\kernel\exceptions\notFoundException("Ambiguous action call");
             }
             # validating the action
             if(!$this->action->IsActionCallable())
             {
-                throw new \iMVC\kernel\exceptions\invalideOperationException("The action `{$this->action->full_name}` is not callable!");
+                throw new \zinux\kernel\exceptions\invalideOperationException("The action `{$this->action->full_name}` is not callable!");
             }
 	}
 
@@ -293,7 +293,7 @@ __FETCHING_MODULES:
 	protected function FetchViewName()
 	{
             # we will gain view's info by info fetched for action 
-            $this->view = new \iMVC\kernel\mvc\view($this->action->name, $this->action);
+            $this->view = new \zinux\kernel\mvc\view($this->action->name, $this->action);
 	}
 
 	/**
@@ -337,7 +337,7 @@ __FETCHING_MODULES:
         */
         public function GetIndexedParam($index)
         {
-            if(!is_integer($index)) throw new \iMVC\kernel\exceptions\invalideArgumentException;
+            if(!is_integer($index)) throw new \zinux\kernel\exceptions\invalideArgumentException;
             return $this->indexed_param[$index];
         }
         /**
@@ -347,7 +347,7 @@ __FETCHING_MODULES:
         */
         public function SetIndexedParam($index, $value)
         {
-            if(!is_integer($index)) throw new \iMVC\kernel\exceptions\invalideArgumentException;
+            if(!is_integer($index)) throw new \zinux\kernel\exceptions\invalideArgumentException;
             $this->indexed_param[$index] = $value;
         }
 

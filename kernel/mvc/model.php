@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\kernel\mvc;
+namespace zinux\kernel\mvc;
 
 require_once 'mvc.php';
 
@@ -47,11 +47,11 @@ class model extends mvc
     }
     public function IsValid()
     {
-        return ($this->CheckControllerExists() && $this->GetInstance() instanceof \iMVC\kernel\controller\baseModel);
+        return ($this->CheckControllerExists() && $this->GetInstance() instanceof \zinux\kernel\controller\baseModel);
     }
     /**
      * 
-     * @return \iMVC\kernel\model\baseModel
+     * @return \zinux\kernel\model\baseModel
      */
     public function GetInstance()
     {

@@ -1,7 +1,7 @@
 <?php
-namespace iMVC\kernel\routing;
+namespace zinux\kernel\routing;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 
 /**
@@ -9,7 +9,7 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:22
  */
-class dispatcher extends \iMVC\baseiMVC
+class dispatcher extends \zinux\baseZinux
 {
         public function Initiate() {}
         
@@ -28,9 +28,9 @@ class dispatcher extends \iMVC\baseiMVC
             // set request as a property in controller
             $c->request = $request;
             // set view object
-            $c->view = new \iMVC\kernel\view\baseView($request);
+            $c->view = new \zinux\kernel\view\baseView($request);
             // set layout object
-            $c->layout = new \iMVC\kernel\layout\baseLayout($c->view);
+            $c->layout = new \zinux\kernel\layout\baseLayout($c->view);
             $c->view->layout = $c->layout;
             // init controller
             $c->Initiate();

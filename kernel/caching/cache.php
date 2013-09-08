@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\kernel\caching;
+namespace zinux\kernel\caching;
 /**
  * Simple Cache class
  * API Documentation: https://github.com/cosenary/Simple-PHP-Cache

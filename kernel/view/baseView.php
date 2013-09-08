@@ -1,19 +1,19 @@
 <?php
-namespace iMVC\kernel\view;
+namespace zinux\kernel\view;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 /**
  * @author dariush
  * @version 1.0
  * @created 04-Sep-2013 17:24:30
  */
-class baseView extends \iMVC\baseiMVC
+class baseView extends \zinux\baseZinux
 {
 
     /**
     * Holds the current request instance 
-    * @var \iMVC\kernel\routing\request
+    * @var \zinux\kernel\routing\request
     */
     public $request;
     /**
@@ -39,7 +39,7 @@ class baseView extends \iMVC\baseiMVC
     public $helper;
     /**
      *
-     * @var \iMVC\kernel\mvc\view
+     * @var \zinux\kernel\mvc\view
      */
     public $metadata;
 
@@ -54,7 +54,7 @@ class baseView extends \iMVC\baseiMVC
 	/**
 	 * Construct a view instance according to passed request
 	 */
-	public function __construct(\iMVC\kernel\routing\request $request)
+	public function __construct(\zinux\kernel\routing\request $request)
 	{
             $request->Process();
             $this->Initiate();
@@ -109,7 +109,7 @@ class baseView extends \iMVC\baseiMVC
                 ob_start();
                     # invoking view's file
                     # we cannot use $this->metadata->Load(); 'cause then the view's 
-                    # file would operate unser \iMVC\kernel\mvc\view instance!!
+                    # file would operate unser \zinux\kernel\mvc\view instance!!
                     require $this->metadata->GetPath();
                     $this->content = ob_get_contents();
                 ob_end_clean();
@@ -118,7 +118,7 @@ class baseView extends \iMVC\baseiMVC
             }
             else
             {
-                throw new iMVC\kernel\exceptions\AppException("The view has been rendered previously...");
+                throw new zinux\kernel\exceptions\AppException("The view has been rendered previously...");
             }
             $this->view_rendered = true;
 	}
@@ -132,10 +132,10 @@ class baseView extends \iMVC\baseiMVC
 	public function RenderPartial(string $view_name, array $partial_view_params = array())
 	{
             if($view_name == $this->request->view)
-                throw new \iMVC\kernel\exceptions\InvalideOperationException("Cannot partially load the currently loaded view...");
+                throw new \zinux\kernel\exceptions\InvalideOperationException("Cannot partially load the currently loaded view...");
 
             // create a fake view handler
-            $nv = new \iMVC\View\BaseView($this->request);
+            $nv = new \zinux\View\BaseView($this->request);
             // set view's name
             $nv->SetView($view_name);
             // is any args are set load it.

@@ -1,9 +1,9 @@
 <?php
-namespace iMVC\kernel\utilities;
+namespace zinux\kernel\utilities;
 
-require_once dirname(__FILE__).'/../../baseiMVC.php';
+require_once dirname(__FILE__).'/../../baseZinux.php';
 
-class _array extends \iMVC\baseiMVC
+class _array extends \zinux\baseZinux
 {
     /**
      * normalizes the array items

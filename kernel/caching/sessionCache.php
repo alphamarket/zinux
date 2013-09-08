@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\kernel\caching;
+namespace zinux\kernel\caching;
 require_once 'cache.php';
 
 class sessionCache extends cache

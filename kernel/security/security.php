@@ -1,7 +1,7 @@
 <?php
-namespace iMVC\kernel\security;
+namespace zinux\kernel\security;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 
 /**
@@ -151,7 +151,7 @@ __THROW_EXCEPTION:
     /**
      * check if passed string is secured compatible operations in `GetSecureString()` function
      * 
-     * @param \iMVC\kernel\security\type $target_string
+     * @param \zinux\kernel\security\type $target_string
      * @param array $based_upon
      * @param type $has_expire_date
      */

@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\kernel\exceptions;
+namespace zinux\kernel\exceptions;
 
 require_once ('securityException.php');
 

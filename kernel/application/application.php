@@ -1,7 +1,7 @@
 <?php
-namespace iMVC\kernel\application;
+namespace zinux\kernel\application;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 
 /**
@@ -9,23 +9,23 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:20
  */
-class application extends \iMVC\baseiMVC
+class application extends \zinux\baseZinux
 {
     protected static $config_file_address = NULL;
     /**
      * db initializer instance
-     * @var \iMVC\kernel\db\basedbInitializer
+     * @var \zinux\kernel\db\basedbInitializer
      */
     protected $dbInit;
     
-    function __construct($module_path = "", \iMVC\kernel\db\basedbInitializer $dbi = NULL)
+    function __construct($module_path = "", \zinux\kernel\db\basedbInitializer $dbi = NULL)
     {
             $this->Initiate();
             
-            if(!file_exists(\iMVC\kernel\utilities\fileSystem::resolve_path($module_path)))
+            if(!file_exists(\zinux\kernel\utilities\fileSystem::resolve_path($module_path)))
                 die("Module directory not found!");
             
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path($module_path."/"));
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path($module_path."/"));
             
             $this->dbInit =$dbi;
     }
@@ -45,9 +45,9 @@ class application extends \iMVC\baseiMVC
                 trigger_error ("Application has not started up. running without configurations...");
                 $this->Startup ("");
             }
-            $r = new \iMVC\kernel\routing\router();
+            $r = new \zinux\kernel\routing\router();
 
-            $request = new \iMVC\kernel\routing\request();
+            $request = new \zinux\kernel\routing\request();
             
             $request->Process();
             
@@ -80,7 +80,7 @@ class application extends \iMVC\baseiMVC
     {
             if(!$config_file_address) 
             {
-                if(\iMVC\kernel\utilities\fileSystem::resolve_path(self::$config_file_address))
+                if(\zinux\kernel\utilities\fileSystem::resolve_path(self::$config_file_address))
                 {
                     $config_file_address = self::$config_file_address;
                 }
@@ -102,19 +102,19 @@ class application extends \iMVC\baseiMVC
                 trigger_error ("RUNNING_ENV is not defined; autosetting to DEVELOPMENT.");
                 define('RUNNING_ENV', "DEVELOPMENT");
             }
-            $c = new \iMVC\kernel\utilities\config($config_file_address);
+            $c = new \zinux\kernel\utilities\config($config_file_address);
             $c->Load(RUNNING_ENV, true);
     __END:
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path(IMVC_ROOT.'/../modules/')."/");
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(zinux_ROOT.'/../modules/')."/");
             $this->_startup_invoked = true;
             return $this;
     }
     
     public function SetConfigFile($address)
     {
-        $address = \iMVC\kernel\utilities\fileSystem::resolve_path($address);
+        $address = \zinux\kernel\utilities\fileSystem::resolve_path($address);
         if(!$address)
-            throw new \iMVC\kernel\exceptions\notFoundException("Config file does not exists ...");
+            throw new \zinux\kernel\exceptions\notFoundException("Config file does not exists ...");
         self::$config_file_address = $address;
         return $this;
     }

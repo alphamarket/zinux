@@ -1,6 +1,6 @@
 <?php
-namespace iMVC\kernel\layout;
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+namespace zinux\kernel\layout;
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 
 /**
@@ -8,22 +8,22 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 17:10:15
  */
-class baseLayout extends \iMVC\baseiMVC
+class baseLayout extends \zinux\baseZinux
 {
 
 	/**
 	 * View object related to layout
-         * @var \iMVC\kernel\view\baseView  
+         * @var \zinux\kernel\view\baseView  
 	 */
 	public $view;
 	/**
 	 * Holds the current request instance 
-         * @var \iMVC\kernel\routing\request
+         * @var \zinux\kernel\routing\request
          */
 	public $request;
         /**
          *  holds layout instance
-         * @var \iMVC\kernel\mvc\layout 
+         * @var \zinux\kernel\mvc\layout 
          */
         public $meta;
 	/**
@@ -51,7 +51,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	protected $suppress_layout = 0;
 
-	function __construct(\iMVC\kernel\view\baseView $view)
+	function __construct(\zinux\kernel\view\baseView $view)
 	{
             $this->view = $view;
             $this->request = $view->request;
@@ -224,7 +224,7 @@ class baseLayout extends \iMVC\baseiMVC
                 if(!$this->view->IsViewSuppressed() && !$this->IsLayoutSuppressed())
                 {
                     # we cannot use $this->metadata->Load(); 'cause then the layout's 
-                    # file would operate unser \iMVC\kernel\mvc\layout instance!!
+                    # file would operate unser \zinux\kernel\mvc\layout instance!!
                     require $this->metadata->GetPath();
                 }
                 else
@@ -277,7 +277,7 @@ class baseLayout extends \iMVC\baseiMVC
 	 */
 	public function SetLayout($name)
 	{
-            $this->metadata =  new \iMVC\kernel\mvc\layout($name, $this->request->module);
+            $this->metadata =  new \zinux\kernel\mvc\layout($name, $this->request->module);
 	}
 	/**
 	 * change layout suppression status

@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\kernel\security;
+namespace zinux\kernel\security;
 
 
 /**

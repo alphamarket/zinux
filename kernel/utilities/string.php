@@ -1,7 +1,7 @@
 <?php
-namespace iMVC\kernel\utilities;
+namespace zinux\kernel\utilities;
 
-require_once dirname(__FILE__).'/../../baseiMVC.php';
+require_once dirname(__FILE__).'/../../baseZinux.php';
 
 /**
  * Some handy string operation goes here
@@ -9,7 +9,7 @@ require_once dirname(__FILE__).'/../../baseiMVC.php';
  * @version 1.0
  * @created 04-Sep-2013 15:50:24
  */
-class string extends \iMVC\baseiMVC
+class string extends \zinux\baseZinux
 {
      /**
         * Check if $haystack starts with $needle

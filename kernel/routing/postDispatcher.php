@@ -1,8 +1,8 @@
 <?php
-namespace iMVC\kernel\routing;
+namespace zinux\kernel\routing;
 
 require_once 'request.php';
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 
 /**
@@ -10,7 +10,7 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:23
  */
-class postDispatcher extends \iMVC\baseiMVC
+class postDispatcher extends \zinux\baseZinux
 {
     public function Initiate()
     {
@@ -37,7 +37,7 @@ class postDispatcher extends \iMVC\baseiMVC
         $bsfiles_path[] = array($request->module->name, $request->module->GetPath()."/{$request->module->name}Bootstrap.php");
         foreach($bsfiles_path as $bs)
         {
-            $bs[1] = \iMVC\kernel\utilities\fileSystem::resolve_path($bs[1]);
+            $bs[1] = \zinux\kernel\utilities\fileSystem::resolve_path($bs[1]);
             if(file_exists($bs[1]))
             {
                 require_once $bs[1];
@@ -48,7 +48,7 @@ class postDispatcher extends \iMVC\baseiMVC
                     $m = get_class_methods($c);
                     foreach($m as $method)
                     {
-                        if(\iMVC\kernel\utilities\string::endsWith(strtoupper($method), "FINAL") || \iMVC\kernel\utilities\string::startsWith(strtoupper($method),"POST_"))
+                        if(\zinux\kernel\utilities\string::endsWith(strtoupper($method), "FINAL") || \zinux\kernel\utilities\string::startsWith(strtoupper($method),"POST_"))
                         {
                             if(!is_callable(array($c, $method)))
                             {

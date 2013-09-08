@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\kernel\mvc;
+namespace zinux\kernel\mvc;
 
 require_once 'mvc.php';
 /**

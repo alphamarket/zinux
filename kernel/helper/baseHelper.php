@@ -1,7 +1,7 @@
 <?php
-namespace iMVC\kernel\helper;
+namespace zinux\kernel\helper;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 
 /**
@@ -9,6 +9,6 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:21
  */
-abstract  class baseHelper extends \iMVC\baseiMVC
+abstract  class baseHelper extends \zinux\baseZinux
 {
 }

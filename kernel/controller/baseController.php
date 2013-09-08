@@ -1,7 +1,7 @@
 <?php
-namespace iMVC\kernel\controller;
+namespace zinux\kernel\controller;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 
 /**
@@ -9,25 +9,25 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:20
  */
-abstract class baseController extends \iMVC\baseiMVC
+abstract class baseController extends \zinux\baseZinux
 {
 
 	/**
         * Holds current layout handler's instance
         *
-        * @var \iMVC\kernel\layout\baseLayout
+        * @var \zinux\kernel\layout\baseLayout
         */
 	public $layout;
 	/**
         * Holds current request instance
         *
-        * @var \iMVC\kernel\routing\request
+        * @var \zinux\kernel\routing\request
         */
 	public $request;
 	/**
         * Holds current view handler's instance
         *
-        * @var \iMVC\kernel\view\baseView
+        * @var \zinux\kernel\view\baseView
         */
 	public $view;
 
@@ -37,9 +37,9 @@ abstract class baseController extends \iMVC\baseiMVC
    
         public function Initiate()
         {
-            $this->layout =  new \iMVC\kernel\layout\baseLayout();
-            $this->request = new \iMVC\kernel\routing\request();
-            $this->view = new \iMVC\kernel\view\baseView();
+            $this->layout =  new \zinux\kernel\layout\baseLayout();
+            $this->request = new \zinux\kernel\routing\request();
+            $this->view = new \zinux\kernel\view\baseView();
         }
         public function Dispose()
         {

@@ -1,7 +1,7 @@
 <?php
-namespace iMVC\kernel\routing;
+namespace zinux\kernel\routing;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 
 /**
@@ -9,7 +9,7 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 17:13:38
  */
-class httpRequest extends \iMVC\baseiMVC
+class httpRequest extends \zinux\baseZinux
 {
 
 	protected $_backedup_vars;
@@ -79,13 +79,13 @@ class httpRequest extends \iMVC\baseiMVC
 	 */
 	protected function setVars()
 	{
-            if(\iMVC\kernel\utilities\string::startsWith($this->uri, "/"))
+            if(\zinux\kernel\utilities\string::startsWith($this->uri, "/"))
             {
                 # figure out the server protocol
                 $prot = "http".($_SERVER['SERVER_PORT']==443?"s":"")."://";
                 $this->uri = $prot.$_SERVER['SERVER_NAME'].$this->uri;
             }
-            if(!\iMVC\kernel\utilities\string::Contains($this->uri, "?"))
+            if(!\zinux\kernel\utilities\string::Contains($this->uri, "?"))
                 $this->uri .= "?";
             $this->uri .= "&".http_build_query($this->GET);
             $this->COOKIE = str_replace("&", "; ", http_build_query($this->COOKIE));

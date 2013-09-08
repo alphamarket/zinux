@@ -1,14 +1,14 @@
 <?php
-namespace iMVC\kernel\mvc;
+namespace zinux\kernel\mvc;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 /**
  * Description of action
  *
  * @author dariush
  */
-abstract class mvc extends \iMVC\baseiMVC
+abstract class mvc extends \zinux\baseZinux
 { 
     /**
      *
@@ -47,10 +47,10 @@ abstract class mvc extends \iMVC\baseiMVC
     
     public function  SetPath($path, $validate = 1)
     {
-        $this->path = \iMVC\kernel\utilities\fileSystem::resolve_path($path);
+        $this->path = \zinux\kernel\utilities\fileSystem::resolve_path($path);
         if($validate && !$this->path)
         {
-            throw new \iMVC\kernel\exceptions\notFoundException("`{$path}` does not exists ...");
+            throw new \zinux\kernel\exceptions\notFoundException("`{$path}` does not exists ...");
         }
     }
     public function GetPath(){ return $this->path; }

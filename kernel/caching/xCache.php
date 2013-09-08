@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\kernel\caching;
+namespace zinux\kernel\caching;
 require_once 'cache.php';
 /**
  * Uses layered caching system
@@ -48,9 +48,9 @@ class xCache extends cache
      * 
      * @return mixed
      */
-    protected function _loadCache() { throw new \iMVC\kernel\exceptions\notImplementedException; }
+    protected function _loadCache() { throw new \zinux\kernel\exceptions\notImplementedException; }
 
-    protected function _saveData(array $cacheData){ throw new \iMVC\kernel\exceptions\notImplementedException; }
+    protected function _saveData(array $cacheData){ throw new \zinux\kernel\exceptions\notImplementedException; }
     
     public function save($key, $data, $expiration = 0)
     {

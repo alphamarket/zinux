@@ -1,5 +1,5 @@
 <?php
-namespace iMVC\kernel\caching;
+namespace zinux\kernel\caching;
 require_once 'cache.php';
 
 class fileCache extends cache
@@ -34,7 +34,7 @@ class fileCache extends cache
         $path = self::$_cachedirectory;
         if(!isset($path) || !is_string($path) || !strlen($path))
         {
-            $path = sys_get_temp_dir()."/iMVC-cache";
+            $path = sys_get_temp_dir()."/zinux-cache";
             $this->setCachePath($path);
         }
     }

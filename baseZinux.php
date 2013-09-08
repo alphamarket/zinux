@@ -1,12 +1,12 @@
 <?php
-namespace iMVC;
+namespace zinux;
 
-if(!defined("IMVC_ROOT") || !defined('PROJECT_ROOT'))
+if(!defined("zinux_ROOT") || !defined('PROJECT_ROOT'))
 {
-    # define iMVC ROOT
-    defined('IMVC_ROOT') || define("IMVC_ROOT", dirname(__FILE__)."/");
+    # define zinux ROOT
+    defined('zinux_ROOT') || define("zinux_ROOT", dirname(__FILE__)."/");
     # dfine project ROOT
-    defined("PROJECT_ROOT") || define("PROJECT_ROOT", dirname(IMVC_ROOT).DIRECTORY_SEPARATOR);
+    defined("PROJECT_ROOT") || define("PROJECT_ROOT", dirname(zinux_ROOT).DIRECTORY_SEPARATOR);
     # set include path to project root
     # every class' namespace should be a map from project root
     ini_set('include_path', implode(PATH_SEPARATOR, array(ini_get('include_path'),  PROJECT_ROOT)));
@@ -23,12 +23,12 @@ if(!defined("IMVC_ROOT") || !defined('PROJECT_ROOT'))
 }
 
 /**
- * This is a base class for all iMVC classes
+ * This is a base class for all zinux classes
  * @author dariush
  * @version 1.0
  * @created 04-Sep-2013 15:50:21
  */
-abstract class baseiMVC extends \stdClass
+abstract class baseZinux extends \stdClass
 {
     /**
      * This will dispose any temp attributes which added by __set()

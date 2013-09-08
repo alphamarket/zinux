@@ -1,13 +1,13 @@
 <?php
-namespace iMVC\kernel\utilities;
+namespace zinux\kernel\utilities;
 
-require_once dirname(__FILE__).'/../../baseiMVC.php';
+require_once dirname(__FILE__).'/../../baseZinux.php';
 /**
  * Description of fileSystem
  *
  * @author dariush
  */
-class fileSystem extends \iMVC\baseiMVC
+class fileSystem extends \zinux\baseZinux
 {
     /**
      * Get all stored all data that cached buy this class
@@ -15,7 +15,7 @@ class fileSystem extends \iMVC\baseiMVC
      */
     public static function GetCaches()
     {
-        $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
+        $fc = new \zinux\kernel\caching\fileCache(__CLASS__);
         return $fc->fetchAll();
     }
     public static function resolve_path($path, $convert_to_real_path = 1)
@@ -27,8 +27,8 @@ class fileSystem extends \iMVC\baseiMVC
         # create a cache signiture
         $cache_sig = __METHOD__."@$path";
         # open the cache file
-        require_once IMVC_ROOT.'kernel/caching/xCache.php';
-        $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
+        require_once zinux_ROOT.'kernel/caching/xCache.php';
+        $xc = new \zinux\kernel\caching\xCache(__CLASS__);
         # check cache file and validate it
         if($xc->isCached($cache_sig) && file_exists($xc->fetch($cache_sig)))
         {

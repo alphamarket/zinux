@@ -1,7 +1,7 @@
 <?php
-namespace iMVC\kernel\utilities;
+namespace zinux\kernel\utilities;
 
-require_once dirname(__FILE__).'/../../baseiMVC.php';
+require_once dirname(__FILE__).'/../../baseZinux.php';
 
 /**
 * Allows for multi-dimensional ini files.
@@ -48,7 +48,7 @@ require_once dirname(__FILE__).'/../../baseiMVC.php';
  * @version 1.0
  * @created 04-Sep-2013 15:50:22
  */
-class iniParser extends \iMVC\baseiMVC
+class iniParser extends \zinux\baseZinux
 {
 
 	/**

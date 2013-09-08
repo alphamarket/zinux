@@ -1,8 +1,8 @@
 <?php
-namespace iMVC\kernel\routing;
+namespace zinux\kernel\routing;
 
 require_once ('request.php');
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 
 /**
@@ -10,7 +10,7 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  * @version 1.0
  * @created 04-Sep-2013 15:50:24
  */
-class router extends \iMVC\baseiMVC
+class router extends \zinux\baseZinux
 {
         public function Initiate()
         {

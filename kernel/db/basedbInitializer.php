@@ -1,7 +1,7 @@
 <?php
-namespace iMVC\kernel\db;
+namespace zinux\kernel\db;
 
-require_once (dirname(__FILE__).'/../../baseiMVC.php');
+require_once (dirname(__FILE__).'/../../baseZinux.php');
 
 /*
  * To change this template, choose Tools | Templates
@@ -13,7 +13,7 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  *
  * @author dariush
  */
-abstract class basedbInitializer extends \iMVC\baseiMVC
+abstract class basedbInitializer extends \zinux\baseZinux
 {
     public abstract function Execute($request);
 }

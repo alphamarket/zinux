@@ -1,13 +1,13 @@
 <?php
-namespace iMVC\kernel\utilities;
+namespace zinux\kernel\utilities;
 
-require_once dirname(__FILE__).'/../../baseiMVC.php';
+require_once dirname(__FILE__).'/../../baseZinux.php';
 /**
  * @author dariush
  * @version 1.0
  * @created 04-Sep-2013 15:50:22
  */
-class debug extends \iMVC\baseiMVC
+class debug extends \zinux\baseZinux
 {
 	/**
 	 * Debug passed varibale

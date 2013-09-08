@@ -2,13 +2,13 @@
     
     define("RUNNING_ENV", "TEST");
     
-    define("IMVC_ROOT", realpath(dirname(__FILE__)."/../")."/");
+    define("zinux_ROOT", realpath(dirname(__FILE__)."/../")."/");
     
     $_SERVER['REQUEST_URI'] = "/";
     
-    require_once IMVC_ROOT."baseiMVC.php";
+    require_once zinux_ROOT."baseZinux.php";
     
-    \iMVC\kernel\caching\fileCache::RegisterCachePath(IMVC_ROOT."../cache/test");
+    \zinux\kernel\caching\fileCache::RegisterCachePath(zinux_ROOT."../cache/test");
     # overwriting PHPUnit autoloader 
     # by pushing it autloader's stack
     # this should be on top of other 
