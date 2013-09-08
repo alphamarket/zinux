@@ -42,7 +42,7 @@ class application extends \zinux\baseZinux
     {
             if(!$this->_startup_invoked)
             {
-                trigger_error ("Application has not started up. running without configurations...");
+                # trigger_error ("Application has not started up. running without configurations...");
                 $this->Startup ("");
             }
             $r = new \zinux\kernel\routing\router();
@@ -86,7 +86,7 @@ class application extends \zinux\baseZinux
                 }
                 else
                 {
-                    trigger_error ("No config file supplied.");
+                    # trigger_error ("No config file supplied.");
                     goto __END;
                 }
             }
