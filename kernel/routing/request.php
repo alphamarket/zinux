@@ -53,7 +53,7 @@ class request extends \iMVC\baseiMVC
         /**
         * hold params by index
         */
-        public $indexed_param;
+        protected $indexed_param;
         /**
          * check if current instance has been proccessed or not
          * @var boolean
@@ -339,6 +339,16 @@ __FETCHING_MODULES:
         {
             if(!is_integer($index)) throw new \iMVC\kernel\exceptions\invalideArgumentException;
             return $this->indexed_param[$index];
+        }
+        /**
+        * Set URI params base on its index
+        * @param integer $index
+        * @return string
+        */
+        public function SetIndexedParam($index, $value)
+        {
+            if(!is_integer($index)) throw new \iMVC\kernel\exceptions\invalideArgumentException;
+            $this->indexed_param[$index] = $value;
         }
 
 	/**
