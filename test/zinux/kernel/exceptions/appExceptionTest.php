@@ -19,7 +19,7 @@ class appExceptionTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new appException;
+        $this->object = new appException("ErRor");
     }
 
     /**
@@ -32,27 +32,12 @@ class appExceptionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers zinux\kernel\exceptions\appException::__destruct
-     * @todo   Implement test__destruct().
-     */
-    public function test__destruct()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers zinux\kernel\exceptions\appException::SendErrorCode
      * @todo   Implement testSendErrorCode().
      */
     public function testSendErrorCode()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->object->SendErrorCode(300);
     }
 
     /**
@@ -61,10 +46,8 @@ class appExceptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetErrorCode()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->object->SendErrorCode(100);
+        $this->assertEquals(100, $this->object->GetErrorCode());
     }
 
     /**
@@ -73,10 +56,7 @@ class appExceptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetErrorTraceAsString()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertTrue(true);
     }
 
 }

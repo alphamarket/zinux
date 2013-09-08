@@ -139,5 +139,4 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(strtolower(basename($this->object->getCacheDirectory())),"test");
     }
-
 }

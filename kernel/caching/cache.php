@@ -41,6 +41,7 @@ abstract class cache {
      * @return boolean
      */
     public function isCached($key) {
+        $this->deleteExpired();
         $cachedData = $this->_loadCache();
         return isset($cachedData[$key]['data']);
     }
@@ -50,7 +51,7 @@ abstract class cache {
      *
      * @param string $key
      * @param mixed $data
-     * @param integer [optional] $expiration
+     * @param timespan [ optional ] $expiration the expiration will sum with NOW datetime
      * @return object
      */
     public function save($key, $data, $expiration = 0) {
@@ -75,11 +76,12 @@ abstract class cache {
      * @param boolean [optional] $timestamp
      * @return string
      */
-    public function fetch($key, $timestamp = false) {
+    public function fetch($key, $meta = false, $timestamp = false) {
         $this->deleteExpired();
         $cachedData = $this->_loadCache();
+        if(!isset($cachedData[$key])) return NULL;
+        if($meta) return $cachedData[$key];
         (false === $timestamp) ? $type = 'data' : $type = 'time';
-        if(!isset($cachedData[$key][$type])) return NULL;
         return $cachedData[$key][$type];
     }
 
@@ -143,7 +145,11 @@ abstract class cache {
             return $counter;
         }
     }
-
+    public function isExpired($key)
+    {
+        $cacheData = $this->fetch($key, 1);
+        return $this->_checkExpired($cacheData['time'], $cacheData['expire']);
+    }
     /**
      * Get the filename hash
      * 
@@ -202,5 +208,16 @@ abstract class cache {
      */
     public function getCacheName(){
         return $this->_cachename;
+    }
+    /**
+     * @param timespan $expiration the expiration will sum with NOW datetime
+     */
+    public function setExpireTime($key, $expiration)
+    {
+        if(!($f = $this->fetch($key)) && $expiration > 0)
+        {
+            throw new \ErrorException("`$key` does not exists");
+        }
+        $this->save($key, $f, $expiration);
     }
 }

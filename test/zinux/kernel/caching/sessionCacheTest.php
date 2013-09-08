@@ -67,5 +67,4 @@ class sessionCacheTest extends \PHPUnit_Framework_TestCase
     {
         $this->testSetCachePath();
     }
-
 }

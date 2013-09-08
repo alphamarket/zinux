@@ -5,3 +5,5 @@ if ! [ $EUID -eq 0 ]; then
 fi
 clear
 sudo phpunit --colors --bootstrap bootstrap.php  $*
+rm -fr ../../cache/test
+echo -e "\e[32mTest's cache directory deleted...\e[39m"

@@ -12,6 +12,16 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      * @var xCache
      */
     protected $object;
+    /**
+     *
+     * @var fileCache
+     */
+    protected $fileCache;
+    /**
+     *
+     * @var sessionCache
+     */
+    protected $sessionCache;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -19,7 +29,32 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new xCache;
+        $this->object = new xCache(__CLASS__);
+        $this->fileCache = new fileCache(__CLASS__);
+        $this->sessionCache = new sessionCache(__CLASS__);
+        $this->object->deleteAll();
+        $this->fileCache->deleteAll();
+        $this->sessionCache->deleteAll();
+        $this->assertArrayHasKey($this->sessionCache->getCacheDirectory(), $_SESSION);
+        $this->assertFalse(isset($_SESSION[$this->sessionCache->getCacheDirectory()][$this->object->getCacheName()]));
+        for($index = 0; $index<10; $index++)
+        {
+            $this->assertFalse($this->fileCache->isCached("KEY##$index"));
+            $this->assertFalse($this->sessionCache->isCached("KEY##$index"));
+        }
+        for($index = 0; $index<10; $index++)
+        {
+            $this->object->save("KEY##$index", "VALUE##$index");
+        }
+        $this->assertNotNull($this->object);
+        $this->assertTrue(isset($_SESSION[$this->sessionCache->getCacheDirectory()][$this->object->getCacheName()]));
+        $this->assertCount(10, $this->object->fetchAll());
+        $this->assertTrue(file_exists($this->fileCache->getCacheFile()));
+        for($index = 0; $index<10; $index++)
+        {
+            $this->assertTrue($this->fileCache->isCached("KEY##$index"));
+            $this->assertTrue($this->sessionCache->isCached("KEY##$index"));
+        }
     }
 
     /**
@@ -37,10 +72,7 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testsave()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->setUp();
     }
 
     /**
@@ -49,10 +81,12 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testfetch()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        for($index = 0; $index<10; $index++)
+        {
+            $this->assertEquals($this->fileCache->fetch("KEY##$index"), "VALUE##$index");
+            $this->assertEquals($this->sessionCache->fetch("KEY##$index"), "VALUE##$index");
+            $this->assertEquals($this->object->fetch("KEY##$index"), "VALUE##$index");
+        }
     }
 
     /**
@@ -61,10 +95,16 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testdelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        for($index = 0; $index<10; $index++)
+        {
+            $this->assertTrue($this->fileCache->isCached("KEY##$index"));
+            $this->assertTrue($this->sessionCache->isCached("KEY##$index"));
+            $this->assertTrue($this->object->isCached("KEY##$index"));
+            $this->object->delete("KEY##$index");
+            $this->assertFalse($this->fileCache->isCached("KEY##$index"));
+            $this->assertFalse($this->sessionCache->isCached("KEY##$index"));
+            $this->assertFalse($this->object->isCached("KEY##$index"));
+        }
     }
 
     /**
@@ -73,10 +113,13 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testdeleteAll()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertArrayHasKey($this->sessionCache->getCacheDirectory(), $_SESSION);
+        $this->assertArrayHasKey($this->sessionCache->getCacheName(), $_SESSION[$this->sessionCache->getCacheDirectory()]);
+        $this->assertTrue(file_exists($this->fileCache->getCacheFile()));
+        $this->object->deleteAll();
+        $this->assertArrayHasKey($this->sessionCache->getCacheDirectory(), $_SESSION);
+        $this->assertArrayNotHasKey($this->sessionCache->getCacheName(), $_SESSION[$this->sessionCache->getCacheDirectory()]);
+        $this->assertFalse(file_exists($this->fileCache->getCacheFile()));
     }
 
     /**
@@ -85,10 +128,18 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testdeleteExpired()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        for($index = 0; $index<10; $index+=2)
+        {
+            $this->object->setExpireTime("KEY##$index", 3600);
+            $this->object->deleteExpired();
+            $this->assertCount(10-($index)/2, $this->object->fetchAll());
+            $this->assertCount(10-($index)/2, $this->fileCache->fetchAll());
+            $this->assertCount(10-($index)/2, $this->sessionCache->fetchAll());
+            $this->object->setExpireTime("KEY##$index", -3600);
+        }
+        $this->assertCount(5, $this->object->fetchAll());
+        $this->assertCount(5, $this->fileCache->fetchAll());
+        $this->assertCount(5, $this->sessionCache->fetchAll());
     }
 
     /**
@@ -97,10 +148,36 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsCached()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        for($index = 0; $index<10; $index++)
+        {
+            $this->assertTrue($this->fileCache->isCached("KEY##$index"));
+            $this->assertTrue($this->sessionCache->isCached("KEY##$index"));
+            $this->assertTrue($this->object->isCached("KEY##$index"));
+            $this->object->setExpireTime("KEY##$index", 3600);
+            $this->assertTrue($this->fileCache->isCached("KEY##$index"));
+            $this->assertTrue($this->sessionCache->isCached("KEY##$index"));
+            $this->assertTrue($this->object->isCached("KEY##$index"));
+            $this->object->setExpireTime("KEY##$index", -3600);
+            $this->assertFalse($this->fileCache->isCached("KEY##$index"));
+            $this->assertFalse($this->sessionCache->isCached("KEY##$index"));
+            $this->assertFalse($this->object->isCached("KEY##$index"));
+            $this->object->save("KEY##$index", "VALUE##$index",1);
+            $this->assertTrue($this->fileCache->isCached("KEY##$index"));
+            $this->assertTrue($this->sessionCache->isCached("KEY##$index"));
+            $this->assertTrue($this->object->isCached("KEY##$index"));
+            $this->object->setExpireTime("KEY##$index", -1);
+            $this->assertFalse($this->fileCache->isCached("KEY##$index"));
+            $this->assertFalse($this->sessionCache->isCached("KEY##$index"));
+            $this->assertFalse($this->object->isCached("KEY##$index"));
+            $this->object->save("KEY##$index", "VALUE##$index",1);
+            $this->assertTrue($this->fileCache->isCached("KEY##$index"));
+            $this->assertTrue($this->sessionCache->isCached("KEY##$index"));
+            $this->assertTrue($this->object->isCached("KEY##$index"));
+            $this->assertFalse($this->object->isCached("$index##KEY"));
+        }
+        $this->assertCount(10, $this->object->fetchAll());
+        $this->assertCount(10, $this->fileCache->fetchAll());
+        $this->assertCount(10, $this->sessionCache->fetchAll());
     }
 
     /**
@@ -109,10 +186,17 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testfetchAll()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertCount(10, $this->object->fetchAll());
+        $this->assertCount(10, $this->fileCache->fetchAll());
+        $this->assertCount(10, $this->sessionCache->fetchAll());
+        for($index = 0; $index<10; $index+=2)
+        {
+            $this->object->delete("KEY##$index");
+            $this->object->delete("++KEY##$index");
+        }
+        $this->assertCount(5, $this->object->fetchAll());
+        $this->assertCount(5, $this->fileCache->fetchAll());
+        $this->assertCount(5, $this->sessionCache->fetchAll());
     }
 
     /**
@@ -121,10 +205,9 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCacheName()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(__CLASS__, $this->object->getCacheName());
+        $this->assertEquals(__CLASS__, $this->fileCache->getCacheName());
+        $this->assertEquals(__CLASS__, $this->sessionCache->getCacheName());
     }
 
     /**
@@ -133,10 +216,9 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetCacheDirectory()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals("test", basename($this->object->getCacheDirectory()));
+        $this->assertEquals("test", basename($this->fileCache->getCacheDirectory()));
+        $this->assertEquals("cache", ($this->sessionCache->getCacheDirectory()));
     }
 
     /**
@@ -145,10 +227,8 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetCacheName()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->object->setCacheName("Foo");
+        $this->assertEquals("Foo", $this->object->getCacheName());
     }
 
     /**
@@ -157,10 +237,10 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetCachePath()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->object->setCachePath($this->object->getCacheDirectory()."~Foo");
+        $this->assertEquals("~Foo", basename($this->object->getCacheDirectory()));
+        $this->fileCache->setCachePath($this->object->getCacheDirectory());
+        $this->fileExists($this->fileCache->getCacheFile());
     }
 
     /**
@@ -169,10 +249,11 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStatisticReportString()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        echo PHP_EOL;
+        ob_start();
+        $c = $this->object->GetStatisticReportString();
+        $c = ob_get_contents();
+        ob_end_clean();
+        echo str_replace("<br />", PHP_EOL, $c);
     }
-
 }

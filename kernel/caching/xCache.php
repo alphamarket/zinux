@@ -57,7 +57,7 @@ class xCache extends cache
         $this->_session_cache->save($key, $data, $expiration);
         $this->_file_cache->save($key, $data, $expiration);
     }
-    public function fetch($key, $timestamp = false)
+    public function fetch($key, $meta = false, $timestamp = false)
     {
         if($this->_session_cache->isCached($key))
         {
@@ -79,7 +79,7 @@ class xCache extends cache
             return NULL;
         }
         # we made sure that the $_SESSION & FILE is synced
-        return $this->_session_cache->fetch($key, $timestamp);
+        return $this->_session_cache->fetch($key, $meta, $timestamp);
     }
     
     public function delete($key)
