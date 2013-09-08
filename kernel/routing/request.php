@@ -64,14 +64,11 @@ class request extends \iMVC\baseiMVC
          */
         protected $is_proccessed;
          
-	function __construct()
+	public function __construct(request $request = NULL)
 	{
             $this->Initiate();
-	}
-
-	function __destruct()
-	{
-            $this->Dispose();
+            if($request)
+                throw new \iMVC\kernel\exceptions\notImplementedException;
 	}
         /**
          * Initializing the instance

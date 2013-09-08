@@ -27,46 +27,8 @@ class routerTest extends \PHPUnit_Framework_TestCase
      * This method is called after a test is executed.
      */
     protected function tearDown()
-    {
-        
+    {  
     }
-
-    /**
-     * @covers iMVC\kernel\routing\router::__destruct
-     * @todo   Implement test__destruct().
-     */
-    public function test__destruct()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers iMVC\kernel\routing\router::Initiate
-     * @todo   Implement testInitiate().
-     */
-    public function testInitiate()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers iMVC\kernel\routing\router::Dispose
-     * @todo   Implement testDispose().
-     */
-    public function testDispose()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
     /**
      * @covers iMVC\kernel\routing\router::Run
      * @todo   Implement testRun().
@@ -74,9 +36,7 @@ class routerTest extends \PHPUnit_Framework_TestCase
     public function testRun()
     {
         // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->markTestSkipped("Skipping test for ".__METHOD__);
     }
 
 }
