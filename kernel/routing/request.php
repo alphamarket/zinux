@@ -31,10 +31,6 @@ class request extends \iMVC\baseiMVC
         */
 	public $view;
 	/**
-        * Get requested uri string
-        */
-	public $requested_uri;
-	/**
         * Holds $_GET's value
         */
 	public $GET;
@@ -63,6 +59,10 @@ class request extends \iMVC\baseiMVC
          * @var boolean
          */
         protected $is_proccessed;
+	/**
+        * Get requested uri string
+        */
+	protected $requested_uri;
          
 	function __construct()
 	{
