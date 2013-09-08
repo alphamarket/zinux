@@ -202,9 +202,7 @@ abstract class cache {
      * 
      * @return void
      */
-    public function getCacheName($hashed = 0) {
-        if($hashed)
-            return $this->_getHash($this->_cachename);
+    public function getCacheName(){
         return $this->_cachename;
     }
 }

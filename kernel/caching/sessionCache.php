@@ -80,6 +80,8 @@ class sessionCache extends cache
      */
     public function setCachePath($path) {
         self::$_cachedirectory = $path;
+        $this->save("", "");
+        $this->erase("");
         return $this;
     }
 
