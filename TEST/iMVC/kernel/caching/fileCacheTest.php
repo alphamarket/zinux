@@ -28,7 +28,6 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        
     }
 
     /**
@@ -65,7 +64,7 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetCacheFile()
     {
-        
+        $this->markTestSkipped();
     }
 
     /**
@@ -74,10 +73,20 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetExtension()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $g = $this->object->getExtension();
+        $this->assertEquals($g, ".".pathinfo($this->object->getCacheFile(), PATHINFO_EXTENSION)) ;
+        $this->object->setExtension(".foo");
+        $this->assertEquals(".foo", $this->object->getExtension());
+        $this->assertNotEquals("foo", $this->object->getExtension());
+        $this->assertEquals(strlen("foo"), strlen($this->object->getExtension())-1);
+        $this->assertEquals("foo", pathinfo($this->object->getCacheFile(), PATHINFO_EXTENSION));
+        $this->object->save("FILE_TEST", "TEST");
+        $this->assertTrue(file_exists($this->object->getCacheFile()));
+        $this->assertTrue($this->object->isCached("FILE_TEST"));
+        $this->object->eraseAll();
+        $this->assertFalse(file_exists($this->object->getCacheFile()));
+        $this->object->setExtension($g);
+        $this->assertTrue(file_exists($this->object->getCacheFile()));
     }
 
     /**
@@ -86,10 +95,7 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetExtension()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->testSetExtension();
     }
 
     /**
@@ -98,10 +104,13 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testRegisterCachePath()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $p = $this->object->getCacheDirectory();
+        $this->object->RegisterCachePath(dirname($this->object->getCacheDirectory()));
+        $this->assertEquals(strtolower(basename($this->object->getCacheDirectory())),"cache");
+        $this->assertFalse(file_exists($this->object->getCacheFile()));
+        $this->object->RegisterCachePath($p);
+        $this->assertEquals(strtolower(basename($this->object->getCacheDirectory())),"test");
+        $this->assertTrue(file_exists($this->object->getCacheFile()));
     }
 
     /**
@@ -110,10 +119,13 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetCachePath()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $p = $this->object->getCacheDirectory();
+        $this->object->SetCachePath(dirname($this->object->getCacheDirectory()));
+        $this->assertEquals(strtolower(basename($this->object->getCacheDirectory())),"cache");
+        $this->assertFalse(file_exists($this->object->getCacheFile()));
+        $this->object->SetCachePath($p);
+        $this->assertEquals(strtolower(basename($this->object->getCacheDirectory())),"test");
+        $this->assertTrue(file_exists($this->object->getCacheFile()));
     }
 
     /**
@@ -122,10 +134,7 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetCacheDirectory()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(strtolower(basename($this->object->getCacheDirectory())),"test");
     }
 
 }

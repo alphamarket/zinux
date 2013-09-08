@@ -169,6 +169,8 @@ class fileCache extends cache
      * @return object
      */
     public function setExtension($ext) {
+        if($ext[0] != ".")
+            $ext = ".".$ext;
         $this->_extension = $ext;
         return $this;
     }
