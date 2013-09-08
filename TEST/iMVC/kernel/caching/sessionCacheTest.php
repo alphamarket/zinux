@@ -56,10 +56,10 @@ class sessionCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers iMVC\kernel\caching\sessionCache::getCachePath
-     * @todo   Implement testGetCachePath().
+     * @covers iMVC\kernel\caching\sessionCache::getCacheDirectory
+     * @todo   Implement testgetCacheDirectory().
      */
-    public function testGetCachePath()
+    public function testgetCacheDirectory()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(

@@ -111,11 +111,11 @@ class request extends \iMVC\baseiMVC
             if($this->is_proccessed) 
                 return;
             $this->DepartURI();
-            $this->RetrieveModuleName();
-            $this->RetrieveControllerName();
-            $this->RetrieveActionName();
-            $this->RetrieveViewName();
-            $this->RetriveParams();
+            $this->FetchModuleName();
+            $this->FetchControllerName();
+            $this->FetchActionName();
+            $this->FetchViewName();
+            $this->FetchParams();
             $this->is_proccessed = true;
 	}
 
@@ -149,7 +149,7 @@ class request extends \iMVC\baseiMVC
         * @return type
         * @throws \iMVC\kernel\exceptions\notFoundException
         */
-	protected function RetrieveModuleName()
+	protected function FetchModuleName()
 	{
 __LOADING_CACHE:
             # all folders in ../modules folders considered a module folder
@@ -173,7 +173,7 @@ __LOADING_CACHE:
             if($xc->isCached(__METHOD__))
             {
                 # catch maintaining optz. 
-                $mc = $xc->retrieve(__METHOD__);
+                $mc = $xc->fetch(__METHOD__);
                 # if the module directory has been updated
                 if($mc->modified_time !=filemtime($module_dir))
                 {
@@ -200,7 +200,7 @@ __LOAD_MODULES:
             }
             # now module collection is ready
             # caching module collections data
-            $xc->store(__METHOD__, $mc);
+            $xc->save(__METHOD__, $mc);
             # fetching related modules accoring to requested URI
 __FETCHING_MODULES:
             # if not parts provided picking up default module
@@ -230,7 +230,7 @@ __FETCHING_MODULES:
         /**
         * Fetch controller name according to URI
         */
-	protected function RetrieveControllerName()
+	protected function FetchControllerName()
 	{
             # default controller
             $this->controller = new \iMVC\kernel\mvc\controller("Index", $this->module);
@@ -263,10 +263,10 @@ __FETCHING_MODULES:
         /**
         * Fetch action name according to URI
         */
-	protected function RetrieveActionName()
+	protected function FetchActionName()
 	{
             $this->action = new \iMVC\kernel\mvc\action("Index", $this->controller);
-            # the class is safe and loaded & checked in RetrieveControllerName
+            # the class is safe and loaded & checked in FetchControllerName
             # check for method existance
             if(isset($this->_parts[0]) && method_exists($this->controller->GetInstance(), "{$this->_parts[0]}Action"))
             {
@@ -290,7 +290,7 @@ __FETCHING_MODULES:
         /**
         * Fetch view name according to action's name
         */
-	protected function RetrieveViewName()
+	protected function FetchViewName()
 	{
             # we will gain view's info by info fetched for action 
             $this->view = new \iMVC\kernel\mvc\view($this->action->name, $this->action);
@@ -299,7 +299,7 @@ __FETCHING_MODULES:
 	/**
         * Fetch params according to URI
         */
-	protected function RetriveParams()
+	protected function FetchParams()
 	{
             $this->GET = $_GET;
             $this->POST = $_POST;

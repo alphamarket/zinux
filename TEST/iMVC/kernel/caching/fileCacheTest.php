@@ -19,7 +19,7 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new fileCache;
+        $this->object = new fileCache(__CLASS__);
     }
 
     /**
@@ -33,14 +33,17 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers iMVC\kernel\caching\fileCache::store
-     * @todo   Implement testStore().
+     * @todo   Implement testsave().
      */
-    public function testStore()
+    public function testsave()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        for($index = 0; $index<10; $index++)
+        {
+            $this->object->save("KEY##$index", "VALUE##$index");
+        }
+        $this->assertNotNull($this->object);
+        $this->assertTrue(file_exists($this->object->getCacheFile()));
+        $this->assertCount(10, $this->object->fetchAll());
     }
 
     /**
@@ -49,22 +52,20 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testEraseAll()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertTrue(file_exists($this->object->getCacheFile()));
+        $this->object->eraseAll();
+        $this->assertCount(0, $this->object->fetchAll());
+        $this->assertFalse(file_exists($this->object->getCacheFile()));
+        $this->testsave();
     }
 
     /**
-     * @covers iMVC\kernel\caching\fileCache::getCacheDir
-     * @todo   Implement testGetCacheDir().
+     * @covers iMVC\kernel\caching\fileCache::getCacheFile
+     * @todo   Implement testgetCacheFile().
      */
-    public function testGetCacheDir()
+    public function testgetCacheFile()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        
     }
 
     /**
@@ -93,9 +94,9 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers iMVC\kernel\caching\fileCache::RegisterCacheDir
-     * @todo   Implement testRegisterCacheDir().
+     * @todo   Implement testRegisterCachePath().
      */
-    public function testRegisterCacheDir()
+    public function testRegisterCachePath()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -116,10 +117,10 @@ class fileCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers iMVC\kernel\caching\fileCache::getCachePath
-     * @todo   Implement testGetCachePath().
+     * @covers iMVC\kernel\caching\fileCache::getCacheDirectory
+     * @todo   Implement testgetCacheDirectory().
      */
-    public function testGetCachePath()
+    public function testgetCacheDirectory()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(

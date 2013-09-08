@@ -53,7 +53,7 @@ abstract class cache {
      * @param integer [optional] $expiration
      * @return object
      */
-    public function store($key, $data, $expiration = 0) {
+    public function save($key, $data, $expiration = 0) {
         $storeData = array(
             'time'   => time(),
             'expire' => $expiration,
@@ -75,7 +75,7 @@ abstract class cache {
      * @param boolean [optional] $timestamp
      * @return string
      */
-    public function retrieve($key, $timestamp = false) {
+    public function fetch($key, $timestamp = false) {
         $this->eraseExpired();
         $cachedData = $this->_loadCache();
         (false === $timestamp) ? $type = 'data' : $type = 'time';
@@ -89,7 +89,7 @@ abstract class cache {
      * @param boolean [optional] $meta
      * @return array
      */
-    public function retrieveAll($meta = false) {
+    public function fetchAll($meta = false) {
         $this->eraseExpired();
         if ($meta === false) {
             $results = array();
@@ -184,7 +184,7 @@ abstract class cache {
      * 
      * @return string
      */
-    public abstract function getCachePath();
+    public abstract function getCacheDirectory();
 
     /**
      * Cache name Setter
@@ -192,7 +192,7 @@ abstract class cache {
      * @param string $name
      * @return object
      */
-    public function setCache($name) {
+    public function setCacheName($name) {
         $this->_cachename = $name;
         return $this;
     }
@@ -202,7 +202,9 @@ abstract class cache {
      * 
      * @return void
      */
-    public function getCache() {
+    public function getCacheName($hashed = 0) {
+        if($hashed)
+            return $this->_getHash($this->_cachename);
         return $this->_cachename;
     }
 }

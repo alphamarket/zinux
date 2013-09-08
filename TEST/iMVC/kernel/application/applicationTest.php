@@ -32,27 +32,12 @@ class applicationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers iMVC\kernel\application\application::Initiate
-     * @todo   Implement testInitiate().
-     */
-    public function testInitiate()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers iMVC\kernel\application\application::Run
      * @todo   Implement testRun().
      */
     public function testRun()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->markTestSkipped();
     }
 
     /**
@@ -61,10 +46,7 @@ class applicationTest extends \PHPUnit_Framework_TestCase
      */
     public function testShutdown()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->markTestSkipped();
     }
 
     /**
@@ -73,10 +55,7 @@ class applicationTest extends \PHPUnit_Framework_TestCase
      */
     public function testStartup()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->markTestSkipped();
     }
 
     /**
@@ -85,10 +64,7 @@ class applicationTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetConfigFile()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->markTestSkipped();
     }
 
 }

@@ -16,7 +16,7 @@ class fileSystem extends \iMVC\baseiMVC
     public static function GetCaches()
     {
         $fc = new \iMVC\kernel\caching\fileCache(__CLASS__);
-        return $fc->retrieveAll();
+        return $fc->fetchAll();
     }
     public static function resolve_path($path, $convert_to_real_path = 1)
     {
@@ -30,10 +30,10 @@ class fileSystem extends \iMVC\baseiMVC
         require_once IMVC_ROOT.'kernel/caching/xCache.php';
         $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
         # check cache file and validate it
-        if($xc->isCached($cache_sig) && file_exists($xc->retrieve($cache_sig)))
+        if($xc->isCached($cache_sig) && file_exists($xc->fetch($cache_sig)))
         {
             # it was a HIT!
-            return $xc->retrieve($cache_sig);
+            return $xc->fetch($cache_sig);
         }
         # if it is ab
         $is_absolute_path = ($path[0] == DIRECTORY_SEPARATOR);
@@ -83,7 +83,7 @@ class fileSystem extends \iMVC\baseiMVC
         if($convert_to_real_path)
             $resolved_path = realpath($resolved_path);
         # cache the result
-        $xc->store($cache_sig, $resolved_path);
+        $xc->save($cache_sig, $resolved_path);
         # retrun the resolved path
         return $resolved_path;
     }

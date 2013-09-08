@@ -32,14 +32,14 @@ class config extends \iMVC\baseiMVC
         $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
         if($xc->isCached(self::$load_cache_sig))
         {
-            $c = $xc->retrieve(self::$load_cache_sig);
+            $c = $xc->fetch(self::$load_cache_sig);
             if($c->modif_time==filemtime($this->file_address))
                 goto __RETURN;
         }
         $c = new \stdClass();
         $c->config = iniParser::parse($this->file_address, $process_sections, $section_name);
         $c->modif_time = filemtime($this->file_address); 
-        $xc->store(self::$load_cache_sig, $c);
+        $xc->save(self::$load_cache_sig, $c);
 __RETURN:
         return $c->config;
     }
@@ -59,7 +59,7 @@ __RETURN:
         $xf = new \iMVC\kernel\caching\xCache(__CLASS__);
         if(!$xf->isCached(self::$load_cache_sig))
             throw new \iMVC\kernel\exceptions\invalideOperationException("The config file has not been loaded");
-        $c = $xf->retrieve(self::$load_cache_sig);
+        $c = $xf->fetch(self::$load_cache_sig);
         return $c->config;
     }
 

@@ -9,7 +9,7 @@ class fileCache extends cache
      *
      * @var string
      */
-    protected static $_cachepath = '';
+    protected static $_cachedirectory = '';
     /**
      * The cache file extension
      *
@@ -30,8 +30,8 @@ class fileCache extends cache
      */
     public function __construct($name = "default"){
         if(isset($name) &&strlen($name))
-            $this->setCache($name);
-        $path = self::$_cachepath;
+            $this->setCacheName($name);
+        $path = self::$_cachedirectory;
         if(!isset($path) || !is_string($path) || !strlen($path))
         {
             $path = sys_get_temp_dir()."/iMVC-cache";
@@ -47,7 +47,7 @@ class fileCache extends cache
      * @param integer [optional] $expiration
      * @return object
      */
-    public function store($key, $data, $expiration = 0) {
+    public function save($key, $data, $expiration = 0) {
         $storeData = array(
             'time'   => time(),
             'expire' => $expiration,
@@ -64,10 +64,10 @@ class fileCache extends cache
     }
     protected function _saveData(array $cacheData)
     {
-          self::$_soft_cache[$this->getCache()] = $cacheData;
+          self::$_soft_cache[$this->getCacheName()] = $cacheData;
           $cacheData['hash-sum'] = $this->_getHash(serialize($cacheData));
           $cacheData = serialize($cacheData);
-          file_put_contents($this->getCacheDir(), $cacheData);
+          file_put_contents($this->getCacheFile(), $cacheData);
     }
     /**
      * Erase all cached entries
@@ -75,11 +75,11 @@ class fileCache extends cache
      * @return object
      */
     public function eraseAll() {
-        $cacheDir = $this->getCacheDir();
+        $cacheDir = $this->getCacheFile();
         # delete the cache file
         unlink($cacheDir);
         # free the soft cache
-        unset(self::$_soft_cache[$this->getCache()]);
+        unset(self::$_soft_cache[$this->getCacheName()]);
         return $this;
     }
 
@@ -90,14 +90,14 @@ class fileCache extends cache
      */
       protected function _loadCache() {
             # relative caching 
-            if(isset(self::$_soft_cache[$this->getCache()]))
-                return self::$_soft_cache[$this->getCache()];
-            if (true === file_exists($this->getCacheDir())) {
-                $file = file_get_contents($this->getCacheDir());
+            if(isset(self::$_soft_cache[$this->getCacheName()]))
+                return self::$_soft_cache[$this->getCacheName()];
+            if (true === file_exists($this->getCacheFile())) {
+                $file = file_get_contents($this->getCacheFile());
                 $u = unserialize($file);
                 if(!isset($u['hash-sum']))
                 {
-                    unlink($this->getCacheDir());
+                    unlink($this->getCacheFile());
                     trigger_error("cache data miss-hashed, cache file deleted...");
                     return false;
                 }
@@ -105,12 +105,12 @@ class fileCache extends cache
                 unset($u['hash-sum']);
                 if($h != $this->_getHash(serialize($u)))
                 {
-                    unlink($this->getCacheDir());
+                    unlink($this->getCacheFile());
                     trigger_error("cache data miss-hashed, cache file deleted...");
                     return false;
                 }  
                 # cache the cache!
-                self::$_soft_cache[$this->getCache()] = $u;
+                self::$_soft_cache[$this->getCacheName()] = $u;
                 return $u;
               }
               else {
@@ -123,11 +123,11 @@ class fileCache extends cache
      * 
      * @return string
      */
-    public function getCacheDir() {
+    public function getCacheFile() {
         if (true === $this->_checkCacheDir()) {
-            $filename = $this->getCache();
+            $filename = $this->getCacheName();
             $filename = preg_replace('/[^0-9a-z\.\_\-]/i', '', strtolower($filename));
-            return $this->getCachePath() . $this->_getHash($filename) . $this->getExtension();
+            return $this->getCacheDirectory() . $this->_getHash($filename) . $this->getExtension();
         }
     }
 
@@ -153,11 +153,11 @@ class fileCache extends cache
      * @return boolean
      */
     protected function _checkCacheDir() {
-        if (!is_dir($this->getCachePath()) && !mkdir($this->getCachePath(), 0775, true)) {
-            throw new \Exception('Unable to create cache directory ' . $this->getCachePath());
-        } elseif (!is_readable($this->getCachePath()) || !is_writable($this->getCachePath())) {
-            if (!chmod($this->getCachePath(), 0775)) {
-                throw new \Exception($this->getCachePath() . ' must be readable and writeable');
+        if (!is_dir($this->getCacheDirectory()) && !mkdir($this->getCacheDirectory(), 0775, true)) {
+            throw new \Exception('Unable to create cache directory ' . $this->getCacheDirectory());
+        } elseif (!is_readable($this->getCacheDirectory()) || !is_writable($this->getCacheDirectory())) {
+            if (!chmod($this->getCacheDirectory(), 0775)) {
+                throw new \Exception($this->getCacheDirectory() . ' must be readable and writeable');
             }
         }
         return true;
@@ -182,18 +182,18 @@ class fileCache extends cache
         return $this->_extension;
     }
     
-    public static function RegisterCacheDir($path)
+    public static function RegisterCachePath($path)
     {
         if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
             $path = $path.DIRECTORY_SEPARATOR;
-        self::$_cachepath=$path;
+        self::$_cachedirectory=$path;
     }
     
     public function setCachePath($path)
     {
         if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
             $path = $path.DIRECTORY_SEPARATOR;
-        self::$_cachepath=$path;
+        self::$_cachedirectory=$path;
     }
 
     /**
@@ -201,7 +201,7 @@ class fileCache extends cache
      * 
      * @return string
      */
-    public function getCachePath() {
-        return self::$_cachepath;
+    public function getCacheDirectory() {
+        return self::$_cachedirectory;
     }
 }

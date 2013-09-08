@@ -33,9 +33,9 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers iMVC\kernel\caching\xCache::store
-     * @todo   Implement testStore().
+     * @todo   Implement testsave().
      */
-    public function testStore()
+    public function testsave()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -45,9 +45,9 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers iMVC\kernel\caching\xCache::retrieve
-     * @todo   Implement testRetrieve().
+     * @todo   Implement testfetch().
      */
-    public function testRetrieve()
+    public function testfetch()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -105,9 +105,9 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers iMVC\kernel\caching\xCache::retrieveAll
-     * @todo   Implement testRetrieveAll().
+     * @todo   Implement testfetchAll().
      */
-    public function testRetrieveAll()
+    public function testfetchAll()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -117,9 +117,9 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers iMVC\kernel\caching\xCache::getCache
-     * @todo   Implement testGetCache().
+     * @todo   Implement testGetCacheName().
      */
-    public function testGetCache()
+    public function testGetCacheName()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -128,10 +128,10 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers iMVC\kernel\caching\xCache::getCachePath
-     * @todo   Implement testGetCachePath().
+     * @covers iMVC\kernel\caching\xCache::getCacheDirectory
+     * @todo   Implement testgetCacheDirectory().
      */
-    public function testGetCachePath()
+    public function testgetCacheDirectory()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -141,9 +141,9 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers iMVC\kernel\caching\xCache::setCache
-     * @todo   Implement testSetCache().
+     * @todo   Implement testSetCacheName().
      */
-    public function testSetCache()
+    public function testSetCacheName()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(

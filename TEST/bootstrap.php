@@ -8,7 +8,7 @@
     
     require_once IMVC_ROOT."baseiMVC.php";
     
-    \iMVC\kernel\caching\fileCache::RegisterCacheDir(IMVC_ROOT."../cache/");
+    \iMVC\kernel\caching\fileCache::RegisterCachePath(IMVC_ROOT."../cache/test");
     # overwriting PHPUnit autoloader 
     # by pushing it autloader's stack
     # this should be on top of other 

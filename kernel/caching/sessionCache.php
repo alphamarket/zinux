@@ -9,7 +9,7 @@ class sessionCache extends cache
      *
      * @var string
      */
-    protected static $_cachepath = '';
+    protected static $_cachedirectory = '';
     /**
      * uses for internal cache upgrading
      * @var type 
@@ -30,7 +30,7 @@ class sessionCache extends cache
      */
     public function __construct($cache_name = 'default') {
         if(isset($cache_name) &&strlen($cache_name))
-            $this->setCache($cache_name);
+            $this->setCacheName($cache_name);
         $this->setCachePath('cache');
     }
 
@@ -46,7 +46,7 @@ class sessionCache extends cache
      * @return mixed
      */
     protected function _loadCache() {
-        $this->_cachepath = self::$_cachepath;
+        $this->_cachepath = self::$_cachedirectory;
         if(!isset($_SESSION[$this->_cachepath][$this->_cachename]))
             return  false;
         $u = unserialize($_SESSION[$this->_cachepath][$this->_cachename]);
@@ -79,7 +79,7 @@ class sessionCache extends cache
      * @return object
      */
     public function setCachePath($path) {
-        self::$_cachepath = $path;
+        self::$_cachedirectory = $path;
         return $this;
     }
 
@@ -88,7 +88,7 @@ class sessionCache extends cache
      * 
      * @return string
      */
-    public function getCachePath() {
-        return self::$_cachepath;
+    public function getCacheDirectory() {
+        return self::$_cachedirectory;
     }
 }

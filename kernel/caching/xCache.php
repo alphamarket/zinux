@@ -52,25 +52,25 @@ class xCache extends cache
 
     protected function _saveData(array $cacheData){ throw new \iMVC\kernel\exceptions\notImplementedException; }
     
-    public function store($key, $data, $expiration = 0)
+    public function save($key, $data, $expiration = 0)
     {
-        $this->_session_cache->store($key, $data, $expiration);
-        $this->_file_cache->store($key, $data, $expiration);
+        $this->_session_cache->save($key, $data, $expiration);
+        $this->_file_cache->save($key, $data, $expiration);
     }
-    public function retrieve($key, $timestamp = false)
+    public function fetch($key, $timestamp = false)
     {
         if($this->_session_cache->isCached($key))
         {
             self::$session_hit_count++;
             if(!$this->_file_cache->isCached($key))
                 # sync file with session
-                $this->_file_cache->store($key, $this->_session_cache->retrieve($key));
+                $this->_file_cache->save($key, $this->_session_cache->fetch($key));
         }
         elseif($this->_file_cache->isCached($key))
         {
             self::$file_hit_count++;
             # sync session with file
-            $this->_session_cache->store($key, $this->_file_cache->retrieve($key));
+            $this->_session_cache->save($key, $this->_file_cache->fetch($key));
         }
         else
         {
@@ -79,7 +79,7 @@ class xCache extends cache
             return NULL;
         }
         # we made sure that the $_SESSION & FILE is synced
-        return $this->_session_cache->retrieve($key, $timestamp);
+        return $this->_session_cache->fetch($key, $timestamp);
     }
     
     public function erase($key)
@@ -105,22 +105,22 @@ class xCache extends cache
         return $this->_session_cache->isCached($key) ||
             $this->_file_cache->isCached($key);
     }
-    public function retrieveAll($meta = false)
+    public function fetchAll($meta = false)
     {
-        return array_merge($this->_session_cache->retrieveAll($meta), $this->_file_cache->retrieveAll($meta));
+        return array_merge($this->_session_cache->fetchAll($meta), $this->_file_cache->fetchAll($meta));
     }
-    public function getCache()
+    public function getCacheName()
     {
-        return $this->_session_cache->getCache();
+        return $this->_session_cache->getCacheName();
     }
-    public function getCachePath()
+    public function getCacheDirectory()
     {
-        return $this->_file_cache->getCachePath();
+        return $this->_file_cache->getCacheDirectory();
     }
-    public function setCache($name)
+    public function setCacheName($name)
     {
-        $this->_session_cache->setCache($name);
-        $this->_file_cache->setCache($name);
+        $this->_session_cache->setCacheName($name);
+        $this->_file_cache->setCacheName($name);
     }
     public function setCachePath($path)
     {
