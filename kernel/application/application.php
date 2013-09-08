@@ -12,8 +12,13 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
 class application extends \iMVC\baseiMVC
 {
     protected static $config_file_address = NULL;
-
-    function __construct($module_path = "")
+    /**
+     * db initializer instance
+     * @var \iMVC\kernel\db\basedbInitializer
+     */
+    protected $dbInit;
+    
+    function __construct($module_path = "", \iMVC\kernel\db\basedbInitializer $dbi = NULL)
     {
             $this->Initiate();
             
@@ -21,6 +26,8 @@ class application extends \iMVC\baseiMVC
                 die("Module directory not found!");
             
             defined('MODULE_ROOT') || define('MODULE_ROOT',  \iMVC\kernel\utilities\fileSystem::resolve_path($module_path."/"));
+            
+            $this->dbInit =$dbi;
     }
 
     public function Initiate()
@@ -40,13 +47,18 @@ class application extends \iMVC\baseiMVC
             }
             $r = new \iMVC\kernel\routing\router();
 
-            $req = new \iMVC\kernel\routing\request();
-
-            #$dbi = new \iMVC\db\ActiveRecord\initializer();
-
-            #$dbi->InitActiveRecord($req);
-
-            $r->Run($req);
+            $request = new \iMVC\kernel\routing\request();
+            
+            $request->Process();
+            
+            if($this->dbInit)
+            {
+                $this->dbInit->Initiate();
+                $this->dbInit->Execute($request);
+            }
+            
+            $r->Run($request);
+            
             return $this;
     }
 
