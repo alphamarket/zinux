@@ -53,7 +53,7 @@ class request extends \iMVC\baseiMVC
         /**
         * hold params by index
         */
-        protected $indexed_param;
+        public $indexed_param;
         /**
          * check if current instance has been proccessed or not
          * @var boolean
@@ -64,14 +64,11 @@ class request extends \iMVC\baseiMVC
         */
 	protected $requested_uri;
          
-	function __construct()
+	public function __construct(request $request = NULL)
 	{
             $this->Initiate();
-	}
-
-	function __destruct()
-	{
-            $this->Dispose();
+            if($request)
+                throw new \iMVC\kernel\exceptions\notImplementedException;
 	}
         /**
          * Initializing the instance
@@ -306,9 +303,6 @@ __FETCHING_MODULES:
 	{
             $this->GET = $_GET;
             $this->POST = $_POST;
-            # merging $_GET, $_POST into $params
-            $this->params = $_GET;
-            $this->params = array_merge($this->params, $_POST);
             # balancing the parts' count
             if(count($this->_parts) % 2 == 1)
                 $this->_parts[] = NULL;
@@ -317,16 +311,20 @@ __FETCHING_MODULES:
             {
                 # add to the $params
                 $this->params[$this->_parts[0]] = $this->_parts[1];
-                # add to indexed params
-                $this->indexed_param[] = $this->_parts[0];
-                # due to opration in `if` statement before current `while`
-                # if NULL appears, should appears in secondary part 
-                # so we only check this 
-                if($this->_parts[1])
-                    $this->indexed_param[] = $this->_parts[1];
                 # remove fetched parts
                 array_shift($this->_parts);
                 array_shift($this->_parts);
+            }
+            # merging $_GET, $_POST into $params 
+            # we need to do it at the end of fetching 
+            # params 'cause its imposible to use
+            # GetIndexedParam()
+            $this->params = array_merge($this->params, $_GET, $_POST);
+            # add to items into indexed params
+            foreach($this->params as $key => $param)
+            {
+                $this->indexed_param[] = $key;
+                $this->indexed_param[] = $param;
             }
             # we don't need this var anymore >:)
             unset($this->_parts);
@@ -358,16 +356,6 @@ __FETCHING_MODULES:
 	{
             return strtoupper($_SERVER['REQUEST_METHOD']) === "GET";
 	}
-        /**
-         * Get instance of current related controller 
-         * @return \iMVC\kernel\controller\baseController
-         */
-        public function GetControllerInstance()
-        {
-            $r = $this;
-            $c = $r->controller->namespace.'\\'.$r->controller->name."Controller";
-            return new $c;
-        }
         public function InvokeAction()
         {
             $c = $this->GetControllerInstance();

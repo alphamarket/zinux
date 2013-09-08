@@ -38,18 +38,9 @@ class httpRequest extends \iMVC\baseiMVC
                     throw new \InvalidArgumentException("The method `$method` is not supported");
             }
 	}
-	
-	function __destruct()
-	{
-	}
-    
         public function Initiate()
         {
             ;
-        }
-        public function Dispose()
-        {
-            parent::Dispose();
         }
 	
 	/**

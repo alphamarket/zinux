@@ -12,25 +12,10 @@ require_once (dirname(__FILE__).'/../../baseiMVC.php');
  */
 class router extends \iMVC\baseiMVC
 {
-
-	function __construct()
-	{
-	}
-
-	function __destruct()
-	{
-	}
-
         public function Initiate()
         {
             ;
         }
-        public function Dispose()
-        {
-            parent::Dispose();
-        }
-
-
 	/**
 	 * Route the passed request
 	 * 
