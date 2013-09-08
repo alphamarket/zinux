@@ -27,7 +27,7 @@ class fileSystem extends \iMVC\baseiMVC
         # create a cache signiture
         $cache_sig = __METHOD__."@$path";
         # open the cache file
-        require_once 'kernel/caching/xCache.php';
+        require_once IMVC_ROOT.'kernel/caching/xCache.php';
         $xc = new \iMVC\kernel\caching\xCache(__CLASS__);
         # check cache file and validate it
         if($xc->isCached($cache_sig) && file_exists($xc->retrieve($cache_sig)))
