@@ -33,7 +33,7 @@ abstract class cache {
      * 
      * @return object
      */
-    public abstract function eraseAll();
+    public abstract function deleteAll();
     /**
      * Check whether data accociated with a key
      *
@@ -76,7 +76,7 @@ abstract class cache {
      * @return string
      */
     public function fetch($key, $timestamp = false) {
-        $this->eraseExpired();
+        $this->deleteExpired();
         $cachedData = $this->_loadCache();
         (false === $timestamp) ? $type = 'data' : $type = 'time';
         if(!isset($cachedData[$key][$type])) return NULL;
@@ -90,7 +90,7 @@ abstract class cache {
      * @return array
      */
     public function fetchAll($meta = false) {
-        $this->eraseExpired();
+        $this->deleteExpired();
         if ($meta === false) {
             $results = array();
             $cachedData = $this->_loadCache();
@@ -111,14 +111,12 @@ abstract class cache {
      * @param string $key
      * @return object
      */
-    public function erase($key) {
+    public function delete($key) {
         $cacheData = $this->_loadCache();
         if (true === is_array($cacheData)) {
             if (true === isset($cacheData[$key])) {
                 unset($cacheData[$key]);
                 $this->_saveData($cacheData);
-            } else {
-                throw new \Exception("Error: erase() - Key '{$key}' not found.");
             }
         }
         return $this;
@@ -129,7 +127,7 @@ abstract class cache {
      * 
      * @return integer
      */
-    public function eraseExpired() {
+    public function deleteExpired() {
         $cacheData = $this->_loadCache();
         if (true === is_array($cacheData)) {
             $counter = 0;

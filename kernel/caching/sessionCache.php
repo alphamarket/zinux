@@ -67,7 +67,7 @@ class sessionCache extends cache
         return $u;
     }
 
-    public function eraseAll()
+    public function deleteAll()
     {
         unset($_SESSION[$this->_cachepath][$this->_cachename]);
     }
@@ -81,7 +81,7 @@ class sessionCache extends cache
     public function setCachePath($path) {
         self::$_cachedirectory = $path;
         $this->save("", "");
-        $this->erase("");
+        $this->delete("");
         return $this;
     }
 

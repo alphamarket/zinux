@@ -214,7 +214,7 @@ __FETCHING_MODULES:
                     if(!file_exists($module->GetPath()))
                     {
                         # delete cached data
-                        $xc->eraseAll();
+                        $xc->deleteAll();
                         # throw exception
                         throw new \zinux\kernel\exceptions\notFoundException("Wired! `{$module->module_name}` not found at `{$module->module_path}`");
                     }

@@ -57,9 +57,9 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers zinux\kernel\caching\xCache::erase
-     * @todo   Implement testErase().
+     * @todo   Implement testdelete().
      */
-    public function testErase()
+    public function testdelete()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -68,10 +68,10 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers zinux\kernel\caching\xCache::eraseAll
-     * @todo   Implement testEraseAll().
+     * @covers zinux\kernel\caching\xCache::deleteAll(
+     * @todo   Implement testdeleteAll().
      */
-    public function testEraseAll()
+    public function testdeleteAll()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -81,9 +81,9 @@ class xCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers zinux\kernel\caching\xCache::eraseExpired
-     * @todo   Implement testEraseExpired().
+     * @todo   Implement testdeleteExpired().
      */
-    public function testEraseExpired()
+    public function testdeleteExpired()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(

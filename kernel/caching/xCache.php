@@ -82,22 +82,22 @@ class xCache extends cache
         return $this->_session_cache->fetch($key, $timestamp);
     }
     
-    public function erase($key)
+    public function delete($key)
     {
-        $this->_session_cache->erase($key);
-        $this->_file_cache->erase($key);
+        $this->_session_cache->delete($key);
+        $this->_file_cache->delete($key);
     }
 
-    public function eraseAll()
+    public function deleteAll()
     {
-        $this->_session_cache->eraseAll();
-        $this->_file_cache->eraseAll();
+        $this->_session_cache->deleteAll();
+        $this->_file_cache->deleteAll();
     }
     
-    public function eraseExpired()
+    public function deleteExpired()
     {
-        $this->_session_cache->eraseExpired();
-        $this->_file_cache->eraseExpired();
+        $this->_session_cache->deleteExpired();
+        $this->_file_cache->deleteExpired();
     }
     
     public function isCached($key)

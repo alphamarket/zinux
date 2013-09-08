@@ -39,12 +39,12 @@ class sessionCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers zinux\kernel\caching\sessionCache::eraseAll
-     * @todo   Implement testEraseAll().
+     * @covers zinux\kernel\caching\sessionCache::deleteAll(
+     * @todo   Implement testdeleteAll().
      */
-    public function testEraseAll()
+    public function testdeleteAll()
     {
-        $this->object->eraseAll();
+        $this->object->deleteAll();
         $this->assertCount(0, $this->object->fetchAll());
     }
 
