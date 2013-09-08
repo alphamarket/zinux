@@ -37,6 +37,8 @@ class sessionCache extends cache
     protected function _saveData(array $cacheData){
         $cacheData['hash-sum'] = $this->_getHash(serialize($cacheData));
         $cacheData = serialize($cacheData);
+        if(!session_id())
+            session_start();
         $_SESSION[$this->_cachepath][$this->_cachename] = $cacheData;
     }
 
