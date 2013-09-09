@@ -6,14 +6,17 @@ In this project i have tried to make it uses so simple with minimal configuratio
 
 <b>Note:</b> Project is under development!
 
-Topic
+Topics
 --
 * [Directory Structure](#directory-structure)
-* [How to use](#how-to-use)
+* [How To Use](#how-to-use)
 * [MVC Entities](#mvc-entities)
 * [Autoloading Classes and Files](#autoloading-classes-and-files)
 * [Naming Conventsion](#naming-conventsion)
 * [Path Resolver](#path-resolver)
+* [Modules Bootstrap](#modules-bootstrap)
+* [How To Boostrap](#how-to-boostrap)
+* [Bootstrap Example](#bootstrap-example)
 * [Changing View](#changing-view)
 * [Changing Layout](#changing-layout)
 * [Loading Helpers](#loading-helpers)
@@ -44,7 +47,7 @@ Create project directory structure as follow<br />
 </pre>
 
 
-How to use
+How To Use
 ----
 Considering above directory structure; in your `PROJECT_ROOT/public_html/index.php` file add following codes
 
@@ -296,7 +299,8 @@ In bootstrap file which is a class file there are 2 kind of methods `Predispatch
         </dd>
 </dl>
 
-<b>How to boostrap</b>
+How To Boostrap
+---
 <dl>
         <dt>Predispatch</dt>
         <dd>
@@ -308,7 +312,8 @@ In bootstrap file which is a class file there are 2 kind of methods `Predispatch
         </dd>
 </dl>
 
-<b>Example of a bootstrap file's content</b>
+Bootstrap Example
+---
 ```PHP
 <?php
 
