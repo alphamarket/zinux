@@ -1,0 +1,929 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Zinux by dariushha</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/dariushha/zinux">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/dariushha/zinux/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/dariushha/zinux/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Zinux</h1>
+          <p>A simple and lightweight but powerful library supporting MVC design pattern  </p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/dariushha">dariushha</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <p>In this project i have tried to make it uses so simple.
+The <i>zinux</i>'s policy is <a href="http://en.wikipedia.org/wiki/Convention_over_configuration">Convention Over Configuration</a>
+which leads it to run minimal configuration and much more flexibility, 
+you will find it very convenient to use and develop.</p>
+
+<p><b>Note:</b> Project is under development!</p>
+
+<h2>
+<a name="topics" class="anchor" href="#topics"><span class="octicon octicon-link"></span></a>Topics</h2>
+
+<ul>
+<li><a href="#directory-structure">Directory Structure</a></li>
+<li><a href="#how-to-use">How To Use</a></li>
+<li><a href="#mvc-entities">MVC Entities</a></li>
+<li><a href="#autoloading-classes-and-files">Autoloading Classes and Files</a></li>
+<li><a href="#naming-conventsion">Naming Conventsion</a></li>
+<li><a href="#path-resolver">Path Resolver</a></li>
+<li>
+<a href="#modules-bootstrap">Modules Bootstrap</a>
+
+<ul>
+<li><a href="#how-to-boostrap">How To Boostrap</a></li>
+<li><a href="#bootstrap-example">Bootstrap Example</a></li>
+</ul>
+</li>
+<li>
+<a href="#working-with-mvc-entities-basics">Working With MVC Entities (Basics)</a>
+
+<ul>
+<li><a href="#passing-variables-to-view">Passing Variables To View</a></li>
+<li>
+<a href="#passing-variables-to-layout">Passing Variables To Layout</a><br>
+</li>
+<li><a href="#changing-view">Changing View</a></li>
+<li><a href="#changing-layout">Changing Layout</a></li>
+<li><a href="#loading-models">Loading Models</a></li>
+<li><a href="#loading-helpers">Loading Helpers</a></li>
+<li><a href="#a-controller-example">A Controller Example</a></li>
+</ul>
+</li>
+<li>
+<a href="#advance">Advance</a>
+
+<ul>
+<li><a href="#binding-custom-configuration-file-to-application">Binding Custom Configuration File to Application</a></li>
+<li><a href="#binding-database-handler-to-application">Binding Database Handler To Application</a></li>
+<li><a href="#adding-plugins">Adding Plugins</a></li>
+</ul>
+</li>
+<li><a href="#tips">Tips</a></li>
+</ul><h2>
+<a name="directory-structure" class="anchor" href="#directory-structure"><span class="octicon octicon-link"></span></a>Directory Structure</h2>
+
+<p>Create project directory structure as follow<br></p>
+
+<pre>
+  PROJECT-ROOT
+    |_ Modules
+        |_ SomeModule
+            |_ Controllers
+            |_ Models
+            |_ Views
+                |_ Layout
+                |_ Helper
+                |_ View
+                
+    |_ zinux (the library)
+    |_ public_html
+    |_ *
+    .
+    .
+    .
+</pre>
+
+<h2>
+<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How To Use</h2>
+
+<p>Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index.php</b> file add following codes</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>    
+    <span class="c1"># PROJECT-ROOT/public_html/index.php</span>
+
+    <span class="nb">defined</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">)</span> <span class="o">||</span> <span class="nb">define</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">,</span> <span class="s2">"DEVELOPMENT"</span><span class="p">);</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");</span>
+
+    <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span><span class="p">;</span>
+
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
+
+    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+
+</pre></div>
+
+<p>now you have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!! [ <i>Simple, isn't it!?</i> ]</p>
+
+<blockquote>
+<p>You may wondering why the folder's name passed to <code>\zinux\kernel\application\application</code> by considering<br>
+case sensitivity, does not match with <code>PROJECT-ROOT/Modules</code> !? See <a href="#path-resolver">Path Resolver</a>.</p>
+</blockquote>
+
+<h2>
+<a name="mvc-entities" class="anchor" href="#mvc-entities"><span class="octicon octicon-link"></span></a>MVC Entities</h2>
+
+<p>There are several entities defined in <i>zenux</i> framework:</p>
+
+<ul>
+<li>Modules</li>
+<li>Controllers</li>
+<li>Actions</li>
+<li>Models</li>
+<li>Layout</li>
+<li>Views</li>
+<li>Helpers</li>
+</ul><p>See <a href="#naming-conventsion">naming convention</a> for MVC Entities</p>
+
+<h2>
+<a name="autoloading-classes-and-files" class="anchor" href="#autoloading-classes-and-files"><span class="octicon octicon-link"></span></a>Autoloading Classes and Files</h2>
+
+<p><i>zinux</i> uses <a href="http://www.sitepoint.com/autoloading-and-the-psr-0-standard/">PSR-0 Standard</a> 
+namespace conventions to load <a href="#mvc-entities">MVC Entities</a>. so as long as <a href="#mvc-entities">MVC Entities</a> follow 
+<a href="http://www.sitepoint.com/autoloading-and-the-psr-0-standard/">PSR-0 Standard</a> 
+the <i>zinux</i>'s autoloader may be able to load those classes and beside <code>require_once '../zinux/baseZinux.php'</code> 
+no <code>require</code> needed for loading classes!  </p>
+
+<blockquote>
+<p><b>Note:</b> classes and relative files should have same name. [not necessarily case-sensitive] </p>
+</blockquote>
+
+<h2>
+<a name="naming-conventsion" class="anchor" href="#naming-conventsion"><span class="octicon octicon-link"></span></a>Naming Conventsion</h2>
+
+<p>MVC entities naming convension is as following table:</p>
+
+<table>
+<tr>
+<th>Entity</th>
+    <th>Pattern</th>
+    <th>File's Extention</th>
+    <th>Example</th>
+  </tr>
+<tr>
+<td>
+      Modules
+    </td>
+    <td>
+      [module_name]Module
+    </td>
+    <td>
+      [FOLDER]
+    </td>
+    <td>
+      <ul>
+<li>DefaultModule</li>
+        <li>UserModule</li>
+        <li>AuthModule</li>
+    </ul>
+</td>
+  </tr>
+<tr>
+<td>
+      Controllers
+    </td>
+    <td>
+      [controller_name]Controller
+    </td>
+    <td>
+      .php
+    </td>
+    <td>
+      <ul>
+<li>IndexController</li>
+        <li>UserController</li>
+        <li>AuthController</li>
+      </ul>
+</td>
+  </tr>
+<tr>
+<td>
+      Actions
+    </td>
+    <td>
+      [model_name]Action
+    </td>
+    <td>
+      [Method]
+    </td>
+    <td>
+      <ul>
+<li>LoginAction</li>
+        <li>FeedAction</li>
+        <li>LogoutAction</li>
+      </ul>
+</td>
+  </tr>
+<tr>
+<td>
+      Models
+    </td>
+    <td>
+      [model_name]Model
+    </td>
+    <td>
+      .php
+    </td>
+    <td>
+      <ul>
+<li>UserModel</li>
+        <li>FooModel</li>
+        <li>CommentModel</li>
+      </ul>
+</td>
+  </tr>
+<tr>
+<td>
+      Layouts
+    </td>
+    <td>
+      [layout_name]Layout
+    </td>
+    <td>
+      .phtml
+    </td>
+    <td>
+      <ul>
+<li>DefaultLayout</li>
+        <li>LoginLayout</li>
+        <li>PrintLayout</li>
+      </ul>
+</td>
+  </tr>
+<tr>
+<td>
+      Views
+    </td>
+    <td>
+      [view_name]View
+    </td>
+    <td>
+      .phtml
+    </td>
+    <td>
+      <ul>
+<li>IndexView</li>
+        <li>LoginView</li>
+        <li>AwesomeView</li>
+      </ul>
+</td>
+  </tr>
+<tr>
+<td>
+      Helpers <b>*</b>
+    </td>
+    <td>
+      [helper_name]Helper
+    </td>
+    <td>
+      .php
+    </td>
+    <td>
+      <ul>
+<li>LanguagesHelper</li>
+        <li>CoolHelper</li>
+        <li>MyHelper</li>
+      </ul>
+</td>
+  </tr>
+</table><p><b>* Note:</b> Helpers can either be class files or function files, see <a href="#loading-helpers">Loading Helpers</a></p>
+
+<h2>
+<a name="path-resolver" class="anchor" href="#path-resolver"><span class="octicon octicon-link"></span></a>Path Resolver</h2>
+
+<p>In UNIX style OS(e.g Linux) which the directory mapping is case-sensitive so sometimes it gets hard when we developing 
+large scale projects and keeping in mind that every file and folder should named as library's defined standard naming
+(i.e you cannot miss-case a letter in your namings) <b>it sucks!!</b><br>
+So i have developed a very fast and effective <b>path solver</b> which empower the library with non-case sensitive files and folders
+naming style!<br><br></p>
+
+<blockquote>
+<p><b>Note:</b> The path solver class is as fast as <code>file_exist()</code> operation which is inevitable when loading items!
+it uses custom made cache system which is very very fast and effective and makes path solver very smooth!
+so you don't need to worry about runtime factors, when it comes to path resolver! </p>
+</blockquote>
+
+<h2>
+<a name="modules-bootstrap" class="anchor" href="#modules-bootstrap"><span class="octicon octicon-link"></span></a>Modules Bootstrap</h2>
+
+<p><i>zinux</i> uses bootstrap file(if any exists when loading modules) to bootstrap the modules, 
+bootstrap files are at following map:</p>
+
+<pre>
+  PROJECT-ROOT
+    |_ Modules
+        |_ SomeModule
+            |_ Controllers
+            |_ Models
+            |_ Views
+            |_ SomeBootstrap.php
+
+        |_ DefaultModule
+            |_ Controllers
+            |_ Models
+            |_ Views
+            |_ DefaultBootstrap.php
+                
+    |_ zinux (the library)
+    |_ public_html
+    |_ *
+    .
+    .
+    .
+</pre>
+
+<p>In bootstrap file which is a class file there are 2 kind of methods <b>Predispatch</b> and <b>Postdispatch</b>:</p>
+
+<dl>
+<dt>Predispatch</dt>
+        <dd>
+                Runs before dispatching to action method!
+                good for operations like detecting language 
+                or checking if user is logged in or not
+        </dd>
+        <dt>Postdispatch</dt>
+        <dd>
+                Runs after dispatching to action method!
+                good do some data clean up or some other things
+        </dd>
+</dl><h2>
+<a name="how-to-boostrap" class="anchor" href="#how-to-boostrap"><span class="octicon octicon-link"></span></a>How To Boostrap</h2>
+
+<dl>
+<dt>Predispatch</dt>
+        <dd>
+                Every public method in bootstrap file which has a prefix <b>pre_</b> gets called in predispatch.
+        </dd>
+        <dt>Postdispatch</dt>
+        <dd>
+                Every public method in bootstrap file which has a prefix <b>post_</b> gets called in postdispatch.
+        </dd>
+</dl><h2>
+<a name="bootstrap-example" class="anchor" href="#bootstrap-example"><span class="octicon octicon-link"></span></a>Bootstrap Example</h2>
+
+<div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+
+    <span class="k">namespace</span> <span class="nx">modules\defaultModule</span><span class="p">;</span>
+
+    <span class="k">class</span> <span class="nc">defaultBootstrap</span>
+    <span class="p">{</span>
+
+      <span class="c1"># Predispatch method #1</span>
+      <span class="k">public</span> <span class="k">function</span> <span class="nf">PRE_echo</span><span class="p">(</span><span class="nx">\zinux\kernel\routing\request</span> <span class="nv">$request</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="k">echo</span> <span class="s2">"I am predispatch #1&lt;br /&gt;"</span><span class="p">;</span>
+
+        <span class="k">echo</span> <span class="s2">"&lt;div style='color:darkred'&gt;"</span><span class="p">;</span>
+        <span class="k">echo</span> <span class="s2">"&lt;br /&gt;You have requested:"</span><span class="p">;</span>
+        <span class="k">echo</span> <span class="s2">"&lt;br /&gt;Module : "</span><span class="o">.</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">module</span><span class="o">-&gt;</span><span class="na">full_name</span><span class="p">;</span>
+        <span class="k">echo</span> <span class="s2">"&lt;br /&gt;Controller : "</span><span class="o">.</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">controller</span><span class="o">-&gt;</span><span class="na">full_name</span><span class="p">;</span>
+        <span class="k">echo</span> <span class="s2">"&lt;br /&gt;Action : "</span><span class="o">.</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">action</span><span class="o">-&gt;</span><span class="na">full_name</span><span class="p">;</span>
+        <span class="k">echo</span> <span class="s2">"&lt;br /&gt;View : "</span><span class="o">.</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">full_name</span><span class="p">;</span>
+        <span class="k">echo</span> <span class="s2">"&lt;/div&gt;"</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="c1"># Predispatch method #2</span>
+      <span class="k">public</span> <span class="k">function</span> <span class="nf">PRE_echo1</span><span class="p">(</span><span class="nx">\zinux\kernel\routing\request</span> <span class="nv">$request</span><span class="p">)</span>
+      <span class="p">{</span>
+          <span class="k">echo</span> <span class="s2">"I am predispatch #2&lt;br /&gt;"</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="c1"># Postdispatch method #1</span>
+      <span class="k">public</span> <span class="k">function</span> <span class="nf">POST_echo</span><span class="p">(</span><span class="nx">\zinux\kernel\routing\request</span> <span class="nv">$request</span><span class="p">)</span>
+      <span class="p">{</span>
+          <span class="k">echo</span> <span class="s2">"I am postdispatch #1&lt;br /&gt;"</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="c1"># Postdispatch method #2</span>
+      <span class="k">public</span> <span class="k">function</span> <span class="nf">POST_echo1</span><span class="p">(</span><span class="nx">\zinux\kernel\routing\request</span> <span class="nv">$request</span><span class="p">)</span>
+      <span class="p">{</span>
+          <span class="k">echo</span> <span class="s2">"I am postdispatch #2&lt;br /&gt;"</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="c1"># This function would never gets called beacause </span>
+      <span class="c1"># It does not have 'pre_' OR 'post_' naming prefix</span>
+      <span class="k">public</span> <span class="k">function</span> <span class="nf">FooFunc</span><span class="p">()</span>
+      <span class="p">{</span>
+          <span class="k">echo</span> <span class="nx">__METHOD__</span><span class="o">.</span><span class="s2">" will never get invoked..."</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+
+<h1>
+<a name="working-with-mvc-entities-basics" class="anchor" href="#working-with-mvc-entities-basics"><span class="octicon octicon-link"></span></a>Working With MVC Entities (Basics)</h1>
+
+<h2>
+<a name="passing-variables-to-view" class="anchor" href="#passing-variables-to-view"><span class="octicon octicon-link"></span></a>Passing Variables To View</h2>
+
+<p>Varibales can passed to view in <b>Controllers</b> via following codes</p>
+
+<div class="highlight highlight-PHP"><pre>   <span class="c1"># in our controller we path varibales like this</span>
+   <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">passed_from_controller</span> <span class="o">=</span> <span class="nv">$some_value</span><span class="p">;</span>
+
+   <span class="c1"># in our view we access variable like this</span>
+   <span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">passed_from_controller</span><span class="p">;</span>
+</pre></div>
+
+<h2>
+<a name="passing-variables-to-layout" class="anchor" href="#passing-variables-to-layout"><span class="octicon octicon-link"></span></a>Passing Variables To Layout</h2>
+
+<p>Varibales can passed to view in <b>Controllers</b> and <b>Views</b> via following codes</p>
+
+<div class="highlight highlight-PHP"><pre>   <span class="c1"># in our controller OR view we path varibales like this</span>
+   <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">layout</span><span class="o">-&gt;</span><span class="na">passed_from_controller_or_view</span> <span class="o">=</span> <span class="nv">$some_value</span><span class="p">;</span>
+
+   <span class="c1"># in our layout we access variable like this</span>
+   <span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">passed_from_controller_or_view</span><span class="p">;</span>
+</pre></div>
+
+<h2>
+<a name="changing-view" class="anchor" href="#changing-view"><span class="octicon octicon-link"></span></a>Changing View</h2>
+
+<p>View can change in <b>Controllers</b> via following codes</p>
+
+<div class="highlight highlight-PHP"><pre>  <span class="c1"># Assume that we have Layout named 'LoginView'(case-insensitve) under current module/controller</span>
+
+  <span class="c1"># following code will change current view to 'LoginView'</span>
+  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">SetView</span><span class="p">(</span><span class="s2">"Login"</span><span class="p">);</span> 
+
+  <span class="c1"># disable view(i.e loading no view only view)</span>
+  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">SuppressView</span><span class="p">();</span>
+</pre></div>
+
+<h2>
+<a name="changing-layout" class="anchor" href="#changing-layout"><span class="octicon octicon-link"></span></a>Changing Layout</h2>
+
+<p>Layout can change in <b>Controllers</b> and <b>Views</b> via following codes</p>
+
+<div class="highlight highlight-PHP"><pre>  <span class="c1"># Assume that we have Layout named 'CoolLayout'(case-insensitve) under current module</span>
+
+  <span class="c1"># following code will change current layout to 'CoolLayout'</span>
+  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">layout</span><span class="o">-&gt;</span><span class="na">SetLayout</span><span class="p">(</span><span class="s2">"COOL"</span><span class="p">);</span> 
+
+  <span class="c1"># disable any layouting(i.e loading no layout only view)</span>
+  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">layout</span><span class="o">-&gt;</span><span class="na">SuppressLayout</span><span class="p">();</span>
+</pre></div>
+
+<h2>
+<a name="loading-models" class="anchor" href="#loading-models"><span class="octicon octicon-link"></span></a>Loading Models</h2>
+
+<p>When creating models' instances the <i>zinux</i>'s autoloader will load models.<br>
+No need for <code>require</code> for models!</p>
+
+<h2>
+<a name="loading-helpers" class="anchor" href="#loading-helpers"><span class="octicon octicon-link"></span></a>Loading Helpers</h2>
+
+<p>Helper can load at <b>Anywhere</b> if demanded helper is a class file just create object of that class the <i>zinux</i>'s autoloader do the rest! but if they are function files they should load via
+following code</p>
+
+<div class="highlight highlight-PHP"><pre>  <span class="c1"># Assume that we have Helper file named 'fOoModel.php'(case-insensitve) under current module</span>
+
+  <span class="c1"># loades fOoModel.php which is under current module ($this-&gt;request-&gt;module)</span>
+  <span class="c1"># the exact use of this code is valid in</span>
+  <span class="c1">#   {Contoller}</span>
+  <span class="c1">#   {Model}</span>
+  <span class="c1">#   {View}</span>
+  <span class="c1">#   {Layout}</span>
+
+  <span class="k">new</span> <span class="nx">\zinux\kernel\mvc\helper</span><span class="p">(</span><span class="s2">"foo"</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">module</span><span class="p">);</span>
+
+  <span class="c1"># now we can use functions in 'fOoHelper.php' file</span>
+  <span class="nx">some_Function_In_fOo</span><span class="p">(</span><span class="s1">'Hello, world'</span><span class="p">)</span>
+</pre></div>
+
+<h2>
+<a name="a-controller-example" class="anchor" href="#a-controller-example"><span class="octicon octicon-link"></span></a>A Controller Example</h2>
+
+<blockquote>
+<p>In this example we will have a demonstration of what we talked about above</p>
+</blockquote>
+
+<p>Lets assume that we have a hypothetical controller under <code>SomeModule</code> define in 
+<a href="#directory-structure">directory structure</a> Here is a controller example <i>(pay attention to namespace and
+relative controller path)</i>.</p>
+
+<div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+    <span class="c1"># this controller locates at  </span>
+    <span class="c1"># PROJECT-ROOT/Modules/SomeModule/Controllers/FooController.php</span>
+    <span class="k">namespace</span> <span class="nx">\Modules\SomeController\Controllers</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     *</span>
+<span class="sd">     * Remember that files pathes are not case sensitive</span>
+<span class="sd">     *</span>
+<span class="sd">     */</span>
+
+    <span class="k">class</span> <span class="nc">FooController</span> <span class="k">extends</span> <span class="nx">\zinux\kernel\controller\baseController</span>
+    <span class="p">{</span>
+       <span class="k">public</span> <span class="k">function</span> <span class="nf">Initiate</span><span class="p">()</span>
+       <span class="p">{</span>
+         <span class="sd">/**</span>
+<span class="sd">          * Do your init stuffs here</span>
+<span class="sd">          * This method will get called </span>
+<span class="sd">          * just before invoking actions</span>
+<span class="sd">          */</span>
+       <span class="p">}</span>
+
+       <span class="sd">/**</span>
+<span class="sd">        * Url map to this controller : </span>
+<span class="sd">        *   </span>
+<span class="sd">        *  /some/foo/some/var?or=GET</span>
+<span class="sd">        *</span>
+<span class="sd">        *  |OR| </span>
+<span class="sd">        *  </span>
+<span class="sd">        *  /some/foo/index/some/var?or=GET</span>
+<span class="sd">        */</span>
+       <span class="k">public</span> <span class="k">function</span> <span class="nf">IndexController</span><span class="p">()</span>
+       <span class="p">{</span>
+         <span class="c1"># lets see that is the request's params are </span>
+         <span class="nx">\zinux\kernel\utilities\debug</span><span class="o">::</span><span class="na">_var</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">params</span><span class="p">);</span>
+         <span class="sd">/**</span>
+<span class="sd">          * output:</span>
+<span class="sd">          *</span>
+<span class="sd">          * Array</span>
+<span class="sd">          * (</span>
+<span class="sd">          *     [some] =&gt; var</span>
+<span class="sd">          *     [or] =&gt; GET</span>
+<span class="sd">          * )</span>
+<span class="sd">          *</span>
+<span class="sd">          */</span>
+       <span class="p">}</span>
+
+       <span class="sd">/**</span>
+<span class="sd">        * Url map to this controller : </span>
+<span class="sd">        *   </span>
+<span class="sd">        *  /some/foo/feed</span>
+<span class="sd">        */</span>
+       <span class="k">public</span> <span class="k">function</span> <span class="nf">FeedAction</span><span class="p">()</span>
+       <span class="p">{</span>
+         <span class="c1"># let assume that we have some data </span>
+         <span class="nv">$data</span> <span class="o">=</span> <span class="nx">some_data_generator</span><span class="p">();</span>
+
+         <span class="c1"># if the 'json' format is requested</span>
+         <span class="c1"># i.e the uri is :</span>
+         <span class="c1"># /some/foo/feed.json</span>
+         <span class="k">if</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">type</span> <span class="o">==</span> <span class="s2">"json"</span><span class="p">)</span>
+         <span class="p">{</span>
+           <span class="c1"># we dont want any view or layout here</span>
+           <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">SuppressView</span><span class="p">();</span>
+           <span class="c1"># print out json format of data</span>
+           <span class="k">echo</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+           <span class="k">return</span><span class="p">;</span>
+         <span class="p">}</span>
+         <span class="c1"># or if the 'raw' format is requested</span>
+         <span class="c1"># i.e the uri is :</span>
+         <span class="c1"># /some/foo/feed.json</span>
+         <span class="k">elseif</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">type</span> <span class="o">==</span> <span class="s2">"raw"</span><span class="p">)</span>
+         <span class="p">{</span>
+           <span class="c1"># we dont want any view or layout here</span>
+           <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">SuppressView</span><span class="p">();</span>
+           <span class="c1"># print out the raw format of $data</span>
+           <span class="nx">\zinux\kernel\utilities\debug</span><span class="o">::</span><span class="na">_var</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+           <span class="k">return</span><span class="p">;</span>
+         <span class="p">}</span>
+
+         <span class="c1"># if was not a json request</span>
+         <span class="c1"># pass data to view</span>
+         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">some_data</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">;</span>
+
+         <span class="c1"># set layout to feedLayout</span>
+         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">layout</span><span class="o">-&gt;</span><span class="na">SetLayout</span><span class="p">(</span><span class="s2">"feed"</span><span class="p">);</span>
+       <span class="p">}</span>
+
+       <span class="sd">/**</span>
+<span class="sd">        * Url map to this controller : </span>
+<span class="sd">        *   </span>
+<span class="sd">        *  /some/foo/modeluse</span>
+<span class="sd">        */</span>
+       <span class="k">public</span> <span class="k">function</span> <span class="nf">ModelUseAction</span><span class="p">()</span>
+       <span class="p">{</span>
+         <span class="sd">/**</span>
+<span class="sd">          *</span>
+<span class="sd">          * In this action are trying to show</span>
+<span class="sd">          * how to use model and helper</span>
+<span class="sd">          *</span>
+<span class="sd">          */</span>
+         <span class="c1"># Assume that we have a model in following path</span>
+         <span class="c1"># PROJECT-ROOT/Modules/SomeModule/Models/Xoxo.php</span>
+         <span class="nv">$o</span> <span class="o">=</span> <span class="nx">\modules\SomeModule\Models\Xoxo</span><span class="p">();</span>
+         <span class="c1"># fetch some data from xoxo class</span>
+         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">new_data</span> <span class="o">=</span> <span class="nv">$o</span><span class="o">-&gt;</span><span class="na">get_some_data</span><span class="p">();</span>
+         <span class="c1"># test data validation</span>
+         <span class="k">if</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">new_data</span><span class="p">)</span>
+         <span class="p">{</span>
+           <span class="c1"># Assume that we have a helper in following path</span>
+           <span class="c1"># PROJECT-ROOT/Modules/SomeModules/Views/Helper/A_helper.php</span>
+           <span class="k">new</span> <span class="nx">\zinux\kernel\mvc\helper</span><span class="p">(</span><span class="s2">"a_helper"</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">module</span><span class="p">);</span>
+           <span class="c1"># in A_helper.php we have bellow function</span>
+           <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">proc_data</span> <span class="o">=</span> <span class="nx">proccess_data</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">new_data</span><span class="p">);</span>
+           <span class="c1"># change the view </span>
+           <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">SetView</span><span class="p">(</span><span class="s2">"ValidData"</span><span class="p">);</span>
+         <span class="p">}</span>
+         <span class="k">else</span>
+         <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">\zinux\kernel\exceptions\notFoundException</span><span class="p">(</span><span class="s2">"data not found!"</span><span class="p">);</span>
+         <span class="p">}</span>
+       <span class="p">}</span>
+    <span class="p">}</span>
+
+</pre></div>
+
+<blockquote>
+<p>At above demo all basic operations are demonstrated. 
+so if you catchup with the above codes you are 100% ready to use <b>zinux</b> library.<br><b>Cheers!</b></p>
+</blockquote>
+
+<h1>
+<a name="advance" class="anchor" href="#advance"><span class="octicon octicon-link"></span></a>Advance</h1>
+
+<p>As i mentioned before, the porpuse of <i>zinux</i> is convention over configuration, and the most challenging 
+topics in developing any applications are <b>Project Configuration</b> and <b>Databse Integration</b>.<br><i>zinux</i> provides a very simple and flexible manner in other to bind a configuration file and database initializer.<br><b>These are optional</b>.</p>
+
+<h2>
+<a name="binding-custom-configuration-file-to-application" class="anchor" href="#binding-custom-configuration-file-to-application"><span class="octicon octicon-link"></span></a>Binding Custom Configuration File to Application</h2>
+
+<p>When creating <code>\zinux\kernel\application\application</code> instance in <code>PROJECT-ROOT/public_html/index.php</code> file
+you can pass a instance of <code>\zinux\kernel\config\baseConfigLoader</code> to <b>Startup()</b>.<br>
+and somewhere in your module you define a class which <b>extents</b> the abstract class 
+<code>\zinux\kernel\config\baseConfigLoader</code> which would be resposible for to load configurations for your application.
+It can be a ini loader or XML loader, etc. </p>
+
+<p><b>Usage example:</b><br></p>
+
+<hr><p>Lets suppose that we have a class named <b>\vendor\tools\iniParser</b> which is responsible for 
+loading configurations from an ini file for your project.</p>
+
+<div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+  <span class="c1"># file : PROJECT-ROOT/vendor/tools/iniParser.php</span>
+
+  <span class="k">namespace</span> <span class="nx">vendor\tools</span><span class="p">;</span>
+
+  <span class="k">class</span> <span class="nc">iniParser</span> <span class="k">extends</span> <span class="nx">\zinux\kernel\config\baseConfigLoader</span>
+  <span class="p">{</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">Execute</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="cm">/*</span>
+<span class="cm">       *</span>
+<span class="cm">       * Your ini parse algorithm here </span>
+<span class="cm">       *</span>
+<span class="cm">       */</span>
+       <span class="sd">/**</span>
+<span class="sd">        * @var array Return type should be an array</span>
+<span class="sd">        * otherwise an exception will be thrown from </span>
+<span class="sd">        * \zinux\kernel\config\config</span>
+<span class="sd">        */</span>
+       <span class="k">return</span> <span class="nv">$loaded_config</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * @param string $config_file_address config file address</span>
+<span class="sd">     * @param string $section_name section_name in ini file</span>
+<span class="sd">     * @throws \zinux\kernel\exceptions\invalideArgumentException</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$config_file_address</span><span class="p">,</span> <span class="nv">$section_name</span> <span class="o">=</span> <span class="k">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">file_address</span>  <span class="o">=</span> <span class="nx">\zinux\kernel\utilities\fileSystem</span><span class="o">::</span><span class="na">resolve_path</span><span class="p">(</span><span class="nv">$config_file_address</span><span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">file_address</span><span class="p">)</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">\zinux\kernel\exceptions\invalideArgumentException</span><span class="p">(</span><span class="s2">"config file not found at '</span><span class="si">$config_file_address</span><span class="s2">'"</span><span class="p">);</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">section_name</span> <span class="o">=</span> <span class="nv">$section_name</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</pre></div>
+
+<p>By overwriting the index file introduced in <a href="#how-to-use">How To Use</a> as follow:</p>
+
+<div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>    
+    <span class="c1"># PROJECT-ROOT/public_html/index.php</span>
+
+    <span class="nb">defined</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">)</span> <span class="o">||</span> <span class="nb">define</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">,</span> <span class="s2">"DEVELOPMENT"</span><span class="p">);</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");</span>
+
+    <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span><span class="p">;</span>
+
+    <span class="c1"># Note that this registration is OPTIONAL</span>
+    <span class="c1"># you don't come up with any cache directory </span>
+    <span class="c1"># the zinux will pick /tmp/zinux-cache as its cache directory</span>
+    <span class="nx">\zinux\kernel\caching\fileCache</span><span class="o">::</span><span class="na">RegisterCachePath</span><span class="p">(</span><span class="s2">"/path/to/cache/dir"</span><span class="p">);</span>
+
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
+
+    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">(</span>
+                    <span class="cm">/*</span>
+<span class="cm">                    * This part is added to previous</span>
+<span class="cm">                    * version of index.php</span>
+<span class="cm">                    */</span>
+                    <span class="k">new</span> <span class="nx">\vendor\tools\iniParser</span><span class="p">(</span><span class="s2">"../config/config.cfg"</span><span class="p">,</span> <span class="nx">RUNNING_ENV</span><span class="p">)</span>
+                  <span class="p">)</span>
+         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+</pre></div>
+
+<p><b>Accessing fetched configs</b><br></p>
+
+<hr><p>Now that we have loaded our configurations we can now get access to all loaded configurations from any we in your
+project via <code>\zinux\kernel\config\config</code> class!
+<b>Example:</b><br></p>
+
+<div class="highlight highlight-PHP"><pre>  <span class="c1"># Assume that in out ini file we have following lines</span>
+  <span class="cm">/*</span>
+<span class="cm">   * config.db.host = localhost</span>
+<span class="cm">   * config.db.username = USERNAME</span>
+<span class="cm">   * config.db.password = PASSWORD</span>
+<span class="cm">   * config.db.dbname = DB_NAME</span>
+<span class="cm">   */</span>
+
+
+  <span class="c1"># output: localhost</span>
+  <span class="k">echo</span> <span class="nx">\zinux\kernel\config\config</span><span class="o">::</span><span class="na">GetConfig</span><span class="p">(</span><span class="s2">"config"</span><span class="p">,</span> <span class="s2">"db"</span><span class="p">,</span> <span class="s2">"host"</span><span class="p">);</span>
+
+  <span class="c1"># output: USERNAME</span>
+  <span class="k">echo</span> <span class="nx">\zinux\kernel\config\config</span><span class="o">::</span><span class="na">GetConfig</span><span class="p">(</span><span class="s2">"config"</span><span class="p">,</span> <span class="s2">"db"</span><span class="p">,</span> <span class="s2">"username"</span><span class="p">);</span>
+
+  <span class="c1"># output: PASSWORD</span>
+  <span class="k">echo</span> <span class="nx">\zinux\kernel\config\config</span><span class="o">::</span><span class="na">GetConfig</span><span class="p">(</span><span class="s2">"config"</span><span class="p">,</span> <span class="s2">"db"</span><span class="p">,</span> <span class="s2">"password"</span><span class="p">);</span>
+
+  <span class="c1"># output: DB_NAME</span>
+  <span class="k">echo</span> <span class="nx">\zinux\kernel\config\config</span><span class="o">::</span><span class="na">GetConfig</span><span class="p">(</span><span class="s2">"config"</span><span class="p">,</span> <span class="s2">"db"</span><span class="p">,</span> <span class="s2">"dbname"</span><span class="p">);</span>
+</pre></div>
+
+<blockquote>
+<p>Easy enough, Na!?</p>
+</blockquote>
+
+<h2>
+<a name="binding-database-handler-to-application" class="anchor" href="#binding-database-handler-to-application"><span class="octicon octicon-link"></span></a>Binding Database Handler To Application</h2>
+
+<p>When creating <code>\zinux\kernel\application\application</code> instance in <code>PROJECT-ROOT/public_html/index.php</code> file
+you can pass a instance of <code>\zinux\kernel\db\basedbInitializer</code> as a secondary argument to <b>constructor</b>.<br>
+and somewhere in your module you define a class which <b>extents</b> the abstract class 
+<code>\zinux\kernel\db\basedbInitializer</code> which would be resposible for configuring database for your application</p>
+
+<p><b>Usage example:</b><br></p>
+
+<hr><p>Lets suppose that we have a class named <b>\vendor\db\ActiveRecord\initializer</b> which is responsible for initializing
+<a>PHP ActiveRecord</a> for your project.</p>
+
+<div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+  <span class="c1"># file : PROJECT-ROOT/vendor/db/ActiveRecord/initializer.php</span>
+
+  <span class="k">namespace</span> <span class="nx">vendor\db\ActiveRecord</span><span class="p">;</span>
+
+  <span class="c1"># Where PHPActive-record lib. is stored </span>
+  <span class="c1"># location:  PROJECT-ROOT/vendor/db/ActiveRecord/vendor</span>
+  <span class="k">require_once</span> <span class="s1">'vendor/ActiveRecord.php'</span><span class="p">;</span>
+
+  <span class="sd">/**</span>
+<span class="sd">   * php-activerecord initializer</span>
+<span class="sd">   * @author dariush</span>
+<span class="sd">   * @version 1.0</span>
+<span class="sd">   */</span>
+  <span class="k">class</span> <span class="nc">initializer</span> <span class="k">extends</span> <span class="nx">\zinux\kernel\db\basedbInitializer</span>
+  <span class="p">{</span>
+      <span class="k">public</span> <span class="k">function</span> <span class="nf">Execute</span><span class="p">(</span><span class="nv">$request</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="nx">ActiveRecord\Config</span><span class="o">::</span><span class="na">initialize</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$cfg</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$request</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nv">$cfg</span><span class="o">-&gt;</span><span class="na">set_model_directory</span><span class="p">(</span><span class="s1">'models'</span><span class="p">);</span>
+            <span class="nv">$cfg</span><span class="o">-&gt;</span><span class="na">set_connections</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+                <span class="s1">'development'</span> <span class="o">=&gt;</span> <span class="s1">'mysql://username:password@localhost/database_name'</span><span class="p">));</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+</pre></div>
+
+<p>By overwriting the index file introduced in <a href="#how-to-use">How To Use</a> as follow:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>    
+    <span class="c1"># PROJECT-ROOT/public_html/index.php</span>
+
+    <span class="nb">defined</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">)</span> <span class="o">||</span> <span class="nb">define</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">,</span> <span class="s2">"DEVELOPMENT"</span><span class="p">);</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");</span>
+
+    <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span><span class="p">;</span>
+
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">,</span>
+                                                        <span class="cm">/*</span>
+<span class="cm">                                                        * This part is added to previous</span>
+<span class="cm">                                                        * version of index.php</span>
+<span class="cm">                                                        */</span>
+                                                        <span class="k">new</span> <span class="nx">\vendor\db\ActiveRecord\initializer</span><span class="p">());</span>
+
+    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+
+</pre></div>
+
+<p>Your application is configured to use <a>PHP ActiveRecord</a> as database handler and
+you can use <b>PHP ActiveRecord</b> framework freely through your project.<br></p>
+
+<blockquote>
+<p>Still Easy, mate!?</p>
+</blockquote>
+
+<h2>
+<a name="adding-plugins" class="anchor" href="#adding-plugins"><span class="octicon octicon-link"></span></a>Adding Plugins</h2>
+
+<p>Add plugins is so simple in <i>zinux</i> you just add the plugin in where 
+ever you want under <b>PROJECT-ROOT</b> and start using it with out any registration or configuration!!!<br><b>What!?!?!</b> Yup, you get it right! but make sure your have followed
+<a href="http://www.sitepoint.com/autoloading-and-the-psr-0-standard/">PSR-0 Standard</a> discussed in 
+<a href="#autoloading-classes-and-files">Autoloading Classes And Files</a> in your plugins.</p>
+
+<blockquote>
+<p>Simple, Ha!?</p>
+</blockquote>
+
+<hr><p>In case of using <b>third-party</b> libraries which is hard to apply <a href="http://www.sitepoint.com/autoloading-and-the-psr-0-standard/">PSR-0 Standard</a>
+to it, following <b>Tip</b> may become usefull!</p>
+
+<blockquote>
+<p><b>Tip:</b> If you are using and <b>third-party plugin</b>, you <b>don't need</b> to standardize 
+<b>entire plugin</b> with <b><i>PSR-0 Standard</i></b> (notice that we <b>didn't change</b> any
+<b>PHP-ActiveRecord</b> namespaces in <a href="#binding-database-handler-to-application">Binding Database Handler To Application</a>!!)<br>
+You just create a <b>initializer class</b> in that plugin which <b>define a autoloader</b> for that pluging!
+In <a href="#binding-database-handler-to-application">Binding Database Handler To Application</a> example the autoloader 
+is defined in : </p>
+</blockquote>
+
+<div class="highlight highlight-PHP"><pre>
+  <span class="c1"># Where PHPActive-record lib. is stored </span>
+  <span class="c1"># location:  PROJECT-ROOT/vendor/db/ActiveRecord/vendor</span>
+  <span class="k">require_once</span> <span class="s1">'vendor/ActiveRecord.php'</span><span class="p">;</span>
+
+</pre></div>
+
+<blockquote>
+<p>Then you call the plugin autoloader <b>just before</b> making application run! i.e 
+by overwriting the index file introduced in <a href="#how-to-use">How To Use</a> as follow:</p>
+</blockquote>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>    
+    <span class="c1"># PROJECT-ROOT/public_html/index.php</span>
+
+    <span class="nb">defined</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">)</span> <span class="o">||</span> <span class="nb">define</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">,</span> <span class="s2">"DEVELOPMENT"</span><span class="p">);</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");</span>
+
+    <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span>
+
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     *</span>
+<span class="sd">     * Call the pluging initliazer here!</span>
+<span class="sd">     *</span>
+<span class="sd">     */</span>
+    <span class="c1"># Lets assume that we have third-party library and we wish to use it</span>
+    <span class="c1"># And also we have a class `\Some\Where\In\Project\FOO_PLUGIN_INITIALIZER`</span>
+    <span class="c1"># Just do class the `\Some\Where\In\Project\FOO_PLUGIN_INITIALIZER` here!</span>
+    <span class="nv">$plugin_init</span> <span class="o">=</span> <span class="nx">\Some\Where\In\Project\FOO_PLUGIN_INITIALIZER</span><span class="p">();</span>
+    <span class="nv">$plugin_init</span><span class="o">-&gt;</span><span class="na">A_Func_To_Add_Plugins_Autoloader</span><span class="p">()</span>
+
+
+    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+
+</pre></div>
+
+<h1>
+<a name="tips" class="anchor" href="#tips"><span class="octicon octicon-link"></span></a>Tips</h1>
+
+<h2>
+<a name="request-types" class="anchor" href="#request-types"><span class="octicon octicon-link"></span></a>Request Types</h2>
+
+<p>The <i>zinux</i> supports request types i.e you can have a URI like <code>/news/feed.json</code> which points to <b>NewsController</b> 
+and <b>FeedAction</b> you can ouput feeds according to request type (in here <code>json</code>) in <b>NewsController::FeedAction()</b>! default is <code>html</code>. </p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
