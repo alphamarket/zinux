@@ -352,6 +352,10 @@ Bootstrap Example
                 echo "This is 
             }
         }
+<<<<<<< HEAD
+=======
+```
+>>>>>>> test
 
 
 
