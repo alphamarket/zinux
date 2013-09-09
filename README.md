@@ -370,7 +370,7 @@ Bootstrap Example
 
 Changing View
 ---
-Layout can change in `Controllers` via following codes
+View can change in `Controllers` via following codes
 
 ```PHP
   # Assume that we have Layout named 'LoginView'(case-insensitve) under current module/controller
