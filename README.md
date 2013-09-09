@@ -241,16 +241,112 @@ MVC entities naming convension is as following table:
 
 Path Resolver
 ---
-In UNIX style OS(e.g Linux) which the directory mapping are case-sensitive so sometimes it gets hard we developing 
+In UNIX style OS(e.g Linux) which the directory mapping is case-sensitive so sometimes it gets hard when we developing 
 large scale projects and keeping in mind that every file and folder should named as library's defined standard naming
-(i.e you cannot miss-case a letter in your namings) it sucks!!<br />
-so i have developed very fast and effective path solver which empower the library with non-case sensitive files and folders
+(i.e you cannot miss-case a letter in your namings) <b>it sucks!!</b><br />
+So i have developed a very fast and effective `path solver` which empower the library with non-case sensitive files and folders
 naming style!<br /><br />
 
 
-> <b>Note:</b> The path solver class is as fast as `file_exist()` operation which inevitable when loading items!
-it uses custom made caches which is very very fast and effective caching system makes path solver very smooth!
-so you don't need to worry about library's runtime, when it comes to path resolver! 
+> <b>Note:</b> The path solver class is as fast as `file_exist()` operation which is inevitable when loading items!
+it uses custom made cache system which is very very fast and effective and makes path solver very smooth!
+so you don't need to worry about runtime factors, when it comes to path resolver! 
+
+
+Modules Bootstrap
+---
+<i>zinux</i> uses bootstrap file(if any exists when loading modules) to bootstrap the modules, 
+bootstrap files are at following map:
+
+<pre>
+  PROJECT-ROOT
+    |_ Modules
+        |_ SomeModule
+            |_ Controllers
+            |_ Models
+            |_ Views
+            |_ SomeBootstrap.php
+
+        |_ DefaultModule
+            |_ Controllers
+            |_ Models
+            |_ Views
+            |_ DefaultBootstrap.php
+                
+    |_ zinux (the library)
+    |_ public_html
+    |_ *
+    .
+    .
+    .
+</pre>
+
+In bootstrap file which is a class file there are 2 kind of methods `Predispatch` and `Postdispatch`:
+<dl>
+        <dt>Predispatch</dt>
+        <dd>
+                Runs before dispatching to action method!
+                good for operations like detecting language 
+                or checking if user is logged in or not
+        </dd>
+        <dt>Postdispatch</dt>
+        <dd>
+                Runs after dispatching to action method!
+                good do some data clean up or some other things
+        </dd>
+</dl>
+
+<b>How to boostrap</b>
+<dl>
+        <dt>Predispatch</dt>
+        <dd>
+                Every public method in bootstrap file which has a prefix `pre_` gets called in predispatch.
+        </dd>
+        <dt>Postdispatch</dt>
+        <dd>
+                Every public method in bootstrap file which has a prefix `post_` gets called in postdispatch.
+        </dd>
+</dl>
+
+<b>Example of a bootstrap file's content</b>
+```PHP
+<?php
+
+        namespace modules\defaultModule;
+
+        class defaultBootstrap
+        {
+
+            # Predispatch method #1
+            public function PRE_echo()
+            {
+                echo "I am predispatch #1<br />";
+            }
+
+            # Predispatch method #2
+            public function PRE_echo1()
+            {
+                echo "I am predispatch #2<br />";
+            }
+            
+            # Postdispatch method #1
+            public function POST_echo()
+            {
+                echo "I am predispatch #1<br />";
+            }
+
+            # Postdispatch method #2
+            public function POST_echo1()
+            {
+                echo "I am predispatch #2<br />";
+            }
+
+            # This function would never gets called
+            public function FooFunc()
+            {
+                echo "This is 
+            }
+        }
 
 
 
@@ -286,7 +382,7 @@ Layout can change in `Controllers` and `Views` via following codes
 
 Loading Helpers
 ---
-Helper can load at `anywhere` if demanded helper is a class file just create object of that class the <i>zinux</i>'s autoloader do the rest! but if they are function files they should load via
+Helper can load at `Anywhere` if demanded helper is a class file just create object of that class the <i>zinux</i>'s autoloader do the rest! but if they are function files they should load via
 following code
 
 ```PHP
