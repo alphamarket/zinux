@@ -53,8 +53,11 @@ Considering above directory structure; in your `PROJECT_ROOT/public_html/index.p
 
 ```php
 <?php    
+    # PROJECT_ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php'
     
@@ -317,41 +320,50 @@ Bootstrap Example
 ```PHP
 <?php
 
-        namespace modules\defaultModule;
+    namespace modules\defaultModule;
 
-        class defaultBootstrap
-        {
+    class defaultBootstrap
+    {
 
-            # Predispatch method #1
-            public function PRE_echo()
-            {
-                echo "I am predispatch #1<br />";
-            }
+      # Predispatch method #1
+      public function PRE_echo(\zinux\kernel\routing\request $request)
+      {
+        echo "I am predispatch #1<br />";
+        
+        echo "<div style='color:darkred'>";
+        echo "<br />You have requested:";
+        echo "<br />Module : ".$request->module->full_name;
+        echo "<br />Controller : ".$request->controller->full_name;
+        echo "<br />Action : ".$request->action->full_name;
+        echo "<br />View : ".$request->view->full_name;
+        echo "</div>";
+      }
 
-            # Predispatch method #2
-            public function PRE_echo1()
-            {
-                echo "I am predispatch #2<br />";
-            }
-            
-            # Postdispatch method #1
-            public function POST_echo()
-            {
-                echo "I am predispatch #1<br />";
-            }
+      # Predispatch method #2
+      public function PRE_echo1(\zinux\kernel\routing\request $request)
+      {
+          echo "I am predispatch #2<br />";
+      }
+      
+      # Postdispatch method #1
+      public function POST_echo(\zinux\kernel\routing\request $request)
+      {
+          echo "I am predispatch #1<br />";
+      }
 
-            # Postdispatch method #2
-            public function POST_echo1()
-            {
-                echo "I am predispatch #2<br />";
-            }
+      # Postdispatch method #2
+      public function POST_echo1(\zinux\kernel\routing\request $request)
+      {
+          echo "I am predispatch #2<br />";
+      }
 
-            # This function would never gets called
-            public function FooFunc()
-            {
-                echo "This is 
-            }
-        }
+      # This function would never gets called beacause 
+      # It does not have 'pre_' OR 'post_' naming prefix
+      public function FooFunc()
+      {
+          echo __METHOD__." will never get invoked...";
+      }
+    }
 ```
 
 
