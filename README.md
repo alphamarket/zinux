@@ -1,8 +1,11 @@
-zinux
+zinux 
 ====
-
-A simple but altered MVC artchitecture in php.<br />
-In this project i have tried to make it uses so simple with minimal configuration and much more flexibility
+<i>A simple but altered MVC artchitecture in php</i>
+--
+In this project i have tried to make it uses so simple.
+The <i>zinux</i>'s policy is [Convention Over Configuration](http://en.wikipedia.org/wiki/Convention_over_configuration)
+which leads it to run minimal configuration and much more flexibility, 
+you will find it very convenient to use and develop.
 
 <b>Note:</b> Project is under development!
 
@@ -15,11 +18,17 @@ Topics
 * [Naming Conventsion](#naming-conventsion)
 * [Path Resolver](#path-resolver)
 * [Modules Bootstrap](#modules-bootstrap)
-* [How To Boostrap](#how-to-boostrap)
-* [Bootstrap Example](#bootstrap-example)
-* [Changing View](#changing-view)
-* [Changing Layout](#changing-layout)
-* [Loading Helpers](#loading-helpers)
+  * [How To Boostrap](#how-to-boostrap)
+  * [Bootstrap Example](#bootstrap-example)
+* [Working With MVC Entities](#working-with-mvc-entities)
+  * [Changing View](#changing-view)
+  * [Changing Layout](#changing-layout)
+  * [Loading Models](#loading-models)
+  * [Loading Helpers](#loading-helpers)
+* [Advance](#advance)
+  * [Binding Custom Configuration File to Application](#binding-custom-configuration-file-to-application)
+  * [Binding Database Handler To Application](#binding-database-handler-to-application)
+  * [Adding Plugins](#adding-plugins)
 * [Tips](#tips)
 
 
@@ -367,6 +376,8 @@ Bootstrap Example
 ```
 
 
+Working With MVC Entities 
+==
 
 Changing View
 ---
@@ -398,6 +409,12 @@ Layout can change in `Controllers` and `Views` via following codes
 ```
 
 
+Loading Models
+---
+When creating models' instances the <i>zinux</i>'s autoloader will load models.<br />
+No need for `require` for models!
+
+
 Loading Helpers
 ---
 Helper can load at `Anywhere` if demanded helper is a class file just create object of that class the <i>zinux</i>'s autoloader do the rest! but if they are function files they should load via
@@ -419,6 +436,149 @@ following code
   some_Function_In_fOo('Hello, world')
 ```
 
+Advance
+==
+As i mentioned before, the porpuse of <i>zinux</i> is convention over configuration, and the most challenging 
+topics in developing any applications are <b>Project Configuration</b> and <b>Databse Integration</b>.<br />
+<i>zinux</i> provide a very simple and flexible manner in other to bind a configuration file and database initializer
+These are optional for advance usage of library.
+
+Binding Custom Configuration File to Application
+---
+<b>Will document soon</b>
+
+
+Binding Database Handler To Application
+---
+When creating `\zinux\kernel\application\application` instance in `PROJECT_ROOT/public_html/index.php` file
+you can pass a instance of `\zinux\kernel\db\basedbInitializer` as a secondary argument to constructor.<br />
+and somewhere in your module you define a class which <b>extents</b> the abstract class 
+`\zinux\kernel\db\basedbInitializer` which would be resposible for configuring database for your application
+
+<b>Usage example:</b><br />
+<hr />
+Lets suppose that we have a class named <b>\vendor\db\ActiveRecord\initializer</b> which is responsible for initializing
+[PHP ActiveRecord](#http://www.phpactiverecord.org/) for your project.
+
+```PHP
+<?php
+  # file : PROJECT_ROOT/vendor/db/ActiveRecord/initializer.php
+  
+  namespace vendor\db\ActiveRecord;
+  
+  # Where PHPActive-record lib. is stored 
+  # location:  PROJECT_ROOT/vendor/db/ActiveRecord/vendor
+  require_once 'vendor/ActiveRecord.php';
+  
+  /**
+   * php-activerecord initializer
+   * @author dariush
+   * @version 1.0
+   */
+  class initializer extends \zinux\kernel\db\basedbInitializer
+  {
+      public function Execute($request)
+      {
+        ActiveRecord\Config::initialize(function($cfg) use ($request)
+        {
+            $cfg->set_model_directory('models');
+            $cfg->set_connections(array(
+                'development' => 'mysql://username:password@localhost/database_name'));
+        });
+      }
+  }
+```
+
+By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
+```php
+<?php    
+    # PROJECT_ROOT/public_html/index.php
+    
+    defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
+    
+    require_once '../zinux/baseZinux.php'
+    
+    $app = new \zinux\kernel\application\application("../mOdUlEs/directory",
+                                                        /*
+                                                        * This part is added to previous
+                                                        * version of index.php
+                                                        */
+                                                        new \vendor\db\ActiveRecord\initializer());
+    
+    $app ->Startup()
+         ->Run()
+         ->Shutdown();
+         
+```
+Your application is configured to use [PHP ActiveRecord](#http://www.phpactiverecord.org/) as database handler and
+you can use <b>PHP ActiveRecord</b> framework freely through your project.<br />
+
+> Easy enough, Na!?
+
+
+
+Adding Plugins
+---
+Add plugins is so simple in <i>zinux</i> you just add the plugin in where 
+ever you want under <b>PROJECT_ROOT</b> and start using it with out any registration or configuration!!!<br />
+<b>What!?!?!</b> Yup, you get it right! but make sure your have followed
+[PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) discussed in 
+[Autoloading Classes And Files](#autoloading-classes-and-files) in your plugins.
+
+> Simple, Ha!?
+
+<hr />
+In case of using <b>third-party</b> libraries which is hard to apply [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
+standard to it following <b>Tip</b> may become usefull!
+
+> <b>Tip:</b> If you are using and <b>third-party plugin</b>, you <b>don't need</b> to standardize 
+<b>entire plugin</b> with <b><i>PSR-0 Standard</i></b> (notice that we <b>didn't change</b> any
+<b>PHP-ActiveRecord</b> namespaces in [Binding Database Handler To Application](#binding-database-handler-to-application)!!)<br />
+You just create a <b>initializer class</b> in that plugin which <b>define a autoloader</b> for that pluging!
+In [Binding Database Handler To Application](#binding-database-handler-to-application) example the autoloader 
+is defined in : 
+
+```PHP
+
+  # Where PHPActive-record lib. is stored 
+  # location:  PROJECT_ROOT/vendor/db/ActiveRecord/vendor
+  require_once 'vendor/ActiveRecord.php';
+  
+```
+> Then you call the plugin autoloader <b>just before</b> making application run! i.e 
+by overwriting the index file introduced in [How To Use](#how-to-use) as follow:
+
+```php
+<?php    
+    # PROJECT_ROOT/public_html/index.php
+    
+    defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
+    
+    require_once '../zinux/baseZinux.php'
+    
+    $app = new \zinux\kernel\application\application("../mOdUlEs/directory");
+    
+    /**
+     *
+     * Call the pluging initliazer here!
+     *
+     */
+    # Lets assume that we have third-party library and we wish to use it
+    # And also we have a class `\Some\Where\In\Project\FOO_PLUGIN_INITIALIZER`
+    # Just do class the `\Some\Where\In\Project\FOO_PLUGIN_INITIALIZER` here!
+    $plugin_init = \Some\Where\In\Project\FOO_PLUGIN_INITIALIZER();
+    $plugin_init->A_Func_To_Add_Plugins_Autoloader()
+    
+    
+    $app ->Startup()
+         ->Run()
+         ->Shutdown();
+         
+```
 
 Tips
 ===
