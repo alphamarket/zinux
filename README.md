@@ -58,11 +58,11 @@ Create project directory structure as follow<br />
 
 How To Use
 ----
-Considering above directory structure; in your `PROJECT_ROOT/public_html/index.php` file add following codes
+Considering above directory structure; in your `PROJECT-ROOT/public_html/index.php` file add following codes
 
 ```php
 <?php    
-    # PROJECT_ROOT/public_html/index.php
+    # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
@@ -70,17 +70,17 @@ Considering above directory structure; in your `PROJECT_ROOT/public_html/index.p
     
     require_once '../zinux/baseZinux.php'
     
-    $app = new \zinux\kernel\application\application("../mOdUlEs/directory");
+    $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
     
     $app ->Startup()
          ->Run()
          ->Shutdown();
          
 ```
-now you have fully MVC magic under <b>`PROJECT_ROOT/Modules`</b>!! [ <i>Simple, isn't it!?</i> ]
+now you have fully MVC magic under <b>`PROJECT-ROOT/Modules`</b>!! [ <i>Simple, isn't it!?</i> ]
 
 > You may wondering why the folder's name passed to `\zinux\kernel\application\application` by considering  
-case sensitivity, does not match with `PROJECT_ROOT/Modules` !? See [Path Resolver](#path-resolver).
+case sensitivity, does not match with `PROJECT-ROOT/Modules` !? See [Path Resolver](#path-resolver).
 
 
 
@@ -440,8 +440,8 @@ Advance
 ==
 As i mentioned before, the porpuse of <i>zinux</i> is convention over configuration, and the most challenging 
 topics in developing any applications are <b>Project Configuration</b> and <b>Databse Integration</b>.<br />
-<i>zinux</i> provide a very simple and flexible manner in other to bind a configuration file and database initializer
-These are optional for advance usage of library.
+<i>zinux</i> provides a very simple and flexible manner in other to bind a configuration file and database initializer.<br />
+<b>These are optional</b>.
 
 Binding Custom Configuration File to Application
 ---
@@ -450,7 +450,7 @@ Binding Custom Configuration File to Application
 
 Binding Database Handler To Application
 ---
-When creating `\zinux\kernel\application\application` instance in `PROJECT_ROOT/public_html/index.php` file
+When creating `\zinux\kernel\application\application` instance in `PROJECT-ROOT/public_html/index.php` file
 you can pass a instance of `\zinux\kernel\db\basedbInitializer` as a secondary argument to constructor.<br />
 and somewhere in your module you define a class which <b>extents</b> the abstract class 
 `\zinux\kernel\db\basedbInitializer` which would be resposible for configuring database for your application
@@ -462,12 +462,12 @@ Lets suppose that we have a class named <b>\vendor\db\ActiveRecord\initializer</
 
 ```PHP
 <?php
-  # file : PROJECT_ROOT/vendor/db/ActiveRecord/initializer.php
+  # file : PROJECT-ROOT/vendor/db/ActiveRecord/initializer.php
   
   namespace vendor\db\ActiveRecord;
   
   # Where PHPActive-record lib. is stored 
-  # location:  PROJECT_ROOT/vendor/db/ActiveRecord/vendor
+  # location:  PROJECT-ROOT/vendor/db/ActiveRecord/vendor
   require_once 'vendor/ActiveRecord.php';
   
   /**
@@ -492,7 +492,7 @@ Lets suppose that we have a class named <b>\vendor\db\ActiveRecord\initializer</
 By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 ```php
 <?php    
-    # PROJECT_ROOT/public_html/index.php
+    # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
@@ -500,7 +500,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     
     require_once '../zinux/baseZinux.php'
     
-    $app = new \zinux\kernel\application\application("../mOdUlEs/directory",
+    $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs",
                                                         /*
                                                         * This part is added to previous
                                                         * version of index.php
@@ -522,7 +522,7 @@ you can use <b>PHP ActiveRecord</b> framework freely through your project.<br />
 Adding Plugins
 ---
 Add plugins is so simple in <i>zinux</i> you just add the plugin in where 
-ever you want under <b>PROJECT_ROOT</b> and start using it with out any registration or configuration!!!<br />
+ever you want under <b>PROJECT-ROOT</b> and start using it with out any registration or configuration!!!<br />
 <b>What!?!?!</b> Yup, you get it right! but make sure your have followed
 [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) discussed in 
 [Autoloading Classes And Files](#autoloading-classes-and-files) in your plugins.
@@ -531,7 +531,7 @@ ever you want under <b>PROJECT_ROOT</b> and start using it with out any registra
 
 <hr />
 In case of using <b>third-party</b> libraries which is hard to apply [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
-standard to it following <b>Tip</b> may become usefull!
+to it, following <b>Tip</b> may become usefull!
 
 > <b>Tip:</b> If you are using and <b>third-party plugin</b>, you <b>don't need</b> to standardize 
 <b>entire plugin</b> with <b><i>PSR-0 Standard</i></b> (notice that we <b>didn't change</b> any
@@ -543,7 +543,7 @@ is defined in :
 ```PHP
 
   # Where PHPActive-record lib. is stored 
-  # location:  PROJECT_ROOT/vendor/db/ActiveRecord/vendor
+  # location:  PROJECT-ROOT/vendor/db/ActiveRecord/vendor
   require_once 'vendor/ActiveRecord.php';
   
 ```
@@ -552,7 +552,7 @@ by overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 
 ```php
 <?php    
-    # PROJECT_ROOT/public_html/index.php
+    # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
@@ -560,7 +560,7 @@ by overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     
     require_once '../zinux/baseZinux.php'
     
-    $app = new \zinux\kernel\application\application("../mOdUlEs/directory");
+    $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
     
     /**
      *
