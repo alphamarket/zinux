@@ -441,7 +441,7 @@ Advance
 As i mentioned before, the porpuse of <i>zinux</i> is convention over configuration, and the most challenging 
 topics in developing any applications are <b>Project Configuration</b> and <b>Databse Integration</b>.<br />
 <i>zinux</i> provide a very simple and flexible manner in other to bind a configuration file and database initializer
-These are optional for advance usage of library.
+<b>These are optional</b>.
 
 Binding Custom Configuration File to Application
 ---
