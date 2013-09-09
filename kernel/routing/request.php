@@ -240,6 +240,7 @@ __FETCHING_MODULES:
             {
                 # updating target controller's info
                 $this->controller = new \zinux\kernel\mvc\controller($this->_parts[0], $this->module);
+                array_shift($this->_parts);
             }
             # try to locate the actual indexController IO address
             elseif(($file = \zinux\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory()."IndexController.php")))
@@ -257,7 +258,6 @@ __FETCHING_MODULES:
             {
                 throw new \ReflectionException("The controller `{$this->controller->full_name}` is not instanceof `\zinux\kernel\controller\baseController`");
             }
-            array_shift($this->_parts);
 	}
 
         /**
