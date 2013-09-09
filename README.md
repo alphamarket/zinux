@@ -163,7 +163,7 @@ MVC entities naming convension is as following table:
       <ul>
         <li>LoginAction</li>
         <li>FeedAction</li>
-        <li>LogoutModel</li>
+        <li>LogoutAction</li>
       </ul>
     </td>
   </tr>
