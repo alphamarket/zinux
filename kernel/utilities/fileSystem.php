@@ -82,9 +82,14 @@ class fileSystem extends \zinux\baseZinux
         }
         if($convert_to_real_path)
             $resolved_path = realpath($resolved_path);
+        
+        # retrun the resolved path
+        if(is_dir($resolved_path))
+            $resolved_path .= DIRECTORY_SEPARATOR;
+        
         # cache the result
         $xc->save($cache_sig, $resolved_path);
-        # retrun the resolved path
+        
         return $resolved_path;
     }
 
