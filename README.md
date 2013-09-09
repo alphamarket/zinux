@@ -439,6 +439,34 @@ Layout can change in <b>Controllers</b> and <b>Views</b> via following codes
 ```
 
 
+Loading Models
+---
+When creating models' instances the <i>zinux</i>'s autoloader will load models.<br />
+No need for `require` for models!
+
+
+Loading Helpers
+---
+Helper can load at <b>Anywhere</b> if demanded helper is a class file just create object of that class the <i>zinux</i>'s autoloader do the rest! but if they are function files they should load via
+following code
+
+```PHP
+  # Assume that we have Helper file named 'fOoModel.php'(case-insensitve) under current module
+
+  # loades fOoModel.php which is under current module ($this->request->module)
+  # the exact use of this code is valid in
+  #   {Contoller}
+  #   {Model}
+  #   {View}
+  #   {Layout}
+  
+  new \zinux\kernel\mvc\helper("foo", $this->request->module);
+  
+  # now we can use functions in 'fOoHelper.php' file
+  some_Function_In_fOo('Hello, world')
+```
+
+
 A Controller Example
 --
 > In this example we will have a demonstration of what we talked about above
@@ -449,9 +477,15 @@ relative controller path)</i>.
 
 ```PHP
 <?php
-    # this controller locate at  
+    # this controller locates at  
     # PROJECT-ROOT/Modules/SomeModule/Controllers/FooController.php
     namespace \Modules\SomeController\Controllers;
+    
+    /**
+     *
+     * Remember that files pathes are not case sensitive
+     *
+     */
     
     class FooController extends \zinux\kernel\controller\baseController
     {
@@ -530,39 +564,47 @@ relative controller path)</i>.
          $this->layout->SetLayout("feed");
        }
        
-       public function dbreadAction
+       /**
+        * Url map to this controller : 
+        *   
+        *  /some/foo/modeluse
+        */
+       public function ModelUseAction()
+       {
+         /**
+          *
+          * In this action are trying to show
+          * how to use model and helper
+          *
+          */
+         # Assume that we have a model in following path
+         # PROJECT-ROOT/Modules/SomeModule/Models/Xoxo.php
+         $o = \modules\SomeModule\Models\Xoxo();
+         # fetch some data from xoxo class
+         $this->view->new_data = $o->get_some_data();
+         # test data validation
+         if($this->view->new_data)
+         {
+           # Assume that we have a helper in following path
+           # PROJECT-ROOT/Modules/SomeModules/Views/Helper/A_helper.php
+           new \zinux\kernel\mvc\helper("a_helper", $this->request->module);
+           # in A_helper.php we have bellow function
+           $this->view->proc_data = proccess_data($this->view->new_data);
+           # change the view 
+           $this->view->SetView("ValidData");
+         }
+         else
+         {
+            throw new \zinux\kernel\exceptions\notFoundException("data not found!");
+         }
+       }
     }
     
 ```
 
-
-
-Loading Models
----
-When creating models' instances the <i>zinux</i>'s autoloader will load models.<br />
-No need for `require` for models!
-
-
-Loading Helpers
----
-Helper can load at <b>Anywhere</b> if demanded helper is a class file just create object of that class the <i>zinux</i>'s autoloader do the rest! but if they are function files they should load via
-following code
-
-```PHP
-  # Assume that we have Helper file named 'fOoModel.php'(case-insensitve) under current module
-
-  # loades fOoModel.php which is under current module ($this->request->module)
-  # the exact use of this code is valid in
-  #   {Contoller}
-  #   {Model}
-  #   {View}
-  #   {Layout}
-  
-  new \zinux\kernel\mvc\helper("foo", $this->request->module);
-  
-  # now we can use functions in 'fOoHelper.php' file
-  some_Function_In_fOo('Hello, world')
-```
+> At above demo all basic operations are demonstrated. 
+so if you catchup with the above codes you are 100% ready to use <b>zinux</b> library.<br />
+<b>Cheers!</b>
 
 Advance
 ==
@@ -668,6 +710,8 @@ project via `\zinux\kernel\config\config` class!
    * config.db.username = USERNAME
    * config.db.password = PASSWORD
    * config.db.dbname = DB_NAME
+   */
+   
   
   # output: localhost
   echo \zinux\kernel\config\config::GetConfig("config", "db", "host");
