@@ -15,5 +15,8 @@ require_once (dirname(__FILE__).'/../../baseZinux.php');
  */
 abstract class basedbInitializer extends \zinux\baseZinux
 {
+    /**
+     * @return array Configurations as array
+     */
     public abstract function Execute($request);
 }

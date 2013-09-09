@@ -11,7 +11,7 @@ require_once (dirname(__FILE__).'/../../baseZinux.php');
  */
 class application extends \zinux\baseZinux
 {
-    protected static $config_file_address = NULL;
+    protected static $config_initializer = NULL;
     /**
      * db initializer instance
      * @var \zinux\kernel\db\basedbInitializer
@@ -42,8 +42,7 @@ class application extends \zinux\baseZinux
     {
             if(!$this->_startup_invoked)
             {
-                # trigger_error ("Application has not started up. running without configurations...");
-                $this->Startup ("");
+                $this->Startup();
             }
             $r = new \zinux\kernel\routing\router();
 
@@ -76,46 +75,29 @@ class application extends \zinux\baseZinux
      * 
      * @param config_file_address
      */
-    public function Startup($config_file_address = NULL)
+    public function Startup(\zinux\kernel\config\baseConfigLoader $config_initializer = NULL)
     {
-            if(!$config_file_address) 
-            {
-                if(\zinux\kernel\utilities\fileSystem::resolve_path(self::$config_file_address))
-                {
-                    $config_file_address = self::$config_file_address;
-                }
-                else
-                {
-                    # trigger_error ("No config file supplied.");
-                    goto __END;
-                }
-            }
-            $this->SetConfigFile($config_file_address);
-
-            if(!file_exists($config_file_address) || !is_file($config_file_address))
-            {
-                trigger_error ("$config_file_address config file does not exists... ");
-                goto __END;
-            }
-            if(!defined('RUNNING_ENV'))
-            {
-                trigger_error ("RUNNING_ENV is not defined; autosetting to DEVELOPMENT.");
-                define('RUNNING_ENV', "DEVELOPMENT");
-            }
-            $c = new \zinux\kernel\utilities\config($config_file_address);
-            $c->Load(RUNNING_ENV, true);
-    __END:
+            # no initializer return
+            if(!$config_initializer) return $this;
+            # cache the $config in
+            $this->SetConfiginItializer($config_initializer);
+            # create config instance
+            $config = new \zinux\kernel\config\config($config_initializer);
+            # load configs
+            $config->Load();
+            # set default module root
             defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(zinux_ROOT.'/../modules/')."/");
+            # check startup invoked
             $this->_startup_invoked = true;
+            # return this instance
             return $this;
     }
     
-    public function SetConfigFile($address)
+    public function SetConfiginItializer(\zinux\kernel\config\baseConfigLoader $config_initializer)
     {
-        $address = \zinux\kernel\utilities\fileSystem::resolve_path($address);
-        if(!$address)
-            throw new \zinux\kernel\exceptions\notFoundException("Config file does not exists ...");
-        self::$config_file_address = $address;
+        if(!$config_initializer)
+            throw new \zinux\kernel\exceptions\invalideArgumentException;
+        self::$config_initializer = $config_initializer;
         return $this;
     }
 }
