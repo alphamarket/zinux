@@ -20,11 +20,14 @@ Topics
 * [Modules Bootstrap](#modules-bootstrap)
   * [How To Boostrap](#how-to-boostrap)
   * [Bootstrap Example](#bootstrap-example)
-* [Working With MVC Entities](#working-with-mvc-entities)
+* [Working With MVC Entities (Basics)](#working-with-mvc-entities-basics)
+  * [Passing Variables To View](#passing-variables-to-view)
+  * [Passing Variables To Layout](#passing-variables-to-layout)  
   * [Changing View](#changing-view)
   * [Changing Layout](#changing-layout)
   * [Loading Models](#loading-models)
   * [Loading Helpers](#loading-helpers)
+  * [A Controller Example](#a-controller-example)
 * [Advance](#advance)
   * [Binding Custom Configuration File to Application](#binding-custom-configuration-file-to-application)
   * [Binding Database Handler To Application](#binding-database-handler-to-application)
@@ -58,7 +61,7 @@ Create project directory structure as follow<br />
 
 How To Use
 ----
-Considering above directory structure; in your `PROJECT-ROOT/public_html/index.php` file add following codes
+Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index.php</b> file add following codes
 
 ```php
 <?php    
@@ -68,7 +71,7 @@ Considering above directory structure; in your `PROJECT-ROOT/public_html/index.p
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
-    require_once '../zinux/baseZinux.php'
+    require_once '../zinux/baseZinux.php';
     
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
     
@@ -77,7 +80,7 @@ Considering above directory structure; in your `PROJECT-ROOT/public_html/index.p
          ->Shutdown();
          
 ```
-now you have fully MVC magic under <b>`PROJECT-ROOT/Modules`</b>!! [ <i>Simple, isn't it!?</i> ]
+now you have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!! [ <i>Simple, isn't it!?</i> ]
 
 > You may wondering why the folder's name passed to `\zinux\kernel\application\application` by considering  
 case sensitivity, does not match with `PROJECT-ROOT/Modules` !? See [Path Resolver](#path-resolver).
@@ -259,7 +262,7 @@ Path Resolver
 In UNIX style OS(e.g Linux) which the directory mapping is case-sensitive so sometimes it gets hard when we developing 
 large scale projects and keeping in mind that every file and folder should named as library's defined standard naming
 (i.e you cannot miss-case a letter in your namings) <b>it sucks!!</b><br />
-So i have developed a very fast and effective `path solver` which empower the library with non-case sensitive files and folders
+So i have developed a very fast and effective <b>path solver</b> which empower the library with non-case sensitive files and folders
 naming style!<br /><br />
 
 
@@ -296,7 +299,7 @@ bootstrap files are at following map:
     .
 </pre>
 
-In bootstrap file which is a class file there are 2 kind of methods `Predispatch` and `Postdispatch`:
+In bootstrap file which is a class file there are 2 kind of methods <b>Predispatch</b> and <b>Postdispatch</b>:
 <dl>
         <dt>Predispatch</dt>
         <dd>
@@ -316,11 +319,11 @@ How To Boostrap
 <dl>
         <dt>Predispatch</dt>
         <dd>
-                Every public method in bootstrap file which has a prefix `pre_` gets called in predispatch.
+                Every public method in bootstrap file which has a prefix <b>pre_</b> gets called in predispatch.
         </dd>
         <dt>Postdispatch</dt>
         <dd>
-                Every public method in bootstrap file which has a prefix `post_` gets called in postdispatch.
+                Every public method in bootstrap file which has a prefix <b>post_</b> gets called in postdispatch.
         </dd>
 </dl>
 
@@ -376,12 +379,39 @@ Bootstrap Example
 ```
 
 
-Working With MVC Entities 
+Working With MVC Entities (Basics)
 ==
+
+Passing Variables To View
+--
+Varibales can passed to view in <b>Controllers</b> via following codes
+
+```PHP
+   # in our controller we path varibales like this
+   $this->view->passed_from_controller = $some_value;
+   
+   # in our view we access variable like this
+   echo $this->passed_from_controller;
+```
+
+
+Passing Variables To Layout
+--
+Varibales can passed to view in <b>Controllers</b> and <b>Views</b> via following codes
+
+```PHP
+   # in our controller OR view we path varibales like this
+   $this->layout->passed_from_controller_or_view = $some_value;
+   
+   # in our layout we access variable like this
+   echo $this->passed_from_controller_or_view;
+```
+
+
 
 Changing View
 ---
-View can change in `Controllers` via following codes
+View can change in <b>Controllers</b> via following codes
 
 ```PHP
   # Assume that we have Layout named 'LoginView'(case-insensitve) under current module/controller
@@ -396,7 +426,7 @@ View can change in `Controllers` via following codes
 
 Changing Layout
 ---
-Layout can change in `Controllers` and `Views` via following codes
+Layout can change in <b>Controllers</b> and <b>Views</b> via following codes
 
 ```PHP
   # Assume that we have Layout named 'CoolLayout'(case-insensitve) under current module
@@ -409,6 +439,104 @@ Layout can change in `Controllers` and `Views` via following codes
 ```
 
 
+A Controller Example
+--
+> In this example we will have a demonstration of what we talked about above
+
+Lets assume that we have a hypothetical controller under `SomeModule` define in 
+[directory structure](#directory-structure) Here is a controller example <i>(pay attention to namespace and
+relative controller path)</i>.
+
+```PHP
+<?php
+    # this controller locate at  
+    # PROJECT-ROOT/Modules/SomeModule/Controllers/FooController.php
+    namespace \Modules\SomeController\Controllers;
+    
+    class FooController extends \zinux\kernel\controller\baseController
+    {
+       public function Initiate()
+       {
+         /**
+          * Do your init stuffs here
+          * This method will get called 
+          * just before invoking actions
+          */
+       }
+       
+       /**
+        * Url map to this controller : 
+        *   
+        *  /some/foo/some/var?or=GET
+        *
+        *  |OR| 
+        *  
+        *  /some/foo/index/some/var?or=GET
+        */
+       public function IndexController()
+       {
+         # lets see that is the request's params are 
+         \zinux\kernel\utilities\debug::_var($this->request->params);
+         /**
+          * output:
+          *
+          * Array
+          * (
+          *     [some] => var
+          *     [or] => GET
+          * )
+          *
+          */
+       }
+       
+       /**
+        * Url map to this controller : 
+        *   
+        *  /some/foo/feed
+        */
+       public function FeedAction()
+       {
+         # let assume that we have some data 
+         $data = some_data_generator();
+         
+         # if the 'json' format is requested
+         # i.e the uri is :
+         # /some/foo/feed.json
+         if($this->request->type == "json")
+         {
+           # we dont want any view or layout here
+           $this->view->SuppressView();
+           # print out json format of data
+           echo json_encode($data);
+           return;
+         }
+         # or if the 'raw' format is requested
+         # i.e the uri is :
+         # /some/foo/feed.json
+         elseif($this->request->type == "raw")
+         {
+           # we dont want any view or layout here
+           $this->view->SuppressView();
+           # print out the raw format of $data
+           \zinux\kernel\utilities\debug::_var($data);
+           return;
+         }
+         
+         # if was not a json request
+         # pass data to view
+         $this->view->some_data = $data;
+         
+         # set layout to feedLayout
+         $this->layout->SetLayout("feed");
+       }
+       
+       public function dbreadAction
+    }
+    
+```
+
+
+
 Loading Models
 ---
 When creating models' instances the <i>zinux</i>'s autoloader will load models.<br />
@@ -417,7 +545,7 @@ No need for `require` for models!
 
 Loading Helpers
 ---
-Helper can load at `Anywhere` if demanded helper is a class file just create object of that class the <i>zinux</i>'s autoloader do the rest! but if they are function files they should load via
+Helper can load at <b>Anywhere</b> if demanded helper is a class file just create object of that class the <i>zinux</i>'s autoloader do the rest! but if they are function files they should load via
 following code
 
 ```PHP
@@ -445,13 +573,123 @@ topics in developing any applications are <b>Project Configuration</b> and <b>Da
 
 Binding Custom Configuration File to Application
 ---
-<b>Will document soon</b>
+When creating `\zinux\kernel\application\application` instance in `PROJECT-ROOT/public_html/index.php` file
+you can pass a instance of `\zinux\kernel\config\baseConfigLoader` to <b>Startup()</b>.<br />
+and somewhere in your module you define a class which <b>extents</b> the abstract class 
+`\zinux\kernel\config\baseConfigLoader` which would be resposible for to load configurations for your application.
+It can be a ini loader or XML loader, etc. 
+
+<b>Usage example:</b><br />
+<hr />
+Lets suppose that we have a class named <b>\vendor\tools\iniParser</b> which is responsible for 
+loading configurations from an ini file for your project.
+
+```PHP
+<?php
+  # file : PROJECT-ROOT/vendor/tools/iniParser.php
+  
+  namespace vendor\tools;
+  
+  class iniParser extends \zinux\kernel\config\baseConfigLoader
+  {
+    
+    public function Execute()
+    {
+      /*
+       *
+       * Your ini parse algorithm here 
+       *
+       */
+       /**
+        * @var array Return type should be an array
+        * otherwise an exception will be thrown from 
+        * \zinux\kernel\config\config
+        */
+       return $loaded_config;
+    }
+    
+    /**
+     * @param string $config_file_address config file address
+     * @param string $section_name section_name in ini file
+     * @throws \zinux\kernel\exceptions\invalideArgumentException
+     */
+    public function __construct($config_file_address, $section_name = NULL)
+    {
+        $this->file_address  = \zinux\kernel\utilities\fileSystem::resolve_path($config_file_address);
+        
+        if(!$this->file_address)
+            throw new \zinux\kernel\exceptions\invalideArgumentException("config file not found at '$config_file_address'");
+        
+        $this->section_name = $section_name;
+    }
+  }
+```
+
+By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
+
+```PHP
+<?php    
+    # PROJECT-ROOT/public_html/index.php
+    
+    defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
+    
+    require_once '../zinux/baseZinux.php';
+    
+    # Note that this registration is OPTIONAL
+    # you don't come up with any cache directory 
+    # the zinux will pick /tmp/zinux-cache as its cache directory
+    \zinux\kernel\caching\fileCache::RegisterCachePath("/path/to/cache/dir");
+    
+    $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
+    
+    $app ->Startup(
+                    /*
+                    * This part is added to previous
+                    * version of index.php
+                    */
+                    new \vendor\tools\iniParser("../config/config.cfg", RUNNING_ENV)
+                  )
+         ->Run()
+         ->Shutdown();
+```
+
+<b>Accessing fetched configs</b><br />
+<hr />
+Now that we have loaded our configurations we can now get access to all loaded configurations from any we in your
+project via `\zinux\kernel\config\config` class!
+<b>Example:</b><br />
+
+```PHP
+  # Assume that in out ini file we have following lines
+  /*
+   * config.db.host = localhost
+   * config.db.username = USERNAME
+   * config.db.password = PASSWORD
+   * config.db.dbname = DB_NAME
+  
+  # output: localhost
+  echo \zinux\kernel\config\config::GetConfig("config", "db", "host");
+  
+  # output: USERNAME
+  echo \zinux\kernel\config\config::GetConfig("config", "db", "username");
+  
+  # output: PASSWORD
+  echo \zinux\kernel\config\config::GetConfig("config", "db", "password");
+  
+  # output: DB_NAME
+  echo \zinux\kernel\config\config::GetConfig("config", "db", "dbname");
+```
+
+> Easy enough, Na!?
+
 
 
 Binding Database Handler To Application
 ---
 When creating `\zinux\kernel\application\application` instance in `PROJECT-ROOT/public_html/index.php` file
-you can pass a instance of `\zinux\kernel\db\basedbInitializer` as a secondary argument to constructor.<br />
+you can pass a instance of `\zinux\kernel\db\basedbInitializer` as a secondary argument to <b>constructor</b>.<br />
 and somewhere in your module you define a class which <b>extents</b> the abstract class 
 `\zinux\kernel\db\basedbInitializer` which would be resposible for configuring database for your application
 
@@ -498,7 +736,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
-    require_once '../zinux/baseZinux.php'
+    require_once '../zinux/baseZinux.php';
     
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs",
                                                         /*
@@ -515,7 +753,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 Your application is configured to use [PHP ActiveRecord](#http://www.phpactiverecord.org/) as database handler and
 you can use <b>PHP ActiveRecord</b> framework freely through your project.<br />
 
-> Easy enough, Na!?
+> Still Easy, mate!?
 
 
 
@@ -585,8 +823,8 @@ Tips
 
 Request Types
 --
-The <i>zinux</i> supports request types i.e you can have a URI like `/news/feed.json` which points to `NewsController` 
-and `FeedAction` you can ouput feeds according to request type (in here `json`) in `NewsController::FeedAction()`! default is `html`. 
+The <i>zinux</i> supports request types i.e you can have a URI like `/news/feed.json` which points to <b>NewsController</b> 
+and <b>FeedAction</b> you can ouput feeds according to request type (in here `json`) in <b>NewsController::FeedAction()</b>! default is `html`. 
 
 
 
