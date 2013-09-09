@@ -41,14 +41,16 @@ class fileSystem extends \zinux\baseZinux
         # normalizing array's parts
         require_once '_array.php';
         $path_parts = _array::array_normalize(explode(DIRECTORY_SEPARATOR, strtolower($path)));
+        # a fail safe 
+        if(!count($path_parts)) return false;
         # UNIX fs style
-        $resolved_path = $is_absolute_path ? "" : ".";
+        $resolved_path = $is_absolute_path ? "/" : ".";
         # WINNT fs style
         require_once 'string.php';
         if(string::Contains($path_parts[0], ":"))
         {
             $is_absolute_path = 1;
-            $resolved_path = $is_absolute_path ? "" : ".".DIRECTORY_SEPARATOR;
+            $resolved_path = $is_absolute_path ? "{$path_parts[0]}:" : ".".DIRECTORY_SEPARATOR;
         }
         # do a BFS in subdirz
         foreach ($path_parts as $part)
