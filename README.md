@@ -348,13 +348,13 @@ Bootstrap Example
       # Postdispatch method #1
       public function POST_echo(\zinux\kernel\routing\request $request)
       {
-          echo "I am predispatch #1<br />";
+          echo "I am postdispatch #1<br />";
       }
 
       # Postdispatch method #2
       public function POST_echo1(\zinux\kernel\routing\request $request)
       {
-          echo "I am predispatch #2<br />";
+          echo "I am postdispatch #2<br />";
       }
 
       # This function would never gets called beacause 
