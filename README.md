@@ -88,7 +88,7 @@ See [naming convention](#naming-conventsion) for MVC Entities
 Autoloading Classes and Files
 ---
 <i>zinux</i> uses [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) 
-namespace conventions to load [MVC Entities](#MVC_Entities). so as long as [MVC Entities](#MVC_entities) follow 
+namespace conventions to load [MVC Entities](#mvc-entities). so as long as [MVC Entities](#mvc-entities) follow 
 [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) 
 the <i>zinux</i>'s autoloader may be able to load those classes and beside `require_once '../zinux/baseZinux.php'` 
 no `require` needed for loading classes!  
@@ -235,7 +235,7 @@ MVC entities naming convension is as following table:
   </tr>
 </table>
 
-<b>* Note:</b> Helpers can either be class files or function files, see [Loading Helpers](#Loading_Helpers)
+<b>* Note:</b> Helpers can either be class files or function files, see [Loading Helpers](#loading-helpers)
 
 
 
