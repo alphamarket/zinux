@@ -46,7 +46,7 @@ Create project directory structure as follow<br />
 
 How to use
 ----
-Considering above directory structure in your `PROJECT_ROOT/public_html/index.php` file add following codes
+Considering above directory structure; in your `PROJECT_ROOT/public_html/index.php` file add following codes
 
 ```php
 <?php    
@@ -62,7 +62,7 @@ Considering above directory structure in your `PROJECT_ROOT/public_html/index.ph
          ->Shutdown();
          
 ```
-how to have fully MVC magic under <b>`PROJECT_ROOT/Modules`</b>!! [ <i>Simple, isn't it!?</i> ]
+now you have fully MVC magic under <b>`PROJECT_ROOT/Modules`</b>!! [ <i>Simple, isn't it!?</i> ]
 
 > You may wondering why the folder's name passed to `\zinux\kernel\application\application` by considering  
 case sensitivity, does not match with `PROJECT_ROOT/Modules` !? See [Path Resolver](#path-resolver).
