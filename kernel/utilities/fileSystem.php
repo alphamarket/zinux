@@ -2,6 +2,7 @@
 namespace zinux\kernel\utilities;
 
 require_once dirname(__FILE__).'/../../baseZinux.php';
+require_once '_array.php';
 /**
  * Description of fileSystem
  *
@@ -24,11 +25,14 @@ class fileSystem extends \zinux\baseZinux
         if(!strlen($path)) return FALSE;
         # a primary check
         if(file_exists($path)) return $path;
-        # create a cache signiture
-        $cache_sig = __METHOD__."@$path";
         # open the cache file
-        require_once zinux_ROOT.'kernel/caching/xCache.php';
+        require_once ZINUX_ROOT.'kernel/caching/xCache.php';
+        # we will use xCache to cache
         $xc = new \zinux\kernel\caching\xCache(__CLASS__);
+        # create a base cache signiture
+        $base_cache_sig = __FUNCTION__."@";
+        # create the cache sig
+        $cache_sig ="$base_cache_sig".strtolower($path);
         # check cache file and validate it
         if($xc->isCached($cache_sig) && file_exists($xc->fetch($cache_sig)))
         {
@@ -44,7 +48,7 @@ class fileSystem extends \zinux\baseZinux
         # a fail safe 
         if(!count($path_parts)) return false;
         # UNIX fs style
-        $resolved_path = $is_absolute_path ? "/" : ".";
+        $resolved_path = $is_absolute_path ? "" : ".";
         # WINNT fs style
         require_once 'string.php';
         if(string::Contains($path_parts[0], ":"))
@@ -52,27 +56,74 @@ class fileSystem extends \zinux\baseZinux
             $is_absolute_path = 1;
             $resolved_path = $is_absolute_path ? "{$path_parts[0]}:" : ".".DIRECTORY_SEPARATOR;
         }
+        # normalize the array
+        $depart = _array::array_normalize(explode(DIRECTORY_SEPARATOR, $path));
+        # fetch the target file's name
+        $file = $depart[count($depart)-1];
+        # unset the file's name
+        unset($depart[count($depart)-1]);
+        # create a cache sig
+        $this_cache_sig = $base_cache_sig.strtolower(DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR, $depart));
+        # check for cache for files directory
+        if($xc->isCached($this_cache_sig))
+        {
+            # fetch the file's directory
+            $resolved_path = $xc->fetch($this_cache_sig);
+            # through a hunch for file's address
+            $hunch = $resolved_path.DIRECTORY_SEPARATOR.$file;
+            if(file_exists($hunch))
+            {
+                $resolved_path = $hunch;
+                goto __RETURN;
+            }
+            # update the directory which bellow FOREACH will search under
+            $path_parts = array($path_parts[count($path_parts)-1]);
+        }
         # do a BFS in subdirz
         foreach ($path_parts as $part)
         {
             if (!empty($part))
             {
                 $target_path = $resolved_path.DIRECTORY_SEPARATOR.$part;
+                # create cache sig for this path
+                $this_cache_sig = $base_cache_sig.strtolower($target_path);
+                # check for fore head cache existance
+                if($xc->isCached($this_cache_sig))
+                {
+                    $target_path = $xc->fetch($this_cache_sig);
+                    if($target_path[strlen($target_path)-1]==DIRECTORY_SEPARATOR)
+                        $target_path = strlen($target_path,0,  strlen($target_path)-1);
+                }
+                # check target path
                 if(file_exists($target_path))
                 {
+                    $xc->save($this_cache_sig, $target_path);
                     $resolved_path = $target_path;
                     continue;
                 }
+                else
+                    # delete any possible miss-formed cache data regarding to current path
+                    $xc->delete($this_cache_sig);
+                
                 $files = scandir($resolved_path);
 
                 $match_found = FALSE;
-
+                
                 foreach ($files as $file)
                 {	
-                    if (strtolower($file) == $part)
+                    if (strtolower($file) == strtolower($part))
                     {
+                        # flag found
                         $match_found = TRUE;
-                        $resolved_path = $resolved_path.DIRECTORY_SEPARATOR.$file;
+                        # update target path
+                        $target_path = $resolved_path.DIRECTORY_SEPARATOR.$file;
+                        # update cache sig for this file
+                        $this_cache_sig = $base_cache_sig.strtolower($resolved_path.DIRECTORY_SEPARATOR.$part);
+                        # cache the path
+                        $xc->save($this_cache_sig,  $target_path);
+                        # update resolved path
+                        $resolved_path = $target_path;
+                        # goto for next file iter.
                         break;
                     }
                 }
@@ -82,12 +133,9 @@ class fileSystem extends \zinux\baseZinux
                 }
             }
         }
+__RETURN:
         if($convert_to_real_path)
             $resolved_path = realpath($resolved_path);
-        
-        # retrun the resolved path
-        if(is_dir($resolved_path))
-            $resolved_path .= DIRECTORY_SEPARATOR;
         
         # cache the result
         $xc->save($cache_sig, $resolved_path);
