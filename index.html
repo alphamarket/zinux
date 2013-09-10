@@ -3,17 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Zinux a PHP MVC library</title>
+    <title>Zinux by dariushha</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
-	<meta name="description" content="Zinux a simple flexible MVC library for PHP developer">
-	<meta name="keywords" content="PHP,MVC,Zinux,Convention Over Configuration,Design Pattern,Autoloading,Namespace Convention,PHP Bootstrap,Bootstrap,Project,Source Code,Action,Module,Controller,Layout,View,Helper,Database binding,Configuration">
-	<meta name="author" content="Dariush Hasanpoor">
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-
-
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -25,7 +19,7 @@
   </head>
   <body>
       <div id="header">
-        <nav style="max-width:900px;">
+        <nav>
           <li class="fork"><a href="https://github.com/dariushha/zinux">View On GitHub</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/zipball/master">ZIP</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/tarball/master">TAR</a></li>
@@ -33,13 +27,15 @@
         </nav>
       </div><!-- end header -->
 
-    <div class="wrapper" style="max-width:900px;">
+    <div class="wrapper">
 
-      <section style="max-width:900px;">
+      <section>
         <div id="title">
           <h1>Zinux</h1>
           <p>A simple and lightweight but powerful library supporting MVC design pattern  </p>
           <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/dariushha">dariushha</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
         </div>
 
         <p>In this project i have tried to make it uses so simple.
@@ -47,7 +43,9 @@ The <i>zinux</i>'s policy is <a href="http://en.wikipedia.org/wiki/Convention_ov
 which leads it to run minimal configuration and much more flexibility, 
 you will find it very convenient to use and develop.</p>
 
+<blockquote>
 <p><b>Note:</b> Project is under development!</p>
+</blockquote>
 
 <h2>
 <a name="topics" class="anchor" href="#topics"><span class="octicon octicon-link"></span></a>Topics</h2>
@@ -138,11 +136,15 @@ you will find it very convenient to use and develop.</p>
 
 </pre></div>
 
-<p>now you have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!! [ <i>Simple, isn't it!?</i> ]</p>
+<p>now you have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!!</p>
 
 <blockquote>
 <p>You may wondering why the folder's name passed to <code>\zinux\kernel\application\application</code> by considering<br>
 case sensitivity, does not match with <code>PROJECT-ROOT/Modules</code> !? See <a href="#path-resolver">Path Resolver</a>.</p>
+</blockquote>
+
+<hr><blockquote>
+<p>Simple, isn't it!?</p>
 </blockquote>
 
 <h2>
