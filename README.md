@@ -82,8 +82,10 @@ Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index
 ```
 now you have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!!
 
-> You may wondering why the folder's name passed to `\zinux\kernel\application\application` by considering  
-case sensitivity, does not match with `PROJECT-ROOT/Modules` !? See [Path Resolver](#path-resolver).
+> You may wondering why the folder's name passed to<br />
+`\zinux\kernel\application\application`<br />
+by considering case sensitivity, does not match with `PROJECT-ROOT/Modules`!?<br />
+See [Path Resolver](#path-resolver).
 
 <hr />
 
