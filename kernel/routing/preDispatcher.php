@@ -35,7 +35,8 @@ class preDispatcher extends \zinux\baseZinux
     {
         # both possible naming for bootstrap
         $bsfiles_path = array();
-        $bsfiles_path[] = array($request->module->full_name, $request->module->GetPath()."/{$request->module->full_name}Bootstrap.php");
+        # we really don't want to confuse our selves
+        # $bsfiles_path[] = array($request->module->full_name, $request->module->GetPath()."/{$request->module->full_name}Bootstrap.php");
         $bsfiles_path[] = array($request->module->name, $request->module->GetPath()."/{$request->module->name}Bootstrap.php");
         foreach($bsfiles_path as $bs)
         {
