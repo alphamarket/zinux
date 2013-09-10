@@ -808,7 +808,7 @@ Adding Plugins
 ---
 Add plugins is so simple in <i>zinux</i> you just add the plugin in where 
 ever you want under <b>PROJECT-ROOT</b> and start using it with out any registration or configuration!!!<br />
-<b>What!?!?!</b> Yup, you get it right! but make sure your have followed
+<b>What!?!?!</b> Yup, you got it right! but make sure your have followed
 [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) discussed in 
 [Autoloading Classes And Files](#autoloading-classes-and-files) in your plugins.
 
