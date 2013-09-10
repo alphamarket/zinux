@@ -187,6 +187,8 @@ class fileCache extends cache
     
     public static function RegisterCachePath($path)
     {
+        if(!strlen($path))
+            throw new \zinux\kernel\exceptions\notFoundException("Cache directory address is empty ...");
         if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
             $path = $path.DIRECTORY_SEPARATOR;
         self::$_cachedirectory=$path;
