@@ -7,7 +7,7 @@ The <i>zinux</i>'s policy is [Convention Over Configuration](http://en.wikipedia
 which leads it to run minimal configuration and much more flexibility, 
 you will find it very convenient to use and develop.
 
-<b>Note:</b> Project is under development!
+> <b>Note:</b> Project is under development!
 
 Topics
 --
@@ -80,12 +80,14 @@ Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index
          ->Shutdown();
          
 ```
-now you have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!! [ <i>Simple, isn't it!?</i> ]
+now you have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!!
 
 > You may wondering why the folder's name passed to `\zinux\kernel\application\application` by considering  
 case sensitivity, does not match with `PROJECT-ROOT/Modules` !? See [Path Resolver](#path-resolver).
 
+<hr />
 
+> Simple, isn't it!?
 
 MVC Entities
 ---
