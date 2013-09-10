@@ -2,13 +2,13 @@
     
     define("RUNNING_ENV", "TEST");
     
-    define("zinux_ROOT", realpath(dirname(__FILE__)."/../")."/");
+    define("ZINUX_ROOT", realpath(dirname(__FILE__)."/../")."/");
     
     $_SERVER['REQUEST_URI'] = "/";
     
-    require_once zinux_ROOT."baseZinux.php";
+    require_once ZINUX_ROOT."baseZinux.php";
     
-    \zinux\kernel\caching\fileCache::RegisterCachePath(zinux_ROOT."../cache/test");
+    \zinux\kernel\caching\fileCache::RegisterCachePath(ZINUX_ROOT."../cache/test");
     # overwriting PHPUnit autoloader 
     # by pushing it autloader's stack
     # this should be on top of other 

@@ -154,9 +154,10 @@ class request extends \zinux\baseZinux
 __LOADING_CACHE:
             # all folders in ../modules folders considered a module folder
             # define module root dir
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(zinux_ROOT.'/../modules/')."/");
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(
+                ZINUX_ROOT.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'modules'));
             # define default module
-            $this->module = new \zinux\kernel\mvc\module("default", MODULE_ROOT."defaultModule");
+            $this->module = new \zinux\kernel\mvc\module("default", MODULE_ROOT."/defaultModule");
             $module_dir = dirname($this->module->GetPath());
             # module collection instance
             $mc = new \stdClass();
@@ -170,10 +171,10 @@ __LOADING_CACHE:
                 die("No module found.");
             # checking if modules has been cached or not
             $xc = new \zinux\kernel\caching\xCache(__CLASS__);
-            if($xc->isCached(__METHOD__))
+            if($xc->isCached(__FUNCTION__))
             {
                 # catch maintaining optz. 
-                $mc = $xc->fetch(__METHOD__);
+                $mc = $xc->fetch(__FUNCTION__);
                 # if the module directory has been updated
                 if($mc->modified_time !=filemtime($module_dir))
                 {
@@ -200,7 +201,7 @@ __LOAD_MODULES:
             }
             # now module collection is ready
             # caching module collections data
-            $xc->save(__METHOD__, $mc);
+            $xc->save(__FUNCTION__, $mc);
             # fetching related modules accoring to requested URI
 __FETCHING_MODULES:
             # if not parts provided picking up default module
