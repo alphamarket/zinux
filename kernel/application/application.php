@@ -11,15 +11,21 @@ require_once (dirname(__FILE__).'/../../baseZinux.php');
  */
 class application extends \zinux\baseZinux
 {
+    /**
+     *
+     * @var plugin
+     */
+    public $plugins;
+    
     protected static $config_initializer = NULL;
     /**
      * db initializer instance
-     * @var \zinux\kernel\db\basedbInitializer
+     * @var \zinux\kernel\application\baseInitializer
      */
     protected $dbInit;
     
-    function __construct($module_path = "", \zinux\kernel\db\basedbInitializer $dbi = NULL)
-    {
+    function __construct($module_path = "", \zinux\kernel\application\dbInitializer $dbi = NULL)
+    {            
             $this->Initiate();
             
             if(!file_exists(\zinux\kernel\utilities\fileSystem::resolve_path($module_path)))
@@ -27,12 +33,19 @@ class application extends \zinux\baseZinux
             
             defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path($module_path."/"));
             
-            $this->dbInit =$dbi;
+            $this ->dbInitializer($dbi)
+                    ->plugins =  new plugin();
     }
 
     public function Initiate()
     {
         $this->_startup_invoked = false;
+    }
+    
+    public function dbInitializer(\zinux\kernel\application\dbInitializer $dbi = NULL)
+    {
+        $this->dbInit = $dbi;
+        return $this;
     }
 
     /**
@@ -86,7 +99,7 @@ class application extends \zinux\baseZinux
             # load configs
             $config->Load();
             # set default module root
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(zinux_ROOT.'/../modules/')."/");
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(ZINUX_ROOT.'/../modules/')."/");
             # check startup invoked
             $this->_startup_invoked = true;
             # return this instance
@@ -101,4 +114,3 @@ class application extends \zinux\baseZinux
         return $this;
     }
 }
-?>
