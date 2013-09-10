@@ -47,7 +47,7 @@ abstract class mvc extends \zinux\baseZinux
     
     public function  SetPath($path, $validate = 1)
     {
-        $this->path = \zinux\kernel\utilities\fileSystem::resolve_path($path);
+        $this->path = \zinux\kernel\utilities\fileSystem::resolve_path($path,1);
         if($validate && !$this->path)
         {
             throw new \zinux\kernel\exceptions\notFoundException("`{$path}` does not exists ...");
