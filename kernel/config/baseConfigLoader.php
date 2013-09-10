@@ -13,7 +13,7 @@ require_once (dirname(__FILE__).'/../../baseZinux.php');
  *
  * @author dariush
  */
-abstract class baseConfigLoader extends \zinux\baseZinux
+abstract class baseConfigLoader extends \zinux\kernel\application\baseInitializer
 {
     /**
      * config file's address
@@ -21,5 +21,4 @@ abstract class baseConfigLoader extends \zinux\baseZinux
      */
     public $file_address;
     public abstract function __construct($config_file_address, array $options = array());
-    public abstract function Execute();
 }
