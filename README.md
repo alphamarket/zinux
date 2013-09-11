@@ -6,7 +6,7 @@ In this project i have tried to make it uses so simple.
 The <i>zinux</i>'s policy is [Convention Over Configuration](http://en.wikipedia.org/wiki/Convention_over_configuration)
 which leads it to run minimal configuration and much more flexibility, 
 you will find it very convenient to use and develop.
-
+There is also a [demo](#demo-project) available.
 
 > <b>Note:</b> Project is under development!
 
@@ -34,6 +34,7 @@ Topics
   * [Binding Database Handler To Application](#binding-database-handler-to-application)
   * [Adding Plugins](#adding-plugins)
 * [Tips](#tips)
+* [Demo Project](#demo-project)
 
 
 
@@ -938,7 +939,9 @@ The <i>zinux</i> supports request types i.e you can have a URI like `/news/feed.
 and <b>FeedAction</b> you can ouput feeds according to request type (in here `json`) in <b>NewsController::FeedAction()</b>! default is `html`. 
 
 
-
+Demo Project
+===
+You can download a demo project from [zinux-demo](https://github.com/dariushha/zinux-demo).
 
 
 
