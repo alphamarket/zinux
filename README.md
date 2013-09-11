@@ -524,7 +524,7 @@ relative controller path)</i>.
         *  
         *  /some/foo/index/some/var?or=GET
         */
-       public function IndexController()
+       public function IndexAction()
        {
          # lets see that is the request's params are 
          \zinux\kernel\utilities\debug::_var($this->request->params);
