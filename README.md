@@ -12,7 +12,7 @@ you will find it very convenient to use and develop.
 Topics
 --
 * [Directory Structure](#directory-structure)
-* [How To Use](#how-to-use)
+* [Setup](#setup)
 * [MVC Entities](#mvc-entities)
 * [Autoloading Classes and Files](#autoloading-classes-and-files)
 * [Naming Conventsion](#naming-conventsion)
@@ -28,7 +28,7 @@ Topics
   * [Loading Models](#loading-models)
   * [Loading Helpers](#loading-helpers)
   * [A Controller Example](#a-controller-example)
-* [Advance](#advance)
+* [Adavnced](#adavnced)
   * [Binding Custom Configuration File to Application](#binding-custom-configuration-file-to-application)
   * [Binding Database Handler To Application](#binding-database-handler-to-application)
   * [Adding Plugins](#adding-plugins)
@@ -59,7 +59,7 @@ Create project directory structure as follow<br />
 </pre>
 
 
-How To Use
+Setup
 ----
 Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index.php</b> file add following codes
 
@@ -80,7 +80,7 @@ Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index
          ->Shutdown();
          
 ```
-now you have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!!
+<b>Congratulations!</b> you now have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!!
 
 > You may wondering why the folder's name passed to `\zinux\kernel\application\application`<br />
 by considering case sensitivity, does not match with `PROJECT-ROOT/Modules`!?<br />
@@ -609,7 +609,7 @@ relative controller path)</i>.
 so if you catchup with the above codes you are 100% ready to use <b>zinux</b> library.<br />
 <b>Cheers!</b>
 
-Advance
+Adavnced
 ==
 As i mentioned before, the porpuse of <i>zinux</i> is convention over configuration, and the most challenging 
 topics in developing any applications are <b>Project Configuration</b> and <b>Databse Integration</b>.<br />
@@ -619,9 +619,9 @@ topics in developing any applications are <b>Project Configuration</b> and <b>Da
 Binding Custom Configuration File to Application
 ---
 When creating `\zinux\kernel\application\application` instance in `PROJECT-ROOT/public_html/index.php` file
-you can pass a instance of `\zinux\kernel\config\baseConfigLoader` to <b>Startup()</b>.<br />
+you can pass a instance of `\zinux\kernel\application\baseConfigLoader` to <b>Startup()</b>.<br />
 and somewhere in your module you define a class which <b>extents</b> the abstract class 
-`\zinux\kernel\config\baseConfigLoader` which would be resposible for to load configurations for your application.
+`\zinux\kernel\application\baseConfigLoader` which would be resposible for to load configurations for your application.
 It can be a ini loader or XML loader, etc. 
 
 <b>Usage example:</b><br />
@@ -629,46 +629,7 @@ It can be a ini loader or XML loader, etc.
 Lets suppose that we have a class named <b>\vendor\tools\iniParser</b> which is responsible for 
 loading configurations from an ini file for your project.
 
-```PHP
-<?php
-  # file : PROJECT-ROOT/vendor/tools/iniParser.php
-  
-  namespace vendor\tools;
-  
-  class iniParser extends \zinux\kernel\config\baseConfigLoader
-  {
-    
-    public function Execute()
-    {
-      /*
-       *
-       * Your ini parse algorithm here 
-       *
-       */
-       /**
-        * @var array Return type should be an array
-        * otherwise an exception will be thrown from 
-        * \zinux\kernel\config\config
-        */
-       return $loaded_config;
-    }
-    
-    /**
-     * @param string $config_file_address config file address
-     * @param string $section_name section_name in ini file
-     * @throws \zinux\kernel\exceptions\invalideArgumentException
-     */
-    public function __construct($config_file_address, $section_name = NULL)
-    {
-        $this->file_address  = \zinux\kernel\utilities\fileSystem::resolve_path($config_file_address);
-        
-        if(!$this->file_address)
-            throw new \zinux\kernel\exceptions\invalideArgumentException("config file not found at '$config_file_address'");
-        
-        $this->section_name = $section_name;
-    }
-  }
-```
+> <b>Note:</b> The <i>zinux</i> has its own ini parser you can use it, or define your config handler, your call.
 
 By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 
@@ -694,7 +655,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
                     * This part is added to previous
                     * version of index.php
                     */
-                    new \vendor\tools\iniParser("../config/config.cfg", RUNNING_ENV)
+                    new \zinux\kernel\utilities\iniParser("../config/config.cfg", RUNNING_ENV)
                   )
          ->Run()
          ->Shutdown();
@@ -736,9 +697,9 @@ project via `\zinux\kernel\config\config` class!
 Binding Database Handler To Application
 ---
 When creating `\zinux\kernel\application\application` instance in `PROJECT-ROOT/public_html/index.php` file
-you can pass a instance of `\zinux\kernel\db\basedbInitializer` as a secondary argument to <b>constructor</b>.<br />
+you can pass a instance of `\zinux\kernel\application\dbInitializer` as a secondary argument to <b>constructor</b>.<br />
 and somewhere in your module you define a class which <b>extents</b> the abstract class 
-`\zinux\kernel\db\basedbInitializer` which would be resposible for configuring database for your application
+`\zinux\kernel\application\dbInitializer` which would be resposible for configuring database for your application
 
 <b>Usage example:</b><br />
 <hr />
@@ -760,7 +721,7 @@ Lets suppose that we have a class named <b>\vendor\db\ActiveRecord\initializer</
    * @author dariush
    * @version 1.0
    */
-  class initializer extends \zinux\kernel\db\basedbInitializer
+  class initializer extends \zinux\kernel\application\dbInitializer
   {
       public function Execute($request)
       {
@@ -797,6 +758,31 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
          ->Shutdown();
          
 ```
+Or this :
+
+```php
+<?php    
+    # PROJECT-ROOT/public_html/index.php
+    
+    defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
+    
+    require_once '../zinux/baseZinux.php';
+    
+    $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
+    
+    $app ->Startup()
+         ->Run()
+         /*
+         * This part is added to previous
+         * version of index.php
+         */
+         ->dbInitializer(new \vendor\db\ActiveRecord\initializer());
+         ->Shutdown();
+         
+```
+
 Your application is configured to use [PHP ActiveRecord](#http://www.phpactiverecord.org/) as database handler and
 you can use <b>PHP ActiveRecord</b> framework freely through your project.<br />
 
@@ -812,10 +798,72 @@ ever you want under <b>PROJECT-ROOT</b> and start using it with out any registra
 [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) discussed in 
 [Autoloading Classes And Files](#autoloading-classes-and-files) in your plugins.
 
-> Simple, Ha!?
+> Actually the <i>zinux</i> looks the entire project as pluging by itself!!
 
+```PHP
+    /**
+     *
+     * in 'zinux/baseZinux.php' you will see the zinux
+     * introduces the project's root directory as a plugin
+     * to itself since the registerPlugin() considers plugins
+     * under PROJECT-ROOT directory by passing no plugin directory
+     * it will add the PROJECT-ROOT as a plugin!
+     *
+     */
+    # require plugin file
+    require_once 'kernel/application/plugin.php';
+    # initiate a new plugin 
+    $plugin = new kernel\application\plugin();
+    # treat current project as a plugin
+    $plugin->registerPlugin("PROJECT_ROOT");
+```
+
+> Simple, Ha!?<br />
+
+<b>Note:</b> In case of using <b>third-party</b> libraries you may encounter with one of two situations bellow :<br />
+
+<b>Situation #1</b>
 <hr />
-In case of using <b>third-party</b> libraries which is hard to apply [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
+In case of using <b>third-party</b> libraries which <b>has applied its own [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)</b>
+you can introduce its <b>root directory</b> to <i>zinux</i> like bellow :
+
+```php
+<?php    
+    # PROJECT-ROOT/public_html/index.php
+    
+    defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
+    
+    require_once '../zinux/baseZinux.php'
+    
+    $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
+    
+    /*
+     *
+     * introducing two 'sundries' and 'FooPlug' plugin to zinux
+     *
+     */
+    #  'sundries' plugin is under "Some/Where/Under/PROJECT-ROOT/sundires" directory
+    $app->plugins ->registerPlugin("sundries", "Some/Where/Under/PROJECT-ROOT/sundires")
+    # 'FooPlug' plugin is under "Some/Where/Under/PROJECT-ROOT/FooPlug" directory
+                  ->registerPlugin("FooPlug", "Some/Where/Under/PROJECT-ROOT/FooPlug");
+    
+    
+    $app ->Startup()
+         ->Run()
+         ->Shutdown();
+         
+```
+> <b>Note:</b> If the <b>third-party</b> does not follow [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
+you have to apply the <b>Situation #2</b> bellow. actually both are the same, but in <b>Situation #1</b>
+the <i>zinux</i> does the <b>autoloading</b> for you, in <b>Situation #2</b> you have to define your own <b>autoloader</b>
+which most <b>third-party</b> libraries do it, you just have to call it. see bellow.
+
+<b>Situation #2</b>
+<hr />
+In case of using <b>third-party</b> libraries <b>has not applied [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)</b>
+and also which is hard to apply [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
 to it, following <b>Tip</b> may become usefull!
 
 > <b>Tip:</b> If you are using and <b>third-party plugin</b>, you <b>don't need</b> to standardize 

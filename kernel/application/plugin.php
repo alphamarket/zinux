@@ -29,7 +29,7 @@
          * @param type $plugin_addres
          * @throws \zinux\kernel\exceptions\notFoundException if plugin's directory not found
          */
-        public function registerPlugin($name, $plugin_addres)
+        public function registerPlugin($name, $plugin_addres = "")
         {
             # first posible place
             if(!($rpath = \zinux\kernel\utilities\fileSystem::resolve_path(PROJECT_ROOT.$plugin_addres)))

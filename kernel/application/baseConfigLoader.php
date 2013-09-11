@@ -1,5 +1,5 @@
 <?php
-namespace zinux\kernel\config;
+namespace zinux\kernel\application;
 
 require_once (dirname(__FILE__).'/../../baseZinux.php');
 

@@ -10,12 +10,12 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
     # set include path to project root
     # every class' namespace should be a map from project root
     ini_set('include_path', implode(PATH_SEPARATOR, array(ini_get('include_path'),  PROJECT_ROOT)));
-    
+    # require plugin file
     require_once 'kernel/application/plugin.php';
-    # initiate new plugin 
+    # initiate a new plugin 
     $plugin = new kernel\application\plugin();
     # treat current project as a plugin
-    $plugin->registerPlugin("PROJECT_ROOT", "");
+    $plugin->registerPlugin("PROJECT_ROOT");
     # dispose the instance
     unset($plugin);
     # register the general autoloader
@@ -28,9 +28,11 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
             {
                 # include once the class' file using dynamic path finder!
                 $path = kernel\utilities\fileSystem::resolve_path("$dir"."$c.php");
+                # if file exists
                 if($path)
                 {
-                    include_once $path;
+                    # include it
+                    require_once $path;
                     break;
                 }
             }

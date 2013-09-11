@@ -1,5 +1,5 @@
 <?php
-namespace zinux\kernel\config;
+namespace zinux\kernel\application;
 
 require_once dirname(__FILE__).'/../../baseZinux.php';
 
@@ -21,7 +21,7 @@ class config extends \zinux\baseZinux
      */
     public $config_initializer;
     
-    public function __construct(\zinux\kernel\config\baseConfigLoader $config_initializer)
+    public function __construct(baseConfigLoader $config_initializer)
     {
         if(!$config_initializer)
             throw new \zinux\kernel\exceptions\invalideArgumentException("The config initializer cannot be NULL");

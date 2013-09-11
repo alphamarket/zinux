@@ -24,7 +24,7 @@ class application extends \zinux\baseZinux
      */
     protected $dbInit;
     
-    function __construct($module_path = "", \zinux\kernel\application\dbInitializer $dbi = NULL)
+    function __construct($module_path = "", dbInitializer $dbi = NULL)
     {            
             $this->Initiate();
             
@@ -42,7 +42,7 @@ class application extends \zinux\baseZinux
         $this->_startup_invoked = false;
     }
     
-    public function dbInitializer(\zinux\kernel\application\dbInitializer $dbi = NULL)
+    public function dbInitializer(dbInitializer $dbi = NULL)
     {
         $this->dbInit = $dbi;
         return $this;
@@ -88,14 +88,14 @@ class application extends \zinux\baseZinux
      * 
      * @param config_file_address
      */
-    public function Startup(\zinux\kernel\config\baseConfigLoader $config_initializer = NULL)
+    public function Startup(baseConfigLoader $config_initializer = NULL)
     {
             # no initializer return
             if(!$config_initializer) return $this;
             # cache the $config in
             $this->SetConfiginItializer($config_initializer);
             # create config instance
-            $config = new \zinux\kernel\config\config($config_initializer);
+            $config = new config($config_initializer);
             # load configs
             $config->Load();
             # set default module root
@@ -106,7 +106,7 @@ class application extends \zinux\baseZinux
             return $this;
     }
     
-    public function SetConfiginItializer(\zinux\kernel\config\baseConfigLoader $config_initializer)
+    public function SetConfiginItializer(baseConfigLoader $config_initializer)
     {
         if(!$config_initializer)
             throw new \zinux\kernel\exceptions\invalideArgumentException;
