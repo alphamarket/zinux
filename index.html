@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-	<meta name="description" content="Zinux a simple flexible MVC library for PHP developer">
-	<meta name="keywords" content="PHP,MVC,Zinux,Convention Over Configuration,Design Pattern,Autoloading,Namespace Convention,PHP Bootstrap,Bootstrap,Project,Source Code,Action,Module,Controller,Layout,View,Helper,Database binding,Configuration">
-	<meta name="author" content="Dariush Hasanpoor">
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -19,11 +15,11 @@
     <link rel="stylesheet" href="stylesheets/ie.css">
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-  
   <body>
       <div id="header">
-        <nav style="max-width: 900px!important">
+        <nav>
           <li class="fork"><a href="https://github.com/dariushha/zinux">View On GitHub</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/zipball/master">ZIP</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/tarball/master">TAR</a></li>
@@ -31,9 +27,9 @@
         </nav>
       </div><!-- end header -->
 
-    <div class="wrapper" style="max-width: 900px!important">
+    <div class="wrapper">
 
-      <section style="max-width: 900px!important">
+      <section>
         <div id="title">
           <h1>Zinux</h1>
           <p>A simple and lightweight but powerful library supporting MVC design pattern  </p>
@@ -45,7 +41,8 @@
         <p>In this project i have tried to make it uses so simple.
 The <i>zinux</i>'s policy is <a href="http://en.wikipedia.org/wiki/Convention_over_configuration">Convention Over Configuration</a>
 which leads it to run minimal configuration and much more flexibility, 
-you will find it very convenient to use and develop.</p>
+you will find it very convenient to use and develop.
+There is also a <a href="#demo-project">demo</a> available.</p>
 
 <blockquote>
 <p><b>Note:</b> Project is under development!</p>
@@ -94,6 +91,7 @@ you will find it very convenient to use and develop.</p>
 </ul>
 </li>
 <li><a href="#tips">Tips</a></li>
+<li><a href="#demo-project">Demo Project</a></li>
 </ul><h2>
 <a name="directory-structure" class="anchor" href="#directory-structure"><span class="octicon octicon-link"></span></a>Directory Structure</h2>
 
@@ -576,7 +574,7 @@ relative controller path)</i>.</p>
 <span class="sd">        *  </span>
 <span class="sd">        *  /some/foo/index/some/var?or=GET</span>
 <span class="sd">        */</span>
-       <span class="k">public</span> <span class="k">function</span> <span class="nf">IndexController</span><span class="p">()</span>
+       <span class="k">public</span> <span class="k">function</span> <span class="nf">IndexAction</span><span class="p">()</span>
        <span class="p">{</span>
          <span class="c1"># lets see that is the request's params are </span>
          <span class="nx">\zinux\kernel\utilities\debug</span><span class="o">::</span><span class="na">_var</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">params</span><span class="p">);</span>
@@ -998,6 +996,11 @@ by overwriting the index file introduced in <a href="#how-to-use">How To Use</a>
 
 <p>The <i>zinux</i> supports request types i.e you can have a URI like <code>/news/feed.json</code> which points to <b>NewsController</b> 
 and <b>FeedAction</b> you can ouput feeds according to request type (in here <code>json</code>) in <b>NewsController::FeedAction()</b>! default is <code>html</code>. </p>
+
+<h1>
+<a name="demo-project" class="anchor" href="#demo-project"><span class="octicon octicon-link"></span></a>Demo Project</h1>
+
+<p>You can download a demo project from <a href="https://github.com/dariushha/zinux-demo">zinux-demo</a>.</p>
       </section>
 
     </div>
