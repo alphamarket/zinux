@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-	<meta name="description" content="Zinux a simple flexible MVC library for PHP developer">
-	<meta name="keywords" content="PHP,MVC,Zinux,Convention Over Configuration,Design Pattern,Autoloading,Namespace Convention,PHP Bootstrap,Bootstrap,Project,Source Code,Action,Module,Controller,Layout,View,Helper,Database binding,Configuration">
-	<meta name="author" content="Dariush Hasanpoor">
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -19,22 +15,21 @@
     <link rel="stylesheet" href="stylesheets/ie.css">
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-  
   <body>
       <div id="header">
-        <nav style="max-width: 900px!important">
+        <nav>
           <li class="fork"><a href="https://github.com/dariushha/zinux">View On GitHub</a></li>
-          <li class="fork" style="margin-left:10px;"><a href="/zinux-demo">Demo Project</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/zipball/master">ZIP</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/tarball/master">TAR</a></li>
           <li class="title">DOWNLOADS</li>
         </nav>
       </div><!-- end header -->
 
-    <div class="wrapper" style="max-width: 900px!important">
+    <div class="wrapper">
 
-      <section style="max-width: 900px!important">
+      <section>
         <div id="title">
           <h1>Zinux</h1>
           <p>A simple and lightweight but powerful library supporting MVC design pattern  </p>
@@ -492,7 +487,7 @@ bootstrap files are at following map:</p>
   <span class="c1"># following code will change current view to 'LoginView'</span>
   <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">SetView</span><span class="p">(</span><span class="s2">"Login"</span><span class="p">);</span> 
 
-  <span class="c1"># disable view(i.e loading no view only view)</span>
+  <span class="c1"># disable view(i.e loading no view and also no layout)</span>
   <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="o">-&gt;</span><span class="na">SuppressView</span><span class="p">();</span>
 </pre></div>
 
