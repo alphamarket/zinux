@@ -70,7 +70,7 @@ Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php';
@@ -653,7 +653,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php';
@@ -756,7 +756,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php';
@@ -780,7 +780,7 @@ Or this :
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php';
@@ -849,7 +849,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php'
@@ -905,7 +905,7 @@ by overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php'
