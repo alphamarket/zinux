@@ -157,7 +157,7 @@ __LOADING_CACHE:
             defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(
                 ZINUX_ROOT.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'modules'));
             # define default module
-            $this->module = new \zinux\kernel\mvc\module("default", MODULE_ROOT."/defaultModule");
+            $this->module = new \zinux\kernel\mvc\module("default", MODULE_ROOT."defaultModule");
             $module_dir = dirname($this->module->GetPath());
             # module collection instance
             $mc = new \stdClass();
