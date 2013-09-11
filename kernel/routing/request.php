@@ -320,7 +320,7 @@ __FETCHING_MODULES:
             # we need to do it at the end of fetching 
             # params 'cause its imposible to use
             # GetIndexedParam()
-            $this->params = array_merge($this->params, $_GET, $_POST);
+            $this->params += array_merge($_GET, $_POST);
             # add to items into indexed params
             foreach($this->params as $key => $param)
             {
