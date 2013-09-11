@@ -437,7 +437,7 @@ View can change in <b>Controllers</b> via following codes
   # following code will change current view to 'LoginView'
   $this->view->SetView("Login"); 
   
-  # disable view(i.e loading no view only view)
+  # disable view(i.e loading no view and also no layout)
   $this->view->SuppressView();
 ```
 
