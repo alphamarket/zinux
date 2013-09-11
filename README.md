@@ -7,6 +7,7 @@ The <i>zinux</i>'s policy is [Convention Over Configuration](http://en.wikipedia
 which leads it to run minimal configuration and much more flexibility, 
 you will find it very convenient to use and develop.
 
+
 > <b>Note:</b> Project is under development!
 
 Topics
@@ -68,7 +69,7 @@ Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php';
@@ -80,6 +81,19 @@ Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index
          ->Shutdown();
          
 ```
+
+and also create a <b><i>.htaccess</i></b> in the same directory as your <b>index.php</b> is and add 
+following code route requestes to index.php.
+
+```
+# PROJECT-ROOT/public_html/.htaccess
+
+RewriteEngine On
+RewriteCond $1 !\.(gif|jpe?g|png|ico|js)$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$ /index.php/$1
+```
+
 <b>Congratulations!</b> you now have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!!
 
 > You may wondering why the folder's name passed to `\zinux\kernel\application\application`<br />
@@ -286,13 +300,13 @@ bootstrap files are at following map:
             |_ Controllers
             |_ Models
             |_ Views
-            |_ SomeBootstrap.php
+            |_ SomeBootstrap.php *(your module bootstrap)
 
         |_ DefaultModule
             |_ Controllers
             |_ Models
             |_ Views
-            |_ DefaultBootstrap.php
+            |_ DefaultBootstrap.php *(your module bootstrap)
                 
     |_ zinux (the library)
     |_ public_html
@@ -322,11 +336,11 @@ How To Boostrap
 <dl>
         <dt>Predispatch</dt>
         <dd>
-                Every public method in bootstrap file which has a prefix <b>pre_</b> gets called in predispatch.
+                Every public method in bootstrap file which has a prefix '<b>pre_</b>' gets called in predispatch.
         </dd>
         <dt>Postdispatch</dt>
         <dd>
-                Every public method in bootstrap file which has a prefix <b>post_</b> gets called in postdispatch.
+                Every public method in bootstrap file which has a prefix '<b>post_</b>' gets called in postdispatch.
         </dd>
 </dl>
 
@@ -510,7 +524,7 @@ relative controller path)</i>.
         *  
         *  /some/foo/index/some/var?or=GET
         */
-       public function IndexController()
+       public function IndexAction()
        {
          # lets see that is the request's params are 
          \zinux\kernel\utilities\debug::_var($this->request->params);
@@ -638,7 +652,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php';
@@ -741,7 +755,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php';
@@ -765,7 +779,7 @@ Or this :
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php';
@@ -825,14 +839,16 @@ ever you want under <b>PROJECT-ROOT</b> and start using it with out any registra
 <b>Situation #1</b>
 <hr />
 In case of using <b>third-party</b> libraries which <b>has applied its own [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)</b>
-you can introduce its <b>root directory</b> to <i>zinux</i> like bellow :
+you can introduce its <b>root directory</b> to <i>zinux</i> like bellow.
+
+By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 
 ```php
 <?php    
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php'
@@ -888,7 +904,7 @@ by overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # PROJECT-ROOT/public_html/index.php
     
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
     
     require_once '../zinux/baseZinux.php'
