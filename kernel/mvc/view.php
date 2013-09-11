@@ -39,6 +39,17 @@ class view extends mvc
         $this->relative_controller = $action->relative_controller;
         $this->relative_module = $action->relative_module;
         $this->extension = ".phtml";
+        $this->SetViewName($this->name);
+    }
+
+    public function SetViewName($name)
+    {
+        if(preg_match('/(\w+)view$/i', $name))
+        {
+            $name=preg_replace('/view$/i', "", $name);
+        }
+        $this->name = $name;
+        $this->full_name = "{$name}View";
         $this->SetPath("{$this->relative_module->GetPath()}".
             DIRECTORY_SEPARATOR.
             "views".
@@ -47,9 +58,9 @@ class view extends mvc
             DIRECTORY_SEPARATOR.
             "{$this->relative_controller->name}".
             DIRECTORY_SEPARATOR.
-            "{$this->full_name}{$this->extension}");
+            "{$this->full_name}{$this->extension}", 0);
     }
-
+    
     public function GetNameSpace()
     {
         return $this->relative_module->GetNameSpace()."\\view";
