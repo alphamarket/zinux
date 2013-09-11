@@ -437,7 +437,7 @@ View can change in <b>Controllers</b> via following codes
   # following code will change current view to 'LoginView'
   $this->view->SetView("Login"); 
   
-  # disable view(i.e loading no view and also no layout)
+  # disable view(i.e loading no view only view)
   $this->view->SuppressView();
 ```
 
@@ -693,16 +693,16 @@ project via `\zinux\kernel\config\config` class!
    
   
   # output: localhost
-  echo \zinux\kernel\config\config::GetConfig("config", "db", "host");
+  echo \zinux\kernel\application\config::GetConfig("config", "db", "host");
   
   # output: USERNAME
-  echo \zinux\kernel\config\config::GetConfig("config", "db", "username");
+  echo \zinux\kernel\application\config::GetConfig("config", "db", "username");
   
   # output: PASSWORD
-  echo \zinux\kernel\config\config::GetConfig("config", "db", "password");
+  echo \zinux\kernel\application\config::GetConfig("config", "db", "password");
   
   # output: DB_NAME
-  echo \zinux\kernel\config\config::GetConfig("config", "db", "dbname");
+  echo \zinux\kernel\application\config::GetConfig("config", "db", "dbname");
 ```
 
 > Easy enough, Na!?
