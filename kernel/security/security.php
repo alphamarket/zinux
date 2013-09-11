@@ -21,7 +21,7 @@ class security
      * @return string the secure string
      * @throws \InvalidArgumentException arises if condition <b>$has_expire_date && $seconds_to_expire_from_now<=0</b> satisfied
      */
-    public static function GetSecureString(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0)
+    public static function GetHashString(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0)
     {
             if($has_expire_date && $seconds_to_expire_from_now<=0)
                 throw new \InvalidArgumentException("The '\$second_to_expire_from_now' didn't provide");
@@ -126,6 +126,8 @@ class security
                      $exception_verbose_msg = "Unable to call `$func()`";
                      goto __THROW_EXCEPTION;
                  }
+                 if(is_string($arg))
+                     $arg = "'$arg'";
                  # asserting the function call
                  if(!assert("$func($arg)"))
                  {
@@ -155,7 +157,7 @@ __THROW_EXCEPTION:
      * @param array $based_upon
      * @param type $has_expire_date
      */
-    public static function IsArraySecured(array $target_array, array $based_upon = array(), $has_expire_date = 0)
+    public static function ArrayHashCheck(array $target_array, array $based_upon = array(), $has_expire_date = 0)
     {
         # generating security fields name
         $tn = "s_".substr(sha1('t'), 0,5);
@@ -194,10 +196,8 @@ __THROW_EXCEPTION:
         }
         require_once 'hash.php';
         # final checking of $target_array via its assertions
-        $this->IsSecure($target_array, $isSecure_based_upon, $asserts , array($hn=>hash::Generate(implode("", $based_upon))));
+        self::IsSecure($target_array, $isSecure_based_upon, $asserts , array($hn=>hash::Generate(implode("", $based_upon))));
         # if we reach this line its all OK
         return true;
     }
-
 }
-?>
