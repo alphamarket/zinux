@@ -53,7 +53,7 @@ class request extends \zinux\baseZinux
         /**
         * hold params by index
         */
-        protected $indexed_param;
+        public $indexed_param;
         /**
          * check if current instance has been proccessed or not
          * @var boolean
@@ -316,17 +316,18 @@ __FETCHING_MODULES:
                 array_shift($this->_parts);
                 array_shift($this->_parts);
             }
+            # add to items into indexed params
+            foreach($this->params as $key => $param)
+            {
+                $this->indexed_param[] = $key;
+                if($param)
+                    $this->indexed_param[] = $param;
+            }
             # merging $_GET, $_POST into $params 
             # we need to do it at the end of fetching 
             # params 'cause its imposible to use
             # GetIndexedParam()
             $this->params += array_merge($_GET, $_POST);
-            # add to items into indexed params
-            foreach($this->params as $key => $param)
-            {
-                $this->indexed_param[] = $key;
-                $this->indexed_param[] = $param;
-            }
             # we don't need this var anymore >:)
             unset($this->_parts);
 	}
@@ -351,7 +352,14 @@ __FETCHING_MODULES:
             if(!is_integer($index)) throw new \zinux\kernel\exceptions\invalideArgumentException;
             $this->indexed_param[$index] = $value;
         }
-
+        /**
+        * Get count of URI params base on its index
+        * @return integer
+        */
+        public function CountIndexedParam()
+        {
+            return count($this->indexed_param);
+        }
 	/**
         * Check if the current request has $_POST values
         */

@@ -45,10 +45,10 @@ abstract class mvc extends \zinux\baseZinux
     
     public function GetExtention(){ return $this->extension; }
     
-    public function  SetPath($path, $validate = 1)
+    public function  SetPath($path, $throw_exception_if_not_exists = 1)
     {
         $this->path = \zinux\kernel\utilities\fileSystem::resolve_path($path,1);
-        if($validate && !$this->path)
+        if($throw_exception_if_not_exists && !$this->path)
         {
             throw new \zinux\kernel\exceptions\notFoundException("`{$path}` does not exists ...");
         }

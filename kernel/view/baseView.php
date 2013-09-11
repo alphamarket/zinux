@@ -17,11 +17,6 @@ class baseView extends \zinux\baseZinux
     */
     public $request;
     /**
-     * holds view's name
-     * @var string
-     */
-    public $view_name;
-    /**
      * is view flagged as rendered?
      */
     protected $view_rendered = 0;
@@ -72,9 +67,9 @@ class baseView extends \zinux\baseZinux
 	 * 
 	 * @param view_name
 	 */
-	public function setView(string $view_name)
+	public function setView($view_name)
 	{
-            $this->view_name = $view_name;
+            $this->metadata->SetViewName($view_name);
 	}
 
 	/**
@@ -106,6 +101,10 @@ class baseView extends \zinux\baseZinux
                 return;
             if(!$this->view_rendered)
             {
+                if(!$this->metadata->GetPath()) 
+                {
+                    throw new \zinux\kernel\exceptions\notFoundException("View '<b>{$this->request->view->full_name}</b>' not found for '<b>{$this->request->module->full_name} / {$this->request->controller->full_name} / {$this->request->action->full_name}</b>'...!");
+                }
                 ob_start();
                     # invoking view's file
                     # we cannot use $this->metadata->Load(); 'cause then the view's 
@@ -129,9 +128,9 @@ class baseView extends \zinux\baseZinux
 	 * @param view_name
 	 * @param partial_view_params
 	 */
-	public function RenderPartial(string $view_name, array $partial_view_params = array())
+	public function RenderPartial($view_name, array $partial_view_params = array())
 	{
-            if($view_name == $this->request->view)
+            if($view_name == $this->metadata->name)
                 throw new \zinux\kernel\exceptions\InvalideOperationException("Cannot partially load the currently loaded view...");
 
             // create a fake view handler
