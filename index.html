@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-	<meta name="description" content="Zinux a simple flexible MVC library for PHP developer">
-	<meta name="keywords" content="PHP,MVC,Zinux,Convention Over Configuration,Design Pattern,Autoloading,Namespace Convention,PHP Bootstrap,Bootstrap,Project,Source Code,Action,Module,Controller,Layout,View,Helper,Database binding,Configuration">
-	<meta name="author" content="Dariush Hasanpoor">
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -19,11 +15,11 @@
     <link rel="stylesheet" href="stylesheets/ie.css">
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-  
   <body>
       <div id="header">
-        <nav style="max-width: 900px!important">
+        <nav>
           <li class="fork"><a href="https://github.com/dariushha/zinux">View On GitHub</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/zipball/master">ZIP</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/tarball/master">TAR</a></li>
@@ -31,9 +27,9 @@
         </nav>
       </div><!-- end header -->
 
-    <div class="wrapper" style="max-width: 900px!important">
+    <div class="wrapper">
 
-      <section style="max-width: 900px!important">
+      <section>
         <div id="title">
           <h1>Zinux</h1>
           <p>A simple and lightweight but powerful library supporting MVC design pattern  </p>
@@ -56,7 +52,7 @@ you will find it very convenient to use and develop.</p>
 
 <ul>
 <li><a href="#directory-structure">Directory Structure</a></li>
-<li><a href="#how-to-use">How To Use</a></li>
+<li><a href="#setup">Setup</a></li>
 <li><a href="#mvc-entities">MVC Entities</a></li>
 <li><a href="#autoloading-classes-and-files">Autoloading Classes and Files</a></li>
 <li><a href="#naming-conventsion">Naming Conventsion</a></li>
@@ -85,7 +81,7 @@ you will find it very convenient to use and develop.</p>
 </ul>
 </li>
 <li>
-<a href="#advance">Advance</a>
+<a href="#adavnced">Adavnced</a>
 
 <ul>
 <li><a href="#binding-custom-configuration-file-to-application">Binding Custom Configuration File to Application</a></li>
@@ -119,7 +115,7 @@ you will find it very convenient to use and develop.</p>
 </pre>
 
 <h2>
-<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How To Use</h2>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
 
 <p>Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index.php</b> file add following codes</p>
 
@@ -140,7 +136,18 @@ you will find it very convenient to use and develop.</p>
 
 </pre></div>
 
-<p>now you have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!!</p>
+<p>and also create a <b><i>.htaccess</i></b> in the same directory as your <b>index.php</b> is and add 
+following code route requestes to index.php.</p>
+
+<pre><code># PROJECT-ROOT/public_html/.htaccess
+
+RewriteEngine On
+RewriteCond $1 !\.(gif|jpe?g|png|ico|js)$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$ /index.php/$1
+</code></pre>
+
+<p><b>Congratulations!</b> you now have fully MVC magic under <b>PROJECT-ROOT/Modules</b>!!</p>
 
 <blockquote>
 <p>You may wondering why the folder's name passed to <code>\zinux\kernel\application\application</code><br>
@@ -348,13 +355,13 @@ bootstrap files are at following map:</p>
             |_ Controllers
             |_ Models
             |_ Views
-            |_ SomeBootstrap.php
+            |_ SomeBootstrap.php *(your module bootstrap)
 
         |_ DefaultModule
             |_ Controllers
             |_ Models
             |_ Views
-            |_ DefaultBootstrap.php
+            |_ DefaultBootstrap.php *(your module bootstrap)
                 
     |_ zinux (the library)
     |_ public_html
@@ -384,11 +391,11 @@ bootstrap files are at following map:</p>
 <dl>
 <dt>Predispatch</dt>
         <dd>
-                Every public method in bootstrap file which has a prefix <b>pre_</b> gets called in predispatch.
+                Every public method in bootstrap file which has a prefix '<b>pre_</b>' gets called in predispatch.
         </dd>
         <dt>Postdispatch</dt>
         <dd>
-                Every public method in bootstrap file which has a prefix <b>post_</b> gets called in postdispatch.
+                Every public method in bootstrap file which has a prefix '<b>post_</b>' gets called in postdispatch.
         </dd>
 </dl><h2>
 <a name="bootstrap-example" class="anchor" href="#bootstrap-example"><span class="octicon octicon-link"></span></a>Bootstrap Example</h2>
@@ -666,7 +673,7 @@ so if you catchup with the above codes you are 100% ready to use <b>zinux</b> li
 </blockquote>
 
 <h1>
-<a name="advance" class="anchor" href="#advance"><span class="octicon octicon-link"></span></a>Advance</h1>
+<a name="adavnced" class="anchor" href="#adavnced"><span class="octicon octicon-link"></span></a>Adavnced</h1>
 
 <p>As i mentioned before, the porpuse of <i>zinux</i> is convention over configuration, and the most challenging 
 topics in developing any applications are <b>Project Configuration</b> and <b>Databse Integration</b>.<br><i>zinux</i> provides a very simple and flexible manner in other to bind a configuration file and database initializer.<br><b>These are optional</b>.</p>
@@ -675,9 +682,9 @@ topics in developing any applications are <b>Project Configuration</b> and <b>Da
 <a name="binding-custom-configuration-file-to-application" class="anchor" href="#binding-custom-configuration-file-to-application"><span class="octicon octicon-link"></span></a>Binding Custom Configuration File to Application</h2>
 
 <p>When creating <code>\zinux\kernel\application\application</code> instance in <code>PROJECT-ROOT/public_html/index.php</code> file
-you can pass a instance of <code>\zinux\kernel\config\baseConfigLoader</code> to <b>Startup()</b>.<br>
+you can pass a instance of <code>\zinux\kernel\application\baseConfigLoader</code> to <b>Startup()</b>.<br>
 and somewhere in your module you define a class which <b>extents</b> the abstract class 
-<code>\zinux\kernel\config\baseConfigLoader</code> which would be resposible for to load configurations for your application.
+<code>\zinux\kernel\application\baseConfigLoader</code> which would be resposible for to load configurations for your application.
 It can be a ini loader or XML loader, etc. </p>
 
 <p><b>Usage example:</b><br></p>
@@ -685,45 +692,9 @@ It can be a ini loader or XML loader, etc. </p>
 <hr><p>Lets suppose that we have a class named <b>\vendor\tools\iniParser</b> which is responsible for 
 loading configurations from an ini file for your project.</p>
 
-<div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>
-  <span class="c1"># file : PROJECT-ROOT/vendor/tools/iniParser.php</span>
-
-  <span class="k">namespace</span> <span class="nx">vendor\tools</span><span class="p">;</span>
-
-  <span class="k">class</span> <span class="nc">iniParser</span> <span class="k">extends</span> <span class="nx">\zinux\kernel\config\baseConfigLoader</span>
-  <span class="p">{</span>
-
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">Execute</span><span class="p">()</span>
-    <span class="p">{</span>
-      <span class="cm">/*</span>
-<span class="cm">       *</span>
-<span class="cm">       * Your ini parse algorithm here </span>
-<span class="cm">       *</span>
-<span class="cm">       */</span>
-       <span class="sd">/**</span>
-<span class="sd">        * @var array Return type should be an array</span>
-<span class="sd">        * otherwise an exception will be thrown from </span>
-<span class="sd">        * \zinux\kernel\config\config</span>
-<span class="sd">        */</span>
-       <span class="k">return</span> <span class="nv">$loaded_config</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="sd">/**</span>
-<span class="sd">     * @param string $config_file_address config file address</span>
-<span class="sd">     * @param string $section_name section_name in ini file</span>
-<span class="sd">     * @throws \zinux\kernel\exceptions\invalideArgumentException</span>
-<span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$config_file_address</span><span class="p">,</span> <span class="nv">$section_name</span> <span class="o">=</span> <span class="k">NULL</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">file_address</span>  <span class="o">=</span> <span class="nx">\zinux\kernel\utilities\fileSystem</span><span class="o">::</span><span class="na">resolve_path</span><span class="p">(</span><span class="nv">$config_file_address</span><span class="p">);</span>
-
-        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">file_address</span><span class="p">)</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nx">\zinux\kernel\exceptions\invalideArgumentException</span><span class="p">(</span><span class="s2">"config file not found at '</span><span class="si">$config_file_address</span><span class="s2">'"</span><span class="p">);</span>
-
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">section_name</span> <span class="o">=</span> <span class="nv">$section_name</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-</pre></div>
+<blockquote>
+<p><b>Note:</b> The <i>zinux</i> has its own ini parser you can use it, or define your config handler, your call.</p>
+</blockquote>
 
 <p>By overwriting the index file introduced in <a href="#how-to-use">How To Use</a> as follow:</p>
 
@@ -748,7 +719,7 @@ loading configurations from an ini file for your project.</p>
 <span class="cm">                    * This part is added to previous</span>
 <span class="cm">                    * version of index.php</span>
 <span class="cm">                    */</span>
-                    <span class="k">new</span> <span class="nx">\vendor\tools\iniParser</span><span class="p">(</span><span class="s2">"../config/config.cfg"</span><span class="p">,</span> <span class="nx">RUNNING_ENV</span><span class="p">)</span>
+                    <span class="k">new</span> <span class="nx">\zinux\kernel\utilities\iniParser</span><span class="p">(</span><span class="s2">"../config/config.cfg"</span><span class="p">,</span> <span class="nx">RUNNING_ENV</span><span class="p">)</span>
                   <span class="p">)</span>
          <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
          <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
@@ -790,9 +761,9 @@ project via <code>\zinux\kernel\config\config</code> class!
 <a name="binding-database-handler-to-application" class="anchor" href="#binding-database-handler-to-application"><span class="octicon octicon-link"></span></a>Binding Database Handler To Application</h2>
 
 <p>When creating <code>\zinux\kernel\application\application</code> instance in <code>PROJECT-ROOT/public_html/index.php</code> file
-you can pass a instance of <code>\zinux\kernel\db\basedbInitializer</code> as a secondary argument to <b>constructor</b>.<br>
+you can pass a instance of <code>\zinux\kernel\application\dbInitializer</code> as a secondary argument to <b>constructor</b>.<br>
 and somewhere in your module you define a class which <b>extents</b> the abstract class 
-<code>\zinux\kernel\db\basedbInitializer</code> which would be resposible for configuring database for your application</p>
+<code>\zinux\kernel\application\dbInitializer</code> which would be resposible for configuring database for your application</p>
 
 <p><b>Usage example:</b><br></p>
 
@@ -813,7 +784,7 @@ and somewhere in your module you define a class which <b>extents</b> the abstrac
 <span class="sd">   * @author dariush</span>
 <span class="sd">   * @version 1.0</span>
 <span class="sd">   */</span>
-  <span class="k">class</span> <span class="nc">initializer</span> <span class="k">extends</span> <span class="nx">\zinux\kernel\db\basedbInitializer</span>
+  <span class="k">class</span> <span class="nc">initializer</span> <span class="k">extends</span> <span class="nx">\zinux\kernel\application\dbInitializer</span>
   <span class="p">{</span>
       <span class="k">public</span> <span class="k">function</span> <span class="nf">Execute</span><span class="p">(</span><span class="nv">$request</span><span class="p">)</span>
       <span class="p">{</span>
@@ -851,6 +822,30 @@ and somewhere in your module you define a class which <b>extents</b> the abstrac
 
 </pre></div>
 
+<p>Or this :</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>    
+    <span class="c1"># PROJECT-ROOT/public_html/index.php</span>
+
+    <span class="nb">defined</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">)</span> <span class="o">||</span> <span class="nb">define</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">,</span> <span class="s2">"DEVELOPMENT"</span><span class="p">);</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");</span>
+
+    <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span><span class="p">;</span>
+
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
+
+    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+         <span class="cm">/*</span>
+<span class="cm">         * This part is added to previous</span>
+<span class="cm">         * version of index.php</span>
+<span class="cm">         */</span>
+         <span class="o">-&gt;</span><span class="na">dbInitializer</span><span class="p">(</span><span class="k">new</span> <span class="nx">\vendor\db\ActiveRecord\initializer</span><span class="p">());</span>
+         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+
+</pre></div>
+
 <p>Your application is configured to use <a>PHP ActiveRecord</a> as database handler and
 you can use <b>PHP ActiveRecord</b> framework freely through your project.<br></p>
 
@@ -867,10 +862,78 @@ ever you want under <b>PROJECT-ROOT</b> and start using it with out any registra
 <a href="#autoloading-classes-and-files">Autoloading Classes And Files</a> in your plugins.</p>
 
 <blockquote>
-<p>Simple, Ha!?</p>
+<p>Actually the <i>zinux</i> looks the entire project as pluging by itself!!</p>
 </blockquote>
 
-<hr><p>In case of using <b>third-party</b> libraries which is hard to apply <a href="http://www.sitepoint.com/autoloading-and-the-psr-0-standard/">PSR-0 Standard</a>
+<div class="highlight highlight-PHP"><pre>    <span class="sd">/**</span>
+<span class="sd">     *</span>
+<span class="sd">     * in 'zinux/baseZinux.php' you will see the zinux</span>
+<span class="sd">     * introduces the project's root directory as a plugin</span>
+<span class="sd">     * to itself since the registerPlugin() considers plugins</span>
+<span class="sd">     * under PROJECT-ROOT directory by passing no plugin directory</span>
+<span class="sd">     * it will add the PROJECT-ROOT as a plugin!</span>
+<span class="sd">     *</span>
+<span class="sd">     */</span>
+    <span class="c1"># require plugin file</span>
+    <span class="k">require_once</span> <span class="s1">'kernel/application/plugin.php'</span><span class="p">;</span>
+    <span class="c1"># initiate a new plugin </span>
+    <span class="nv">$plugin</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">kernel\application\plugin</span><span class="p">();</span>
+    <span class="c1"># treat current project as a plugin</span>
+    <span class="nv">$plugin</span><span class="o">-&gt;</span><span class="na">registerPlugin</span><span class="p">(</span><span class="s2">"PROJECT_ROOT"</span><span class="p">);</span>
+</pre></div>
+
+<blockquote>
+<p>Simple, Ha!?<br></p>
+</blockquote>
+
+<p><b>Note:</b> In case of using <b>third-party</b> libraries you may encounter with one of two situations bellow :<br></p>
+
+<p><b>Situation #1</b></p>
+
+<hr><p>In case of using <b>third-party</b> libraries which <b>has applied its own <a href="http://www.sitepoint.com/autoloading-and-the-psr-0-standard/">PSR-0 Standard</a></b>
+you can introduce its <b>root directory</b> to <i>zinux</i> like bellow.</p>
+
+<p>By overwriting the index file introduced in <a href="#how-to-use">How To Use</a> as follow:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>    
+    <span class="c1"># PROJECT-ROOT/public_html/index.php</span>
+
+    <span class="nb">defined</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">)</span> <span class="o">||</span> <span class="nb">define</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">,</span> <span class="s2">"DEVELOPMENT"</span><span class="p">);</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCT");</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");</span>
+
+    <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span>
+
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
+
+    <span class="cm">/*</span>
+<span class="cm">     *</span>
+<span class="cm">     * introducing two 'sundries' and 'FooPlug' plugin to zinux</span>
+<span class="cm">     *</span>
+<span class="cm">     */</span>
+    <span class="c1">#  'sundries' plugin is under "Some/Where/Under/PROJECT-ROOT/sundires" directory</span>
+    <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">plugins</span> <span class="o">-&gt;</span><span class="na">registerPlugin</span><span class="p">(</span><span class="s2">"sundries"</span><span class="p">,</span> <span class="s2">"Some/Where/Under/PROJECT-ROOT/sundires"</span><span class="p">)</span>
+    <span class="c1"># 'FooPlug' plugin is under "Some/Where/Under/PROJECT-ROOT/FooPlug" directory</span>
+                  <span class="o">-&gt;</span><span class="na">registerPlugin</span><span class="p">(</span><span class="s2">"FooPlug"</span><span class="p">,</span> <span class="s2">"Some/Where/Under/PROJECT-ROOT/FooPlug"</span><span class="p">);</span>
+
+
+    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+
+</pre></div>
+
+<blockquote>
+<p><b>Note:</b> If the <b>third-party</b> does not follow <a href="http://www.sitepoint.com/autoloading-and-the-psr-0-standard/">PSR-0 Standard</a>
+you have to apply the <b>Situation #2</b> bellow. actually both are the same, but in <b>Situation #1</b>
+the <i>zinux</i> does the <b>autoloading</b> for you, in <b>Situation #2</b> you have to define your own <b>autoloader</b>
+which most <b>third-party</b> libraries do it, you just have to call it. see bellow.</p>
+</blockquote>
+
+<p><b>Situation #2</b></p>
+
+<hr><p>In case of using <b>third-party</b> libraries <b>has not applied <a href="http://www.sitepoint.com/autoloading-and-the-psr-0-standard/">PSR-0 Standard</a></b>
+and also which is hard to apply <a href="http://www.sitepoint.com/autoloading-and-the-psr-0-standard/">PSR-0 Standard</a>
 to it, following <b>Tip</b> may become usefull!</p>
 
 <blockquote>
