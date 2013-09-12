@@ -788,12 +788,12 @@ Or this :
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
     
     $app ->Startup()
-         ->Run()
          /*
          * This part is added to previous
          * version of index.php
          */
          ->dbInitializer(new \vendor\db\ActiveRecord\initializer());
+         ->Run()
          ->Shutdown();
          
 ```
