@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-	<meta name="description" content="Zinux a simple flexible MVC library for PHP developer">
-	<meta name="keywords" content="PHP,MVC,Zinux,Convention Over Configuration,Design Pattern,Autoloading,Namespace Convention,PHP Bootstrap,Bootstrap,Project,Source Code,Action,Module,Controller,Layout,View,Helper,Database binding,Configuration">
-	<meta name="author" content="Dariush Hasanpoor">
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -19,22 +15,21 @@
     <link rel="stylesheet" href="stylesheets/ie.css">
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-  
   <body>
       <div id="header">
-        <nav style="max-width: 900px!important">
+        <nav>
           <li class="fork"><a href="https://github.com/dariushha/zinux">View On GitHub</a></li>
-          <li class="fork" style="margin-left:10px;"><a href="/zinux-demo">Demo Project</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/zipball/master">ZIP</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/tarball/master">TAR</a></li>
           <li class="title">DOWNLOADS</li>
         </nav>
       </div><!-- end header -->
 
-    <div class="wrapper" style="max-width: 900px!important">
+    <div class="wrapper">
 
-      <section style="max-width: 900px!important">
+      <section>
         <div id="title">
           <h1>Zinux</h1>
           <p>A simple and lightweight but powerful library supporting MVC design pattern  </p>
@@ -843,12 +838,12 @@ and somewhere in your module you define a class which <b>extents</b> the abstrac
     <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
 
     <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
-         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
          <span class="cm">/*</span>
 <span class="cm">         * This part is added to previous</span>
 <span class="cm">         * version of index.php</span>
 <span class="cm">         */</span>
          <span class="o">-&gt;</span><span class="na">dbInitializer</span><span class="p">(</span><span class="k">new</span> <span class="nx">\vendor\db\ActiveRecord\initializer</span><span class="p">());</span>
+         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
          <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
 
 </pre></div>
