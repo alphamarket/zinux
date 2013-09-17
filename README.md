@@ -13,7 +13,7 @@ There is also a [demo](#demo-project) available.
 Topics
 --
 * [Directory Structure](#directory-structure)
-* [Quick Setup](#quick_setup)
+* [Quick Setup](#quick-setup)
 * [MVC Entities](#mvc-entities)
 * [Autoloading Classes and Files](#autoloading-classes-and-files)
 * [Naming Conventsion](#naming-conventsion)
