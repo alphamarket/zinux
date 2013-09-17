@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="javascripts/respond.js"></script>
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-	<meta name="description" content="Zinux a simple flexible MVC library for PHP developer">
-	<meta name="keywords" content="PHP,MVC,Zinux,Convention Over Configuration,Design Pattern,Autoloading,Namespace Convention,PHP Bootstrap,Bootstrap,Project,Source Code,Action,Module,Controller,Layout,View,Helper,Database binding,Configuration">
-	<meta name="author" content="Dariush Hasanpoor">
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -19,23 +15,21 @@
     <link rel="stylesheet" href="stylesheets/ie.css">
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-  
   <body>
       <div id="header">
-        <nav style="max-width: 900px!important">
+        <nav>
           <li class="fork"><a href="https://github.com/dariushha/zinux">View On GitHub</a></li>
-          <li class="fork" style="margin-left:10px;"><a href="/zinux-demo">Demo Project</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/zipball/master">ZIP</a></li>
           <li class="downloads"><a href="https://github.com/dariushha/zinux/tarball/master">TAR</a></li>
           <li class="title">DOWNLOADS</li>
         </nav>
       </div><!-- end header -->
 
-    <div class="wrapper" style="max-width: 900px!important">
+    <div class="wrapper">
 
-      <section style="max-width: 900px!important">
-
+      <section>
         <div id="title">
           <h1>Zinux</h1>
           <p>A simple and lightweight but powerful library supporting MVC design pattern  </p>
@@ -59,17 +53,30 @@ There is also a <a href="#demo-project">demo</a> available.</p>
 
 <ul>
 <li><a href="#directory-structure">Directory Structure</a></li>
-<li><a href="#setup">Setup</a></li>
+<li><a href="#quick_setup">Quick Setup</a></li>
 <li><a href="#mvc-entities">MVC Entities</a></li>
 <li><a href="#autoloading-classes-and-files">Autoloading Classes and Files</a></li>
 <li><a href="#naming-conventsion">Naming Conventsion</a></li>
 <li><a href="#path-resolver">Path Resolver</a></li>
 <li>
+<a href="#bootstraping">Bootstraping</a>
+
+<ul>
+<li><a href="#general-definition-of-how-to-boostrap">General Definition of How To Boostrap</a></li>
+<li>
+<a href="#application-bootstraps">Application Bootstraps</a>
+
+<ul>
+<li><a href="#registering-application-bootstrap">Registering Application Bootstrap</a></li>
+</ul>
+</li>
+<li>
 <a href="#modules-bootstrap">Modules Bootstrap</a>
 
 <ul>
-<li><a href="#how-to-boostrap">How To Boostrap</a></li>
-<li><a href="#bootstrap-example">Bootstrap Example</a></li>
+<li><a href="#module-bootstrap-example">Module Bootstrap Example</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
@@ -91,6 +98,14 @@ There is also a <a href="#demo-project">demo</a> available.</p>
 <a href="#adavnced">Adavnced</a>
 
 <ul>
+<li>
+<a href="#custom-routing">Custom Routing</a> 
+
+<ul>
+<li>
+<a href="#how-to-register-routers">How To Register Routers</a> </li>
+</ul>
+</li>
 <li><a href="#binding-custom-configuration-file-to-application">Binding Custom Configuration File to Application</a></li>
 <li><a href="#binding-database-handler-to-application">Binding Database Handler To Application</a></li>
 <li><a href="#adding-plugins">Adding Plugins</a></li>
@@ -123,7 +138,7 @@ There is also a <a href="#demo-project">demo</a> available.</p>
 </pre>
 
 <h2>
-<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
+<a name="quick-setup" class="anchor" href="#quick-setup"><span class="octicon octicon-link"></span></a>Quick Setup</h2>
 
 <p>Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index.php</b> file add following codes</p>
 
@@ -351,6 +366,141 @@ so you don't need to worry about runtime factors, when it comes to path resolver
 </blockquote>
 
 <h2>
+<a name="bootstraping" class="anchor" href="#bootstraping"><span class="octicon octicon-link"></span></a>Bootstraping</h2>
+
+<h2>
+<a name="general-definition-of-how-to-boostrap" class="anchor" href="#general-definition-of-how-to-boostrap"><span class="octicon octicon-link"></span></a>General Definition of How To Boostrap</h2>
+
+<dl>
+<dt>Pre-strap</dt>
+   <dd>
+      Every public method in bootstrap file which has a prefix '<b>pre_</b>' gets called in pre-strap phase.
+   </dd>
+   <dt>Post-strap</dt>
+   <dd>
+      Every public method in bootstrap file which has a prefix '<b>post_</b>' gets called in post-strap phase.
+   </dd>
+</dl><h2>
+<a name="application-bootstraps" class="anchor" href="#application-bootstraps"><span class="octicon octicon-link"></span></a>Application Bootstraps</h2>
+
+<p><i>zinux</i> uses bootstrap files(if any defined) to bootstrap the project, project boostraping has 2 stages:</p>
+
+<dl>
+<dt>pre-straps</dt>
+  <dd>
+    <b>Before</b> executing any operation regaurding to application, <i>zinux</i> launches <b>pre-straps</b>  
+    methods, of course if any defined.(See [bellow](#registering-application-bootstrap) for how to definition pre-straps.)
+  <dd>
+  </dd>
+</dd>
+<dt>post-straps</dt>
+  <dd>
+    <b>After</b> executing the application, <i>zinux</i> launches <b>post-straps</b>  
+    methods, of course if any defined.(See bellow for how to definition post-straps.)
+  <dd>
+</dd>
+</dd>
+</dl><p>Application's bootstrap files can be located and addressed to anywhere under <b>PROJECT-ROOT</b>, <b>I suggest</b> put your application's boostrap files
+in following directory path</p>
+
+<pre>
+  PROJECT-ROOT
+    |_ application
+       |_ SomeAppBootstrap.php
+       |_ AnotherAppBoostrap.php
+       
+    |_ Modules
+    |_ zinux (the library)
+    |_ public_html
+    |_ *
+    .
+    .
+    .
+</pre>
+
+<blockquote>
+<p><b>Note:</b> <i>zinux</i> supports multiple application boostrap files.</p>
+</blockquote>
+
+<h2>
+<a name="registering-application-bootstrap" class="anchor" href="#registering-application-bootstrap"><span class="octicon octicon-link"></span></a>Registering Application Bootstrap</h2>
+
+<p>Assume we have boostrap class called <b>appBoostrap</b> under <b>PROJECT-ROOT/application</b> directory as follow:</p>
+
+<div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+    <span class="c1"># PROJECT-ROOT/application/appBoostrap.php</span>
+    <span class="k">namespace</span> <span class="nx">application</span><span class="p">;</span>
+
+    <span class="k">class</span> <span class="nc">appBoostrap</span> <span class="k">extends</span> <span class="nx">\zinux\kernel\application\applicationBootstrap</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">PRE_CHECK</span><span class="p">(</span><span class="nx">\zinux\kernel\routing\request</span> <span class="o">&amp;</span><span class="nv">$request</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="sd">/**</span>
+<span class="sd">             * this is a pre-strap function use this on pre-bootstrap opt.</span>
+<span class="sd">             * @param \zinux\kernel\routing\request $request </span>
+<span class="sd">             */</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">post_FOO</span><span class="p">(</span><span class="nx">\zinux\kernel\routing\request</span> <span class="nv">$request</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="sd">/**</span>
+<span class="sd">             * this is a post-strap function use this on post-bootstrap opt.</span>
+<span class="sd">             * @param \zinux\kernel\routing\request $request </span>
+<span class="sd">             */</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+
+<blockquote>
+<p><b>Note:</b> Application bootsrap classes should inherit from <code>\zinux\kernel\application\applicationBootstrap</code>. </p>
+</blockquote>
+
+<p>By overwriting the index file introduced in <a href="#how-to-use">How To Use</a> as follow:</p>
+
+<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>    
+    <span class="c1"># PROJECT-ROOT/public_html/index.php</span>
+
+    <span class="nb">defined</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">)</span> <span class="o">||</span> <span class="nb">define</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">,</span> <span class="s2">"DEVELOPMENT"</span><span class="p">);</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");</span>
+
+    <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span><span class="p">;</span>
+
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
+
+    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+         <span class="cm">/*</span>
+<span class="cm">         * This part is added to previous</span>
+<span class="cm">         * version of index.php</span>
+<span class="cm">         */</span>
+         <span class="o">-&gt;</span><span class="na">SetBootstrap</span><span class="p">(</span><span class="k">new</span> <span class="nx">\application\appBootstrap</span><span class="p">)</span>
+         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+
+</pre></div>
+
+<p>Now your <b>appBootstrap</b> is registered in <i>zinux</i> and will get called automatically, through booting project.</p>
+
+<blockquote>
+<p><b>Note:</b> In <i>zinux</i> you are <b>not limited</b> to have only <i>one</i> project bootstrap file, you can always
+have multiple project bootstrap file: (But of course i discourage to have multiple project boostrap file, it may cause
+confusion at application level.)</p>
+</blockquote>
+
+<div class="highlight highlight-PHP"><pre>  <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+       <span class="cm">/*</span>
+<span class="cm">        * 1'st boostrap file</span>
+<span class="cm">        */</span>
+       <span class="o">-&gt;</span><span class="na">SetBootstrap</span><span class="p">(</span><span class="k">new</span> <span class="nx">\application\appBootstrap</span><span class="p">)</span>
+       <span class="cm">/*</span>
+<span class="cm">        * 2'nd boostrap file</span>
+<span class="cm">        */</span>
+       <span class="o">-&gt;</span><span class="na">SetBootstrap</span><span class="p">(</span><span class="k">new</span> <span class="nx">\application\anotherAppBootstrap</span><span class="p">)</span>
+       <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+       <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+</pre></div>
+
+<h2>
 <a name="modules-bootstrap" class="anchor" href="#modules-bootstrap"><span class="octicon octicon-link"></span></a>Modules Bootstrap</h2>
 
 <p><i>zinux</i> uses bootstrap file(if any exists when loading modules) to bootstrap the modules, 
@@ -383,30 +533,22 @@ bootstrap files are at following map:</p>
 
 <dl>
 <dt>Predispatch</dt>
-        <dd>
-                Runs before dispatching to action method!
-                good for operations like detecting language 
-                or checking if user is logged in or not
-        </dd>
-        <dt>Postdispatch</dt>
-        <dd>
-                Runs after dispatching to action method!
-                good do some data clean up or some other things
-        </dd>
-</dl><h2>
-<a name="how-to-boostrap" class="anchor" href="#how-to-boostrap"><span class="octicon octicon-link"></span></a>How To Boostrap</h2>
+   <dd>
+      Runs before dispatching to action method!
+      good for operations like detecting language 
+      or checking if user is logged in or not
+   </dd>
+   <dt>Postdispatch</dt>
+   <dd>
+      Runs after dispatching to action method!
+      good do some data clean up or some other things
+   </dd>
+</dl><blockquote>
+<p><b>Note:</b> <i>zinux</i> does not allow multiple boostrap file for boostraping modules.  </p>
+</blockquote>
 
-<dl>
-<dt>Predispatch</dt>
-        <dd>
-                Every public method in bootstrap file which has a prefix '<b>pre_</b>' gets called in predispatch.
-        </dd>
-        <dt>Postdispatch</dt>
-        <dd>
-                Every public method in bootstrap file which has a prefix '<b>post_</b>' gets called in postdispatch.
-        </dd>
-</dl><h2>
-<a name="bootstrap-example" class="anchor" href="#bootstrap-example"><span class="octicon octicon-link"></span></a>Bootstrap Example</h2>
+<h2>
+<a name="module-bootstrap-example" class="anchor" href="#module-bootstrap-example"><span class="octicon octicon-link"></span></a>Module Bootstrap Example</h2>
 
 <div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 
@@ -687,6 +829,71 @@ so if you catchup with the above codes you are 100% ready to use <b>zinux</b> li
 topics in developing any applications are <b>Project Configuration</b> and <b>Databse Integration</b>.<br><i>zinux</i> provides a very simple and flexible manner in other to bind a configuration file and database initializer.<br><b>These are optional</b>.</p>
 
 <h2>
+<a name="custom-routing" class="anchor" href="#custom-routing"><span class="octicon octicon-link"></span></a>Custom Routing</h2>
+
+<p>Some times in developing its good to have URL name convention, i.e for editing notes instead of linking <code>/note/edit/123</code>
+you can link <code>/note/123/edit</code> this cause a naming unifying at URI level, i.e cou can also have <code>/note/123/delete</code> and ... 
+which is much pretty and user-friendly than <code>/note/edit/123</code> and also <code>/note/delete/123</code>.<br><i>Zinux</i> made it very simple to have such custom routing maps, to doing so you have to have <b>some classes</b>
+(<i>zinux</i> supports multiple routing class, but having multiple routing classes are discouraged for sake of clean project.)
+which inherit from <code>\zinux\kernel\routing\routerBootstrap</code>, you can put your routers any where under <b>PROJECT-ROOT</b>
+directory, <b>i suggest</b> put it under <b>PROJECT-ROOT/application</b> nearby your <a href="#application-bootstraps">application  boostrap</a> files, 
+there is an example:</p>
+
+<div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+    <span class="c1"># PROJECT-ROOT/application/someRoutes.php</span>
+    <span class="k">namespace</span> <span class="nx">application</span><span class="p">;</span>
+    <span class="sd">/**</span>
+<span class="sd">     * This is a class to add custom-routes to route maps</span>
+<span class="sd">     */</span>
+    <span class="k">class</span> <span class="nc">someRoutes</span> <span class="k">extends</span> <span class="nx">\zinux\kernel\routing\routerBootstrap</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">Fetch</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="sd">/**</span>
+<span class="sd">             * Route Example For This:</span>
+<span class="sd">             *      /note/1234/edit/what/so/ever?nonsences=passed =&gt; /note/edit/1234/what/so/ever?nonsences=passed </span>
+<span class="sd">             */</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addRoute</span><span class="p">(</span><span class="s2">"/note/$1/edit$2"</span><span class="p">,</span> <span class="s2">"/note/edit/$1$2"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+
+<p><b>How does it works?</b><br>
+In <code>someRoutes</code> class in <b>any function</b> called from <code>someRoutes::Fetch()</code> by adding a route <code>$this-&gt;addRoute()</code>
+you can define custom made routes.</p>
+
+<blockquote>
+<p><b>Note:</b> The <code>$1</code>,<code>$2</code> markers provide order in uri parts.  </p>
+</blockquote>
+
+<h2>
+<a name="how-to-register-routers" class="anchor" href="#how-to-register-routers"><span class="octicon octicon-link"></span></a>How To Register Routers</h2>
+
+<p>It is simple! By overwriting the index file introduced in <a href="#how-to-use">How To Use</a> as follow:</p>
+
+<div class="highlight highlight-PHP"><pre><span class="o">&lt;?</span><span class="nx">php</span>    
+    <span class="c1"># PROJECT-ROOT/public_html/index.php</span>
+
+    <span class="nb">defined</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">)</span> <span class="o">||</span> <span class="nb">define</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">,</span> <span class="s2">"DEVELOPMENT"</span><span class="p">);</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");</span>
+    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");</span>
+
+    <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span><span class="p">;</span>
+
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
+
+    <span class="nv">$app</span> 
+        <span class="cm">/*</span>
+<span class="cm">        * This part is added to previous</span>
+<span class="cm">        * version of index.php</span>
+<span class="cm">        */</span>
+        <span class="o">-&gt;</span><span class="na">SetRouterBootstrap</span><span class="p">(</span><span class="k">new</span> <span class="nx">\application\someRoutes</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+</pre></div>
+
+<h2>
 <a name="binding-custom-configuration-file-to-application" class="anchor" href="#binding-custom-configuration-file-to-application"><span class="octicon octicon-link"></span></a>Binding Custom Configuration File to Application</h2>
 
 <p>When creating <code>\zinux\kernel\application\application</code> instance in <code>PROJECT-ROOT/public_html/index.php</code> file
@@ -715,22 +922,22 @@ loading configurations from an ini file for your project.</p>
 
     <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span><span class="p">;</span>
 
-    <span class="c1"># Note that this registration is OPTIONAL</span>
-    <span class="c1"># you don't come up with any cache directory </span>
-    <span class="c1"># the zinux will pick /tmp/zinux-cache as its cache directory</span>
-    <span class="nx">\zinux\kernel\caching\fileCache</span><span class="o">::</span><span class="na">RegisterCachePath</span><span class="p">(</span><span class="s2">"/path/to/cache/dir"</span><span class="p">);</span>
-
     <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
 
-    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">(</span>
-                    <span class="cm">/*</span>
-<span class="cm">                    * This part is added to previous</span>
-<span class="cm">                    * version of index.php</span>
-<span class="cm">                    */</span>
-                    <span class="k">new</span> <span class="nx">\zinux\kernel\utilities\iniParser</span><span class="p">(</span><span class="s2">"../config/config.cfg"</span><span class="p">,</span> <span class="nx">RUNNING_ENV</span><span class="p">)</span>
-                  <span class="p">)</span>
-         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
-         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+    <span class="nv">$app</span> 
+        <span class="cm">/*</span>
+<span class="cm">        * This part is added to previous</span>
+<span class="cm">        * version of index.php</span>
+<span class="cm">        */</span>
+        <span class="c1"># Note that this registration is OPTIONAL</span>
+        <span class="c1"># you don't come up with any cache directory </span>
+        <span class="c1"># the zinux will pick /tmp/zinux-cache as its cache directory</span>
+        <span class="o">-&gt;</span><span class="na">SetCacheDirectory</span><span class="p">(</span><span class="s2">"/path/to/cache/dir"</span><span class="p">)</span>
+        <span class="c1"># setting Config iniliazer</span>
+        <span class="o">-&gt;</span><span class="na">SetConfigIniliazer</span><span class="p">(</span><span class="k">new</span> <span class="nx">\zinux\kernel\utilities\iniParser</span><span class="p">(</span><span class="s2">"/path/to/config/file"</span><span class="p">,</span> <span class="nx">RUNNING_ENV</span><span class="p">))</span>
+        <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
 </pre></div>
 
 <p><b>Accessing fetched configs</b><br></p>
@@ -817,40 +1024,17 @@ and somewhere in your module you define a class which <b>extents</b> the abstrac
 
     <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span><span class="p">;</span>
 
-    <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">,</span>
-                                                        <span class="cm">/*</span>
-<span class="cm">                                                        * This part is added to previous</span>
-<span class="cm">                                                        * version of index.php</span>
-<span class="cm">                                                        */</span>
-                                                        <span class="k">new</span> <span class="nx">\vendor\db\ActiveRecord\initializer</span><span class="p">());</span>
-
-    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
-         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
-         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
-
-</pre></div>
-
-<p>Or this :</p>
-
-<div class="highlight highlight-php"><pre><span class="o">&lt;?</span><span class="nx">php</span>    
-    <span class="c1"># PROJECT-ROOT/public_html/index.php</span>
-
-    <span class="nb">defined</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">)</span> <span class="o">||</span> <span class="nb">define</span><span class="p">(</span><span class="s2">"RUNNING_ENV"</span><span class="p">,</span> <span class="s2">"DEVELOPMENT"</span><span class="p">);</span>
-    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");</span>
-    <span class="c1"># defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");</span>
-
-    <span class="k">require_once</span> <span class="s1">'../zinux/baseZinux.php'</span><span class="p">;</span>
-
     <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
 
-    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
-         <span class="cm">/*</span>
-<span class="cm">         * This part is added to previous</span>
-<span class="cm">         * version of index.php</span>
-<span class="cm">         */</span>
-         <span class="o">-&gt;</span><span class="na">dbInitializer</span><span class="p">(</span><span class="k">new</span> <span class="nx">\vendor\db\ActiveRecord\initializer</span><span class="p">());</span>
-         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
-         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+    <span class="nv">$app</span>
+        <span class="cm">/*</span>
+<span class="cm">        * This part is added to previous</span>
+<span class="cm">        * version of index.php</span>
+<span class="cm">        */</span>
+        <span class="o">-&gt;</span><span class="na">SetDBInitializer</span><span class="p">(</span><span class="k">new</span> <span class="nx">\vendor\db\ActiveRecord\initializer</span><span class="p">())</span>
+        <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
 
 </pre></div>
 
@@ -914,20 +1098,21 @@ you can introduce its <b>root directory</b> to <i>zinux</i> like bellow.</p>
 
     <span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\zinux\kernel\application\application</span><span class="p">(</span><span class="s2">"PROJECT-ROOT/mOdUlEs"</span><span class="p">);</span>
 
-    <span class="cm">/*</span>
-<span class="cm">     *</span>
-<span class="cm">     * introducing two 'sundries' and 'FooPlug' plugin to zinux</span>
-<span class="cm">     *</span>
-<span class="cm">     */</span>
-    <span class="c1">#  'sundries' plugin is under "Some/Where/Under/PROJECT-ROOT/sundires" directory</span>
-    <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">plugins</span> <span class="o">-&gt;</span><span class="na">registerPlugin</span><span class="p">(</span><span class="s2">"sundries"</span><span class="p">,</span> <span class="s2">"Some/Where/Under/PROJECT-ROOT/sundires"</span><span class="p">)</span>
-    <span class="c1"># 'FooPlug' plugin is under "Some/Where/Under/PROJECT-ROOT/FooPlug" directory</span>
-                  <span class="o">-&gt;</span><span class="na">registerPlugin</span><span class="p">(</span><span class="s2">"FooPlug"</span><span class="p">,</span> <span class="s2">"Some/Where/Under/PROJECT-ROOT/FooPlug"</span><span class="p">);</span>
 
+    <span class="nv">$app</span>
+        <span class="cm">/*</span>
+<span class="cm">         *</span>
+<span class="cm">         * introducing two 'sundries' and 'FooPlug' plugin to zinux</span>
+<span class="cm">         *</span>
+<span class="cm">         */</span>
+        <span class="c1">#  'sundries' plugin is under "Some/Where/Under/PROJECT-ROOT/sundires" directory</span>
+        <span class="o">-&gt;</span><span class="na">registerPlugin</span><span class="p">(</span><span class="s2">"sundries"</span><span class="p">,</span> <span class="s2">"Some/Where/Under/PROJECT-ROOT/sundires"</span><span class="p">)</span>
+        <span class="c1"># 'FooPlug' plugin is under "Some/Where/Under/PROJECT-ROOT/FooPlug" directory</span>
+        <span class="o">-&gt;</span><span class="na">registerPlugin</span><span class="p">(</span><span class="s2">"FooPlug"</span><span class="p">,</span> <span class="s2">"Some/Where/Under/PROJECT-ROOT/FooPlug"</span><span class="p">)</span>
 
-    <span class="nv">$app</span> <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
-         <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
-         <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
+        <span class="o">-&gt;</span><span class="na">Startup</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">Run</span><span class="p">()</span>
+        <span class="o">-&gt;</span><span class="na">Shutdown</span><span class="p">();</span>
 
 </pre></div>
 
@@ -1011,15 +1196,16 @@ and <b>FeedAction</b> you can ouput feeds according to request type (in here <co
 
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    <script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-44064575-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
 
-	  ga('create', 'UA-44064575-1', 'dariushha.github.io');
-	  ga('send', 'pageview');
-
-	</script>
   </body>
 </html>
