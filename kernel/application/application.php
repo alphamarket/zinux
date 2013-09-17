@@ -17,7 +17,7 @@ class application extends \zinux\baseZinux
      */
     public $plugins;
     
-    protected static $config_initializer = NULL;
+    protected $config_initializer;
     /**
      * db initializer instance
      * @var \zinux\kernel\application\baseInitializer
@@ -27,38 +27,77 @@ class application extends \zinux\baseZinux
      * Application boostrap
      * @var bootstrap
      */
-    protected $boostrap;
+    protected $applicationBoostrap;
+    /**
+     * Router boostrap
+     * @var \zinux\kernel\routing\routerBootstrap
+     */
+    protected $routerBoostrap;
+    /**
+     * Router
+     * @var \zinux\kernel\routing\router
+     */
+    protected $router;
     
-    function __construct($module_path = "", dbInitializer $dbi = NULL)
+    public function __construct($module_path = "../modules")
     {            
-            # initialize current application instance
-            $this->Initiate();
-            # a fail safe for module dir existance
-            if(!file_exists(\zinux\kernel\utilities\fileSystem::resolve_path($module_path)))
-                die("Module directory not found!");
-            # define module ROOT if not defined
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path($module_path."/"));
-            # register db initializer
-            $this ->dbInitializer($dbi)
-                    # initialize plugins
-                    ->plugins =  new plugin();
-            # create a request instance
-            $this->request = new \zinux\kernel\routing\request();
-            # create a application bootstrap
-            $this->boostrap = new bootstrap();
-            # run a pre strap opt.
-            $this->boostrap->RunPrestrap($this->request);
+        # this cannot move into init()
+        $this->_startup_invoked = false;
+        # initialize current application instance
+        $this->Initiate();
+        # a fail safe for module dir existance
+        if(!file_exists(\zinux\kernel\utilities\fileSystem::resolve_path($module_path)))
+            die("Module directory not found!");
+        # define module ROOT if not defined
+        defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path($module_path."/"));
+    }
+    
+    public function SetDBInitializer(dbInitializer $dbi)
+    {
+        $this->dbInit = $dbi;
+        return $this;
+    }
+    
+    public function SetCacheDirectory($cache_dir)
+    {
+        \zinux\kernel\caching\fileCache::RegisterCachePath($cache_dir);
+        return $this;
+    }
+    
+    public function SetRouterBootstrap(\zinux\kernel\routing\routerBootstrap $rb)
+    {
+        \zinux\kernel\routing\router::RegisterBootstrap($rb);
+        return $this;
+    }
+    public function SetConfigIniliazer(baseConfigLoader $config_initializer)
+    {
+        $this->config_initializer = $config_initializer;
+        return $this;
+    }
+    /**
+     * Sets bootstrap for application
+     * @param \zinux\kernel\application\applicationBootstrap $ab
+     * @return \zinux\kernel\application\application
+     */
+    public function SetBootstrap(applicationBootstrap $ab)
+    {
+        applicationBootstrap::RegisterBootstrap($ab);
+        return $this;
     }
 
     public function Initiate()
     {
-        $this->_startup_invoked = false;
-    }
-    
-    public function dbInitializer(dbInitializer $dbi = NULL)
-    {
-        $this->dbInit = $dbi;
-        return $this;
+        # create an router
+        $this->router = new \zinux\kernel\routing\router;
+        # initialize plugins
+        $this->plugins =  new plugin();
+        # create a request instance
+        $this->request = new \zinux\kernel\routing\request();
+        # create a application bootstrap
+        $this->applicationBoostrap = new applicationBootstrap();
+        # run a pre strap opt.
+        $this->applicationBoostrap->RunPrestrap($this->request);
+         return $this;
     }
 
     /**
@@ -66,63 +105,55 @@ class application extends \zinux\baseZinux
      */
     public function Run()
     {
-            if(!$this->_startup_invoked)
-            {
-                $this->Startup();
-            }
-            $r = new \zinux\kernel\routing\router();
-            
-            $this->request->Process();
-            
-            if($this->dbInit)
-            {
-                $this->dbInit->Initiate();
-                $this->dbInit->Execute($this->request);
-            }
-            
-            $r->Run($this->request);
-            
-            return $this;
+        $this->Initiate();
+        
+        if(!$this->_startup_invoked)
+        {
+            $this->Startup();
+        }
+
+        # process the request 
+        $this->router->Process($this->request);
+        # run the router
+        $this->router->Run();
+
+        return $this;
     }
 
     /**
-     * Shutdowns application
+     * Shutdowns application [ Runs Application's Poststraps in bootstrap file ]
      */
     public function Shutdown()
     {
-            $this->boostrap->RunPoststrap($this->request);
+            $this->applicationBoostrap->RunPoststrap($this->request);
             $this->Dispose();
             return $this;
     }
 
     /**
-     * Startup and making application's ready with passed configuration file
+     * Startup and making application's ready with passed configuration file [ Loads configurations and db ]
      * 
      * @param config_file_address
      */
-    public function Startup(baseConfigLoader $config_initializer = NULL)
+    public function Startup()
     {
-            # no initializer return
-            if(!$config_initializer) return $this;
-            # cache the $config in
-            $this->SetConfiginItializer($config_initializer);
-            # create config instance
-            $config = new config($config_initializer);
-            # load configs
-            $config->Load();
-            # set default module root
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(ZINUX_ROOT.'/../modules/')."/");
-            # check startup invoked
-            $this->_startup_invoked = true;
-            # return this instance
-            return $this;
-    }
-    
-    public function SetConfiginItializer(baseConfigLoader $config_initializer)
-    {
-        if(!$config_initializer)
-            throw new \zinux\kernel\exceptions\invalideArgumentException;
-        self::$config_initializer = $config_initializer;
+        # no initializer return
+        if(!$this->config_initializer) goto __DB_INIT;
+        # create config instance
+        $config = new config($this->config_initializer);
+        # load configs
+        $config->Load();
+__DB_INIT:
+        if($this->dbInit)
+        {
+            $this->dbInit->Initiate();
+            $this->dbInit->Execute($this->request);
+        }
+        # set default module root
+        defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(ZINUX_ROOT.'/../modules/')."/");
+        # check startup invoked
+        $this->_startup_invoked = true;
+        # return this instance
         return $this;
     }
 }
