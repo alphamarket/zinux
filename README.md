@@ -33,6 +33,8 @@ Topics
   * [Loading Helpers](#loading-helpers)
   * [A Controller Example](#a-controller-example)
 * [Adavnced](#adavnced)
+  * [Custom Routing](#custom-routing) 
+  		* [How To Register Routers](#how-to-register-routers) 
   * [Binding Custom Configuration File to Application](#binding-custom-configuration-file-to-application)
   * [Binding Database Handler To Application](#binding-database-handler-to-application)
   * [Adding Plugins](#adding-plugins)
@@ -747,6 +749,69 @@ topics in developing any applications are <b>Project Configuration</b> and <b>Da
 <i>zinux</i> provides a very simple and flexible manner in other to bind a configuration file and database initializer.<br />
 <b>These are optional</b>.
 
+Custom Routing
+--
+Some times in developing its good to have URL name convention, i.e for editing notes instead of linking `/note/edit/123`
+you can link `/note/123/edit` this cause a naming unifying at URI level, i.e cou can also have `/note/123/delete` and ... 
+which is much pretty and user-friendly than `/note/edit/123` and also `/note/delete/123`.<br />
+<i>Zinux</i> made it very simple to have such custom routing maps, to doing so you have to have <b>some classes</b>
+(<i>zinux</i> supports multiple routing class, but having multiple routing classes are discouraged for sake of clean project.)
+which inherit from `\zinux\kernel\routing\routerBootstrap`, you can put your routers any where under <b>PROJECT-ROOT</b>
+directory, <b>i suggest</b> put it under <b>PROJECT-ROOT/application</b> nearby your [application  boostrap](#application-bootstraps) files, 
+there is an example:
+
+```PHP
+<?php
+	# PROJECT-ROOT/application/someRoutes.php
+	namespace application;
+	/**
+	 * This is a class to add custom-routes to route maps
+	 */
+	class someRoutes extends \zinux\kernel\routing\routerBootstrap
+	{
+	    public function Fetch()
+	    {
+	        /**
+	         * Route Example For This:
+	         *      /note/1234/edit/what/so/ever?nonsences=passed => /note/edit/1234/what/so/ever?nonsences=passed 
+	         */
+	        $this->addRoute("/note/$1/edit$2", "/note/edit/$1$2");
+	    }
+	}
+```
+<b>How does it works?</b><br />
+In `someRoutes` class in <b>any function</b> called from `someRoutes::Fetch()` by adding a route `$this->addRoute()`
+you can define custom made routes.
+
+> <b>Note:</b> The `$1`,`$2` markers provide order in uri parts.  
+
+How To Register Routers
+--
+It is simple! By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
+
+```PHP
+<?php    
+    # PROJECT-ROOT/public_html/index.php
+    
+    defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
+    
+    require_once '../zinux/baseZinux.php';
+    
+    $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
+    
+    $app 
+    	/*
+        * This part is added to previous
+        * version of index.php
+        */
+        ->SetRouterBootstrap(new \application\someRoutes)
+    	->Startup()
+    	->Run()
+        ->Shutdown();
+```
+
 Binding Custom Configuration File to Application
 ---
 When creating `\zinux\kernel\application\application` instance in `PROJECT-ROOT/public_html/index.php` file
@@ -774,22 +839,22 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     
     require_once '../zinux/baseZinux.php';
     
-    # Note that this registration is OPTIONAL
-    # you don't come up with any cache directory 
-    # the zinux will pick /tmp/zinux-cache as its cache directory
-    \zinux\kernel\caching\fileCache::RegisterCachePath("/path/to/cache/dir");
-    
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
     
-    $app ->Startup(
-                    /*
-                    * This part is added to previous
-                    * version of index.php
-                    */
-                    new \zinux\kernel\utilities\iniParser("../config/config.cfg", RUNNING_ENV)
-                  )
-         ->Run()
-         ->Shutdown();
+    $app 
+    	/*
+        * This part is added to previous
+        * version of index.php
+        */
+    	# Note that this registration is OPTIONAL
+    	# you don't come up with any cache directory 
+    	# the zinux will pick /tmp/zinux-cache as its cache directory
+    	->SetCacheDirectory("/path/to/cache/dir")
+    	# setting Config iniliazer
+    	->SetConfigIniliazer(new \zinux\kernel\utilities\iniParser("/path/to/config/file", RUNNING_ENV))
+    	->Startup()
+    	->Run()
+        ->Shutdown();
 ```
 
 <b>Accessing fetched configs</b><br />
@@ -877,40 +942,17 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     
     require_once '../zinux/baseZinux.php';
     
-    $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs",
-                                                        /*
-                                                        * This part is added to previous
-                                                        * version of index.php
-                                                        */
-                                                        new \vendor\db\ActiveRecord\initializer());
-    
-    $app ->Startup()
-         ->Run()
-         ->Shutdown();
-         
-```
-Or this :
-
-```php
-<?php    
-    # PROJECT-ROOT/public_html/index.php
-    
-    defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
-    # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
-    
-    require_once '../zinux/baseZinux.php';
-    
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
     
-    $app ->Startup()
-         /*
-         * This part is added to previous
-         * version of index.php
-         */
-         ->dbInitializer(new \vendor\db\ActiveRecord\initializer());
-         ->Run()
-         ->Shutdown();
+    $app
+    	/*
+        * This part is added to previous
+        * version of index.php
+        */
+    	->SetDBInitializer(new \vendor\db\ActiveRecord\initializer())
+    	->Startup()
+    	->Run()
+        ->Shutdown();
          
 ```
 
@@ -972,20 +1014,21 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
     
-    /*
-     *
-     * introducing two 'sundries' and 'FooPlug' plugin to zinux
-     *
-     */
-    #  'sundries' plugin is under "Some/Where/Under/PROJECT-ROOT/sundires" directory
-    $app->plugins ->registerPlugin("sundries", "Some/Where/Under/PROJECT-ROOT/sundires")
-    # 'FooPlug' plugin is under "Some/Where/Under/PROJECT-ROOT/FooPlug" directory
-                  ->registerPlugin("FooPlug", "Some/Where/Under/PROJECT-ROOT/FooPlug");
     
-    
-    $app ->Startup()
-         ->Run()
-         ->Shutdown();
+    $app
+    	/*
+	     *
+	     * introducing two 'sundries' and 'FooPlug' plugin to zinux
+	     *
+	     */
+	    #  'sundries' plugin is under "Some/Where/Under/PROJECT-ROOT/sundires" directory
+    	->registerPlugin("sundries", "Some/Where/Under/PROJECT-ROOT/sundires")
+	 	# 'FooPlug' plugin is under "Some/Where/Under/PROJECT-ROOT/FooPlug" directory
+    	->registerPlugin("FooPlug", "Some/Where/Under/PROJECT-ROOT/FooPlug")
+    	
+    	->Startup()
+        ->Run()
+        ->Shutdown();
          
 ```
 > <b>Note:</b> If the <b>third-party</b> does not follow [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
