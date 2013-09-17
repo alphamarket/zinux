@@ -103,7 +103,8 @@ class baseView extends \zinux\baseZinux
             {
                 if(!$this->metadata->GetPath()) 
                 {
-                    throw new \zinux\kernel\exceptions\notFoundException("View '<b>{$this->request->view->full_name}</b>' not found for '<b>{$this->request->module->full_name} / {$this->request->controller->full_name} / {$this->request->action->full_name}</b>'...!");
+                    echo ("<div>Notice: View '<b>{$this->request->view->full_name}</b>' not found for '<b>{$this->request->module->full_name} / {$this->request->controller->full_name} / {$this->request->action->full_name}</b>'...!</div>");
+                    return;
                 }
                 ob_start();
                     # invoking view's file
