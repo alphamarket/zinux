@@ -13,14 +13,17 @@ There is also a [demo](#demo-project) available.
 Topics
 --
 * [Directory Structure](#directory-structure)
-* [Setup](#setup)
+* [Quick Setup](#quick_setup)
 * [MVC Entities](#mvc-entities)
 * [Autoloading Classes and Files](#autoloading-classes-and-files)
 * [Naming Conventsion](#naming-conventsion)
 * [Path Resolver](#path-resolver)
-* [Modules Bootstrap](#modules-bootstrap)
-  * [How To Boostrap](#how-to-boostrap)
-  * [Bootstrap Example](#bootstrap-example)
+* [Bootstraping](#bootstraping)
+	* [General Definition of How To Boostrap](#general-definition-of-how-to-boostrap)
+	* [Application Bootstraps](#application-bootstraps)
+		* [Registering Application Bootstrap](#registering-application-bootstrap)
+	* [Modules Bootstrap](#modules-bootstrap)
+		* [Module Bootstrap Example](#module-bootstrap-example)
 * [Working With MVC Entities (Basics)](#working-with-mvc-entities-basics)
   * [Passing Variables To View](#passing-variables-to-view)
   * [Passing Variables To Layout](#passing-variables-to-layout)  
@@ -61,7 +64,7 @@ Create project directory structure as follow<br />
 </pre>
 
 
-Setup
+Quick Setup
 ----
 Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index.php</b> file add following codes
 
@@ -288,6 +291,130 @@ naming style!<br /><br />
 it uses custom made cache system which is very very fast and effective and makes path solver very smooth!
 so you don't need to worry about runtime factors, when it comes to path resolver! 
 
+Bootstraping
+---
+General Definition of How To Boostrap
+---
+<dl>
+   <dt>Pre-strap</dt>
+   <dd>
+      Every public method in bootstrap file which has a prefix '<b>pre_</b>' gets called in pre-strap phase.
+   </dd>
+   <dt>Post-strap</dt>
+   <dd>
+      Every public method in bootstrap file which has a prefix '<b>post_</b>' gets called in post-strap phase.
+   </dd>
+</dl>
+
+
+Application Bootstraps
+---
+<i>zinux</i> uses bootstrap files(if any defined) to bootstrap the project, project boostraping has 2 stages:
+<dl>
+  <dt>pre-straps</dt>
+  <dd>
+    <b>Before</b> executing any operation regaurding to application, <i>zinux</i> launches <b>pre-straps</b>  
+    methods, of course if any defined.(See [bellow](#registering-application-bootstrap) for how to definition pre-straps.)
+  <dd>
+  <dt>post-straps</dt>
+  <dd>
+    <b>After</b> executing the application, <i>zinux</i> launches <b>post-straps</b>  
+    methods, of course if any defined.(See bellow for how to definition post-straps.)
+  <dd>
+</dl>
+
+Application's bootstrap files can be located and addressed to anywhere under <b>PROJECT-ROOT</b>, <b>I suggest</b> put your application's boostrap files
+in following directory path
+
+<pre>
+  PROJECT-ROOT
+    |_ application
+       |_ SomeAppBootstrap.php
+       |_ AnotherAppBoostrap.php
+       
+    |_ Modules
+    |_ zinux (the library)
+    |_ public_html
+    |_ *
+    .
+    .
+    .
+</pre>
+
+> <b>Note:</b> <i>zinux</i> supports multiple application boostrap files.
+
+Registering Application Bootstrap
+---
+Assume we have boostrap class called <b>appBoostrap</b> under <b>PROJECT-ROOT/application</b> directory as follow:
+```PHP
+<?php
+    # PROJECT-ROOT/application/appBoostrap.php
+    namespace application;
+    
+    class appBoostrap extends \zinux\kernel\application\applicationBootstrap
+    {
+        public function PRE_CHECK(\zinux\kernel\routing\request &$request)
+        {
+            /**
+             * this is a pre-strap function use this on pre-bootstrap opt.
+             * @param \zinux\kernel\routing\request $request 
+             */
+        }
+        
+        public function post_FOO(\zinux\kernel\routing\request $request)
+        {
+            /**
+             * this is a post-strap function use this on post-bootstrap opt.
+             * @param \zinux\kernel\routing\request $request 
+             */
+        }
+    }
+```
+> <b>Note:</b> Application bootsrap classes should inherit from `\zinux\kernel\application\applicationBootstrap`. 
+
+By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
+
+```php
+<?php    
+    # PROJECT-ROOT/public_html/index.php
+    
+    defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
+    # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
+    
+    require_once '../zinux/baseZinux.php';
+    
+    $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
+    
+    $app ->Startup()
+         /*
+         * This part is added to previous
+         * version of index.php
+         */
+         ->SetBootstrap(new \application\appBootstrap)
+         ->Run()
+         ->Shutdown();
+         
+```
+Now your <b>appBootstrap</b> is registered in <i>zinux</i> and will get called automatically, through booting project.
+
+> <b>Note:</b> In <i>zinux</i> you are <b>not limited</b> to have only <i>one</i> project bootstrap file, you can always
+have multiple project bootstrap file: (But of course i discourage to have multiple project boostrap file, it may cause
+confusion at application level.)
+
+```PHP    
+  $app ->Startup()
+       /*
+        * 1'st boostrap file
+        */
+       ->SetBootstrap(new \application\appBootstrap)
+       /*
+        * 2'nd boostrap file
+        */
+       ->SetBootstrap(new \application\anotherAppBootstrap)
+       ->Run()
+       ->Shutdown();
+```
 
 Modules Bootstrap
 ---
@@ -319,33 +446,22 @@ bootstrap files are at following map:
 
 In bootstrap file which is a class file there are 2 kind of methods <b>Predispatch</b> and <b>Postdispatch</b>:
 <dl>
-        <dt>Predispatch</dt>
-        <dd>
-                Runs before dispatching to action method!
-                good for operations like detecting language 
-                or checking if user is logged in or not
-        </dd>
-        <dt>Postdispatch</dt>
-        <dd>
-                Runs after dispatching to action method!
-                good do some data clean up or some other things
-        </dd>
+   <dt>Predispatch</dt>
+   <dd>
+      Runs before dispatching to action method!
+      good for operations like detecting language 
+      or checking if user is logged in or not
+   </dd>
+   <dt>Postdispatch</dt>
+   <dd>
+      Runs after dispatching to action method!
+      good do some data clean up or some other things
+   </dd>
 </dl>
 
-How To Boostrap
----
-<dl>
-        <dt>Predispatch</dt>
-        <dd>
-                Every public method in bootstrap file which has a prefix '<b>pre_</b>' gets called in predispatch.
-        </dd>
-        <dt>Postdispatch</dt>
-        <dd>
-                Every public method in bootstrap file which has a prefix '<b>post_</b>' gets called in postdispatch.
-        </dd>
-</dl>
+> <b>Note:</b> <i>zinux</i> does not allow multiple boostrap file for boostraping modules.  
 
-Bootstrap Example
+Module Bootstrap Example
 ---
 ```PHP
 <?php
