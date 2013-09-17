@@ -15,8 +15,11 @@ class application extends \zinux\baseZinux
      *
      * @var plugin
      */
-    public $plugins;
-    
+    protected $plugins;
+    /**
+     * config initializer
+     * @var baseConfigLoader
+     */
     protected $config_initializer;
     /**
      * db initializer instance
@@ -72,6 +75,11 @@ class application extends \zinux\baseZinux
     public function SetConfigIniliazer(baseConfigLoader $config_initializer)
     {
         $this->config_initializer = $config_initializer;
+        return $this;
+    }
+    public function registerPlugin($name, $plugin_addres = "")
+    {
+        $this->plugins->registerPlugin($name, $plugin_addres);
         return $this;
     }
     /**
