@@ -35,6 +35,10 @@ class application extends \zinux\baseZinux
             
             $this ->dbInitializer($dbi)
                     ->plugins =  new plugin();
+            # create a application bootstrap
+            $app_boot = new bootstrap();
+            # run the application bootstrap
+            $app_boot->Run();
     }
 
     public function Initiate()
