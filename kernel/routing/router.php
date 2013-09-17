@@ -12,28 +12,52 @@ require_once (dirname(__FILE__).'/../../baseZinux.php');
  */
 class router extends \zinux\baseZinux
 {
-        public function Initiate()
+    protected  static $_boostraps;
+    
+    public function __construct()
+    {
+        $this->Initiate();
+    }
+    
+    public function Initiate()
+    {
+        self::$_boostraps = array();
+    }
+    /**
+     * Route the passed request
+     * 
+     * @param request
+     */
+    public function Run(request &$request)
+    {
+        $this->RunBootstrap($request);
+        
+        $request->Process();
+        // pre-dispatcher
+        $predisp = new preDispatcher();
+        $predisp->Process($request);
+        // dispatcher
+        $disp = new dispatcher();
+        $disp->Process($request);
+        // post-dispatcher
+        $postdisp = new postDispatcher();
+        $postdisp->Process($request);  
+    }
+    protected function RunBootstrap(request &$request)
+    {
+        foreach(self::$_boostraps as $callback)
         {
-            ;
+            call_user_func_array($callback, array($request));
         }
-	/**
-	 * Route the passed request
-	 * 
-	 * @param request
-	 */
-	public function Run(request $request)
-	{
-            $request->Process();
-            // pre-dispatcher
-            $predisp = new preDispatcher();
-            $predisp->Process($request);
-            // dispatcher
-            $disp = new dispatcher();
-            $disp->Process($request);
-            // post-dispatcher
-            $postdisp = new postDispatcher();
-            $postdisp->Process($request);  
-	}
-
+    }
+    public static function RegisterBootstrap($callback, $name = "default")
+    {
+        self::$_boostraps[$name] = $callback;
+    }
+    
+    public static function UnregisterBootstrap($name = "default")
+    {
+        unset(self::$_boostraps[$name]);
+    }
 }
 ?>

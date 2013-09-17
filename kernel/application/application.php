@@ -23,22 +23,31 @@ class application extends \zinux\baseZinux
      * @var \zinux\kernel\application\baseInitializer
      */
     protected $dbInit;
+    /**
+     * Application boostrap
+     * @var bootstrap
+     */
+    protected $boostrap;
     
     function __construct($module_path = "", dbInitializer $dbi = NULL)
     {            
+            # initialize current application instance
             $this->Initiate();
-            
+            # a fail safe for module dir existance
             if(!file_exists(\zinux\kernel\utilities\fileSystem::resolve_path($module_path)))
                 die("Module directory not found!");
-            
+            # define module ROOT if not defined
             defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path($module_path."/"));
-            
+            # register db initializer
             $this ->dbInitializer($dbi)
+                    # initialize plugins
                     ->plugins =  new plugin();
+            # create a request instance
+            $this->request = new \zinux\kernel\routing\request();
             # create a application bootstrap
-            $app_boot = new bootstrap();
-            # run the application bootstrap
-            $app_boot->Run();
+            $this->boostrap = new bootstrap();
+            # run a pre strap opt.
+            $this->boostrap->RunPrestrap($this->request);
     }
 
     public function Initiate()
@@ -62,18 +71,16 @@ class application extends \zinux\baseZinux
                 $this->Startup();
             }
             $r = new \zinux\kernel\routing\router();
-
-            $request = new \zinux\kernel\routing\request();
             
-            $request->Process();
+            $this->request->Process();
             
             if($this->dbInit)
             {
                 $this->dbInit->Initiate();
-                $this->dbInit->Execute($request);
+                $this->dbInit->Execute($this->request);
             }
             
-            $r->Run($request);
+            $r->Run($this->request);
             
             return $this;
     }
@@ -83,6 +90,7 @@ class application extends \zinux\baseZinux
      */
     public function Shutdown()
     {
+            $this->boostrap->RunPoststrap($this->request);
             $this->Dispose();
             return $this;
     }
