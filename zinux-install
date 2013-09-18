@@ -32,11 +32,7 @@ else
 		echo 'source $HOME/.zinux/.bashzg' >> $HOME/.bashrc
     }
 fi
-source $HOME/.bashrc
 cd $HOME
 chmod 775 $HOME/.zinux -R
-command -v zg --version >/dev/null 2>&1 || {
-    echo -e "\e[31mUnable to add \e[33mzg\e[31m to system \$PATH\e[m" >&2
-    exit 1;
-}
-echo -e "\e[33mzg\e[32m installled successfully ...\nYou can test it by \e[33mzg --version\e[32m command ..."
+echo -e "\e[33mzg\e[32m installled successfully ...\nYou can test it by \e[33mzg --version\e[32m command ...\e[m"
+echo -e "Exit current terminal and open a new one or run \e[33msource $HOME/.bashrc\e[m to apply changes..." 
