@@ -62,6 +62,6 @@ abstract class baseZinux extends \stdClass
     /**
      * The initiation works on loading class
      */
-    abstract public function Initiate();
+    public function Initiate(){}
 }
 ?>
