@@ -38,30 +38,32 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
             }
         },1,1);
 }
-
-/**
- * This is a base class for all zinux classes
- * @author dariush
- * @version 1.0
- * @created 04-Sep-2013 15:50:21
- */
-abstract class baseZinux extends \stdClass
+if(!defined("BASEZINUX_CLASS_DECLARED"))
 {
+    define("BASEZINUX_CLASS_DECLARED", 1);
     /**
-     * This will dispose any temp attributes which added by __set()
+     * This is a base class for all zinux classes
+     * @author dariush
+     * @version 1.0
+     * @created 04-Sep-2013 15:50:21
      */
-    public function Dispose()
+    abstract class baseZinux extends \stdClass
     {
-        foreach($this as $key => $value)
+        /**
+         * This will dispose any temp attributes which added by __set()
+         */
+        public function Dispose()
         {
-            unset($this->$key);
-            unset($value);
+            foreach($this as $key => $value)
+            {
+                unset($this->$key);
+                unset($value);
+            }
         }
-    }
 
-    /**
-     * The initiation works on loading class
-     */
-    public function Initiate(){}
+        /**
+         * The initiation works on loading class
+         */
+        public function Initiate(){}
+    }
 }
-?>
