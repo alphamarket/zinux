@@ -218,7 +218,7 @@ class baseLayout extends \zinux\baseZinux
             {
                 if(!file_exists($this->metadata->GetPath()))
                 {
-                    echo "<div>Notice: The layout '".$this->metadata->full_name."' not found!<div>";
+                    echo "<div>Notice: The layout '<b>".$this->metadata->full_name."</b>' not found!<div>";
                     $this->SuppressLayout();
                 }
                 if(!$this->view->IsViewSuppressed() && !$this->IsLayoutSuppressed())
