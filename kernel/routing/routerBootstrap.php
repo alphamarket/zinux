@@ -21,7 +21,7 @@ abstract class routerBootstrap extends \zinux\baseZinux
     
     private function regexPath($path)
     {
-        return '#' . preg_replace(array("/:int:/i", "/:string:/i", "/[$]\d+/i", "#^/#", "#/$#"), array("(\d+)", "(.+)", "(.+)", "", ""), $path) . '#i';
+        return '#' . preg_replace(array("/:int:/i", "/:string:/i", "/[$]\d+/i", "#^/#", "#/$#"), array("(\d+)", "(.*)", "(.*)", "", ""), $path) . '#i';
     }
 
     public function addRoute($pattern, $target)
