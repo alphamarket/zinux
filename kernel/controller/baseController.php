@@ -37,9 +37,9 @@ abstract class baseController extends \zinux\baseZinux
    
         public function Initiate()
         {
-            $this->layout =  new \zinux\kernel\layout\baseLayout();
             $this->request = new \zinux\kernel\routing\request();
-            $this->view = new \zinux\kernel\view\baseView();
+            $this->view = new \zinux\kernel\view\baseView($this->request);
+            $this->layout =  new \zinux\kernel\layout\baseLayout($this->view);
         }
         public function Dispose()
         {
