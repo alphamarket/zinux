@@ -19,7 +19,7 @@ class accessDeniedException extends appException
 	 */
 	function __construct($message = null, $code = null, $previous = null)
 	{
-            parent::__construct(strlen($message)?$message:isset($_SERVER['REQUEST_URI'])?"Access denied to <b>".$_SERVER['REQUEST_URI']."</b>.":"", $code, $previous);
+            parent::__construct($message, $code, $previous);
             $this->SendErrorCode(403);
 	}
 
