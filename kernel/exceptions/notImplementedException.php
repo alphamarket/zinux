@@ -21,7 +21,7 @@ class notImplementedException extends appException
         {
             if(!isset($message) || !strlen($message))
                     $message = "The method has not implemented...";
-            parent::__construct(isset($message) && strlen($message)?$message:"Page <b>".$_SERVER['REQUEST_URI']."</b> not found.", $code, $previous);
+            parent::__construct(isset($message) && strlen($message)?$message:isset($_SERVER['REQUEST_URI'])?"Page <b>".$_SERVER['REQUEST_URI']."</b> not found.":"", $code, $previous);
             $this->SendErrorCode(404);
         }
 
