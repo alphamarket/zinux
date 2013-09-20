@@ -1,0 +1,14 @@
+{
+    "name" : "zinux", 
+    "path" : ".",
+    "repo" : "https://github.com/dariushha/zinux",
+    "dependencies":
+    {
+        "zg" : 
+        {
+            "name" : "zg", 
+            "path" : "zg",
+            "repo" : "https://github.com/dariushha/zg"
+        }
+    }
+}
