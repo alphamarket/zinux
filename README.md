@@ -1,6 +1,6 @@
 zinux 
 ====
-<i>A simple but altered MVC artchitecture in php</i>
+<i>A simple and lightweight but powerful framework supporting MVC design pattern</i>
 --
 In this project i have tried to make it uses so simple.
 The <i>zinux</i>'s policy is [Convention Over Configuration](http://en.wikipedia.org/wiki/Convention_over_configuration)
