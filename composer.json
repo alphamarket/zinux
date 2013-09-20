@@ -1,0 +1,19 @@
+{
+    "name": "zinux",
+    "type": "library",
+    "description": "A simple and lightweight but powerful library supporting MVC design pattern",
+    "version": "03.00.08",
+    "homepage": "http://dariushha.github.io/zinux/",
+    "keywords": ["PHP","MVC","lightweight","powerful", "design pattern", "zinux", "simple"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dariush Hasanpoor",
+            "email": "b.g.dariush@gmail.com",
+            "homepage": "https://github.com/dariushha"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    }
+}
