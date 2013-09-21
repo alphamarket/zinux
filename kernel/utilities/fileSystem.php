@@ -105,6 +105,9 @@ class fileSystem extends \zinux\baseZinux
                     # delete any possible miss-formed cache data regarding to current path
                     $xc->delete($this_cache_sig);
                 
+                # a fail safe
+                if(!is_readable($resolved_path)) return false;
+                
                 $files = scandir($resolved_path);
 
                 $match_found = FALSE;
