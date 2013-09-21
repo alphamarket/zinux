@@ -2,7 +2,7 @@
     "name" : "zinux", 
     "path" : ".",
     "repo" : "https://github.com/dariushha/zinux",
-    "dependencies":
+    "modules":
     {
         "zg" : 
         {
