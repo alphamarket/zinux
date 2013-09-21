@@ -3,7 +3,7 @@ namespace zinux;
 
 if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
 {
-    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "5.3.0");
+    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "03.00.11");
     
     if(version_compare(PHP_VERSION, ZINUX_BUILD_VERSION, "<"))
     {
