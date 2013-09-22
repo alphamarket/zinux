@@ -1,0 +1,3 @@
+[submodule "zg"]
+	path = zg
+	url = git@github.com:dariushha/zg
