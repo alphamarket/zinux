@@ -145,6 +145,18 @@ __RETURN:
         
         return $resolved_path;
     }
-
-    public function Initiate(){}
+    /**
+     * Recursive glob
+     * @param string $pattern search pattern
+     * @param int $flags GLOB_* flag
+     * @param string $path path to search
+     * @return array() search result
+     */
+    public static function rglob($pattern='*', $flags = 0, $path='')
+    {
+        $paths=  glob($path.'*', GLOB_MARK|GLOB_ONLYDIR|GLOB_NOSORT);
+        $files=  glob($path.$pattern, $flags);
+        foreach ($paths as $path) { $files=array_merge($files,self::rglob($pattern, $flags, $path)); }
+        return $files;
+    }
 }
