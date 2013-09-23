@@ -40,7 +40,7 @@ class encryption
      * @param int    $mode   The MCRYPT_MODE_* mode to use for this instance
      * @param int    $rounds The number of PBKDF2 rounds to do on the key
      */
-    public function __construct($cipher, $mode, $rounds = 100) {
+    public function __construct($cipher = MCRYPT_BlOWFISH, $mode = MCRYPT_MODE_CBC, $rounds = 100) {
         $this->cipher = $cipher;
         $this->mode = $mode;
         $this->rounds = (int) $rounds;
