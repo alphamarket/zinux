@@ -25,7 +25,7 @@ class hash
             $o = $h;
             if($regular_shuf || $long_version) 
             {
-                $m=  strlen($content)/4;
+                $m=  strlen($h)/4;
                 // $h = |A|B|C|D
                 // $o = |D|B|A|C
                 $o = "";
