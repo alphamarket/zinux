@@ -1,4 +1,4 @@
 [submodule "zg"]
 	path = zg
-	url = git@github.com:dariushha/zg.git
+	url = https://github.com/dariushha/zg.git
 	branch = master
