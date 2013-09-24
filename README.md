@@ -2,11 +2,11 @@ zinux
 ====
 <i>A simple and lightweight but powerful framework supporting MVC design pattern</i>
 --
-In this project i have tried to make it uses so simple.
+In this project i have tried to make its uses so simple.
 The <i>zinux</i>'s policy is [Convention Over Configuration](http://en.wikipedia.org/wiki/Convention_over_configuration)
-which leads it to run minimal configuration and much more flexibility, 
+which leads it to run with minimal configuration and much more flexibility, 
 you will find it very convenient to use and develop.
-There is also a [demo](#demo-project) available.
+There are also a [demo](#demo-project) and [zinux generator tool](https://github.com/dariushha/zg) available.
 
 Topics
 --
