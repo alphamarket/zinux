@@ -8,10 +8,11 @@ which leads it to run minimal configuration and much more flexibility,
 you will find it very convenient to use and develop.
 There is also a [demo](#demo-project) available.
 
-> <b>Note:</b> Project is under development!
-
 Topics
 --
+* [Requirements](#requirements)
+* [Installation](#installation)
+  * [Windows Users](#windows-users) 
 * [Directory Structure](#directory-structure)
 * [Quick Setup](#quick-setup)
 * [MVC Entities](#mvc-entities)
@@ -40,12 +41,39 @@ Topics
   * [Adding Plugins](#adding-plugins)
 * [Tips](#tips)
 * [Demo Project](#demo-project)
+* [Zinux Generator Tool](#zinux-generator-tool)
 
+Requirements
+--
+* PHP version 5.3.10 or greater
+
+Installation
+--
+There is a [zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer) shell script, it will 
+automatically download and configure your system to use <i>zinux</i> project freely in your system.<br />
+It also installs [zinux generator tool](https://github.com/dariushha/zg) which is an handy tool to create, manipulate
+and provides solid security for your <i>zinux</i> project, for more information see
+[Zinux Generator Tool](#zinux-generator-tool).
+
+> You will need to have [Git](http://git-scm.com/) installed before using
+[zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer). 
+
+Windows Users
+--
+For running shell scripts in Windows you need a third-party application installed in your system 
+to enable using shell scripts in Windows, such as:
+* [GnuWin32](http://gnuwin32.sourceforge.net/)
+* [UnxUtils](http://unxutils.sourceforge.net/)
+
+> <b>Note:</b> [zinux generator tool](https://github.com/dariushha/zg) also uses shell scripts to run faster, 
+so before you use [zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer) or start using
+[zinux generator tool](https://github.com/dariushha/zg) make sure your Windows supports shell scripts, i.e if 
+`ls -l` command lists your directories, you are OK! 
 
 
 Directory Structure
 --
-Create project directory structure as follow<br />
+Create project directory structure as follow.( or `zg new PROJECT_NAME` command in [zinux generator tool](https://github.com/dariushha/zg))<br />
 <pre>
   PROJECT-ROOT
     |_ Modules
@@ -207,16 +235,16 @@ MVC entities naming convension is as following table:
       Models
     </td>
     <td>
-      [model_name]Model
+      [model_name]
     </td>
     <td>
       .php
     </td>
     <td>
       <ul>
-        <li>UserModel</li>
-        <li>FooModel</li>
-        <li>CommentModel</li>
+        <li>userModel</li>
+        <li>Foo</li>
+        <li>WhatEver</li>
       </ul>
     </td>
   </tr>
@@ -1103,8 +1131,25 @@ Demo Project
 You can download a demo project from [zinux-demo](https://github.com/dariushha/zinux-demo).
 
 
+Zinux Generator Tool
+===
+[Zinux generator tool](https://github.com/dariushha/zg) is an efficient appliction designed make use of <i>zinux</i>
+project even easier than it is, and also makes you develop more, in a short time.<br />
+For an example, just by typing following command you will have your preoject ready:<br />
+```RUBY
+# shortcut form: 
+# zg n new_project
+zg new new_project
+```
 
+> The above command will creates a whole new project containing `defaultModule`, `appBootstrap`, `appRoutes`, 
+`indexConroller`, etc.
 
-
-
-
+Or for an other example the following command will creates a new action and its related view in any
+controller and in any desired module:
+```RUBY
+# shortcut form:
+# zg n a action_name (controller_name) (module_name)
+zg new action action_name (controller_name) (module_name)
+```
+For more information see Zinux Generator Project's [official page](http://dariushha.github.io/zg).
