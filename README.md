@@ -6,7 +6,8 @@ In this project i have tried to make its uses so simple.
 The <i>zinux</i>'s policy is [Convention Over Configuration](http://en.wikipedia.org/wiki/Convention_over_configuration)
 which leads it to run with minimal configuration and much more flexibility, 
 you will find it very convenient to use and develop.
-There are also a [demo](#demo-project) and a [zinux generator tool](https://github.com/dariushha/zg) available.
+
+> There are also a [demo project](#demo-project) and a [zinux generator tool](https://github.com/dariushha/zg) available.
 
 Topics
 --
