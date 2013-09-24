@@ -4,12 +4,6 @@ command -v git >/dev/null 2>&1 || {
     echo -e "\e[33mgit\e[31m not found...\n[ Aborting ]\e[m"
     exit 1;
 }
-if [ -e $HOME/.zinux  ]; then
-        #cp $HOME/.zinux $HOME/.zinux.clone
-        echo -e "\e[31m[ FAILSAFE ]\e[33m$HOME/.zinux exists....\e[m";
-        echo -e "\e[31m[ ABORTING ]\e[m";
-        exit;
-fi 
 rm $HOME/.zinux -fr
 mkdir $HOME/.zinux
 if [ -e $HOME/.zinux.clone ]; then
