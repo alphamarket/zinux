@@ -3,11 +3,13 @@ namespace zinux;
 
 if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
 {
-    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "03.00.17");
+    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "03.00.18");
     
-    if(version_compare(PHP_VERSION, ZINUX_BUILD_VERSION, "<"))
+    defined("ZINUX_BUILD_PHP_VERSION") || define("ZINUX_BUILD_PHP_VERSION", "5.3.10");
+    
+    if(version_compare(PHP_VERSION, ZINUX_BUILD_PHP_VERSION, "<"))
     {
-        echo ("The minimal PHP version required is ".ZINUX_BUILD_VERSION."!<br />");
+        echo ("The minimal PHP version required is ".ZINUX_BUILD_PHP_VERSION."!<br />");
         die("Your PHP version is: ".PHP_VERSION);
     }
     # define zinux ROOT
