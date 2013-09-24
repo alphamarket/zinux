@@ -16,7 +16,7 @@ namespace zinux\kernel\security;
  * - Does HMAC verification of source data
  *
  */
-class encryption 
+class cryption 
 {
     /**
      * @var string $cipher The mcrypt cipher to use for this instance
