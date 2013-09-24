@@ -20,11 +20,7 @@ class model extends mvc
     
     public function __construct($name, module $module, $auto_load = 1)
     {
-        if(preg_match('/(\w+)model$/i', $name))
-        {
-            $name=preg_replace('/model$/i', "", $name);
-        }
-        parent::__construct($name, "{$name}Model");
+        parent::__construct($name, $name);
         $this->relative_module = $module;
         $this->SetPath("{$this->relative_module->GetPath()}".DIRECTORY_SEPARATOR."models".DIRECTORY_SEPARATOR."{$this->full_name}{$this->extension}");
          if($auto_load)
