@@ -7,7 +7,7 @@ The <i>zinux</i>'s policy is [Convention Over Configuration](http://en.wikipedia
 which leads it to run with minimal configuration and much more flexibility, 
 you will find it very convenient to use and develop.
 
-> There are also a [demo project](#demo-project) and a [zinux generator tool](https://github.com/dariushha/zg) available.
+> There are also a [demo project](#demo-project) and a [zinux generator tool](#zinux-generator-tool) available.
 
 Topics
 --
@@ -1137,7 +1137,7 @@ You can download a demo project from [zinux-demo](https://github.com/dariushha/z
 
 Zinux Generator Tool
 ===
-[Zinux generator tool](https://github.com/dariushha/zg) is an efficient appliction designed make use of <i>zinux</i>
+[Zinux generator tool](https://github.com/dariushha/zg) is an efficient appliction designed to make use of <i>zinux</i>
 project even easier than it is, and also makes you develop more, in a short time.<br />
 For an example, just by typing following command you will have your preoject ready:<br />
 ```RUBY
@@ -1157,3 +1157,6 @@ controller and in any desired module:
 zg new action action_name (controller_name) (module_name)
 ```
 For more information see Zinux Generator Project's [official page](http://dariushha.github.io/zg).
+
+> It also provides solid code-level security for your project, by solid encryption/decryption algorithms designed to
+encrypt or decrypt your project's code files.
