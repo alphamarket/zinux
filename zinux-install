@@ -4,12 +4,12 @@ command -v git >/dev/null 2>&1 || {
     echo -e "\e[33mgit\e[31m not found...\n[ Aborting ]\e[m"
     exit 1;
 }
-if [ -e $HOME/.zinux  ]; then
-        #cp $HOME/.zinux $HOME/.zinux.clone
-        echo -e "\e[31m[ FAILSAFE ]\e[33m$HOME/.zinux exists....\e[m";
-        echo -e "\e[31m[ ABORTING ]\e[m";
-        exit;
-fi 
+command -v zg --version >/dev/null 2>&1 && {
+	echo -e '\e[33mzinux \e[32malready installed\e[m...\n';
+	echo -e "You can use '\e[33mzg update --cache\e[m' to update the installed zinux in your system"
+	echo -e '\e[31m[ Aborting ]\e[m'
+	exit 1
+}
 rm $HOME/.zinux -fr
 mkdir $HOME/.zinux
 if [ -e $HOME/.zinux.clone ]; then
@@ -43,3 +43,4 @@ cd $HOME
 chmod 775 $HOME/.zinux -R
 echo -e "\e[33mzg\e[32m installled successfully ...\nYou can test it by \e[33mzg --version\e[32m command ...\e[m"
 echo -e "Exit current terminal and open a new one or run \e[33msource $HOME/.bashrc\e[m to apply changes..." 
+
