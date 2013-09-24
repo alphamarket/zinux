@@ -42,6 +42,8 @@ fi
 cd $HOME
 chmod 775 $HOME/.zinux -R
 chmod a-w $HOME/.zinux
+source $HOME/.bashrc
+zg update --cache --all
 echo -e "\e[33mzg\e[32m installled successfully ...\nYou can test it by \e[33mzg --version\e[32m command ...\e[m"
 echo -e "Exit current terminal and open a new one or run \e[33msource $HOME/.bashrc\e[m to apply changes..." 
 
