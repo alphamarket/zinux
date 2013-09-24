@@ -58,6 +58,9 @@ and provides solid security for your <i>zinux</i> project, for more information 
 > You will need to have [Git](http://git-scm.com/) installed before using
 [zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer). 
 
+For installation just download the [zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer) 
+and save it at anywhere, and run the following command `bash /path/to/your/zinux/installer` it will do the reset. 
+
 Windows Users
 --
 For running shell scripts in Windows you need a third-party application installed in your system 
