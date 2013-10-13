@@ -25,8 +25,6 @@ class dispatcher extends \zinux\baseZinux
             $this->Initiate();
             // create new controller
             $c = $request->controller->GetInstance();
-            // init controller
-            $c->Initiate();
             // set request as a property in controller
             $c->request = $request;
             // set view object
@@ -34,6 +32,8 @@ class dispatcher extends \zinux\baseZinux
             // set layout object
             $c->layout = new \zinux\kernel\layout\baseLayout($c->view);
             $c->view->layout = $c->layout;
+            // init controller
+            $c->Initiate();
             // call the action method
             $c->request->action->InvokeAction($c);
             // render : layout ~> view
