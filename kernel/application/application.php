@@ -103,8 +103,6 @@ class application extends \zinux\baseZinux
         $this->request = new \zinux\kernel\routing\request();
         # create a application bootstrap
         $this->applicationBoostrap = new applicationBootstrap();
-        # run a pre strap opt.
-        $this->applicationBoostrap->RunPrestrap($this->request);
          return $this;
     }
 
@@ -119,7 +117,10 @@ class application extends \zinux\baseZinux
         {
             $this->Startup();
         }
-
+        # process the request
+        $this->request->Process();
+        # run a pre strap opt.
+        $this->applicationBoostrap->RunPrestrap($this->request);
         # process the request 
         $this->router->Process($this->request);
         # run the router
