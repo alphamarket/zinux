@@ -1,6 +1,6 @@
 #!/bin/bash
 clear
-cd $HOME
+cd "$HOME"
 command -v git >/dev/null 2>&1 || {
     echo -e "\e[33mgit\e[31m not found...\n[ Aborting ]\e[m"
     exit 1;
@@ -11,18 +11,15 @@ command -v zg --version >/dev/null 2>&1 && {
 	echo -e '\e[31m[ Aborting ]\e[m'
 	exit 1
 }
-rm $HOME/.zinux -fr
-mkdir $HOME/.zinux
-if [ -e $HOME/.zinux.clone ]; then
-        mv $HOME/.zinux.clone $HOME/.zinux/
-fi;
-chmod 775 $HOME/.zinux -R
-cd $HOME/.zinux
+rm "$HOME/.zinux" -fr
+mkdir "$HOME/.zinux"
+chmod 775 "$HOME/.zinux" -R
+cd "$HOME/.zinux"
 echo -e "Starting to cloning \e[33mzinux\e[m..."
 echo -e "\e[33m\c"
 git clone --recursive https://github.com/dariushha/zinux.git
 echo -e "\e[m\c"
-cd $HOME/.zinux
+cd "$HOME/.zinux"
 echo -e "Modifing \e[33m\$HOME\e[m varibale content ..."
 echo '#!/bin/bash
 PATH="$HOME/.zinux/zinux/zg/bin:$PATH"' > .bashzg
@@ -30,18 +27,18 @@ if ! [ -e .bashzg ]; then
     echo -e "\e[31mCouldn't create \e[33m.bashzg\e[m file!\n[ Aborting ]\e[m" >&2
     exit 1;
 fi;
-cd $HOME
-chmod 775 $HOME/.zinux -R
+cd "$HOME"
+chmod 775 "$HOME/.zinux" -R
 echo -e "Adding \e[33mzg\e[m to \$PATH"
 if  ! [ -e $HOME/.bashrc ];then
     echo -e "\e[31m Couldn't find \e[33m$HOME/.bashrc\e[31m; please add following lines in a bash loader file...\e[m" 
     echo 'source $HOME/.zinux/.bashzg'
 else 
-	if [ $(grep -F "source \$HOME/.zinux/.bashzg" $HOME/.bashrc | wc -l) -eq 0 ]; then
-	    echo 'source $HOME/.zinux/.bashzg' >> $HOME/.bashrc
+	if [ $(grep -F "source \"\$HOME/.zinux/.bashzg\"" "$HOME/.bashrc" | wc -l) -eq 0 ]; then
+	    echo 'source "$HOME/.zinux/.bashzg"' >> "$HOME/.bashrc"
 	fi;
 fi
-chmod a-w $HOME/.zinux
-bash $HOME/.zinux/zinux/zg/bin/zg update --cache
+chmod a-w "$HOME/.zinux"
+bash "$HOME/.zinux/zinux/zg/bin/zg update --cache"
 echo -e "\e[33mzg\e[32m installled successfully ...\nYou can test it by \e[33mzg --version\e[32m command ...\e[m"
 echo -e "Exit current terminal and open a new one or run \e[33msource $HOME/.bashrc\e[m to apply changes..." 
