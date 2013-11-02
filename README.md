@@ -64,16 +64,13 @@ and save it at anywhere, and run the following command `bash /path/to/your/zinux
 
 Windows Users
 --
-For running shell scripts in Windows you need a third-party application installed in your system 
-to enable using shell scripts in Windows, such as:
-* [GnuWin32](http://gnuwin32.sourceforge.net/)
-* [UnxUtils](http://unxutils.sourceforge.net/)
-
-> <b>Note:</b> [zinux generator tool](https://github.com/dariushha/zg) also uses shell scripts to run faster, 
-so before you use [zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer) or start using
-[zinux generator tool](https://github.com/dariushha/zg) make sure your Windows supports shell scripts, i.e if 
-`ls -l` command lists your directories, you are OK! 
-
+For technical reasons zinux generator does not support Windows!! 
+You just have to clone and use the framework manually.<br />
+We are sorry about this....
+ 
+> Some advise for PHP developers, you cannot become a professional PHP developer and develop a full
+scale PHP application within windows, you just cannot!! so maybe it is time to move your PHP developments 
+on linux.
 
 Directory Structure
 --
