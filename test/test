@@ -1,9 +1,0 @@
-#!/bin/bash
-if ! [ $EUID -eq 0 ]; then
-        echo -e "\e[31mYou need to be root to run this script"
-        exit 1
-fi
-clear
-sudo phpunit --colors --bootstrap bootstrap.php  $*
-rm -fr ../../cache/test
-echo -e "\e[32mTest's cache directory deleted...\e[39m"
