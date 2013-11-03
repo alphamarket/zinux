@@ -21,11 +21,11 @@ class baseLayout extends \zinux\baseZinux
          * @var \zinux\kernel\routing\request
          */
 	public $request;
-        /**
-         *  holds layout instance
-         * @var \zinux\kernel\mvc\layout 
-         */
-        public $meta;
+    /**
+     *  holds layout instance
+     * @var \zinux\kernel\mvc\layout 
+     */
+    public $meta;
 	/**
 	 * Options settings
 	 */
@@ -38,6 +38,10 @@ class baseLayout extends \zinux\baseZinux
 	 * JS tags collection
 	 */
 	protected $JSImports;
+    /**
+     * layout title string
+     */
+    protected $title;
 	/**
 	 * check if layout has rendered or not
 	 */
@@ -53,25 +57,36 @@ class baseLayout extends \zinux\baseZinux
 
 	function __construct(\zinux\kernel\view\baseView $view)
 	{
-            $this->view = $view;
-            $this->request = $view->request;
-            $this->Initiate();
+        $this->view = $view;
+        $this->request = $view->request;
+        $this->Initiate();
 	}
 
-        public function Initiate()
-        {
-            $this->options = new \stdClass();
-            $this->CSSImports = array();
-            $this->JSImports = array();
-            $this->MetaImports = array();
-            $this->SetDefaultLayout();
-        }
-        public function Dispose()
-        {
-            parent::Dispose();
-        }
-
-
+    public function Initiate()
+    {
+        $this->options = new \stdClass();
+        $this->CSSImports = array();
+        $this->JSImports = array();
+        $this->MetaImports = array();
+        $this->AddTitle("");
+        $this->SetDefaultLayout();
+    }
+    public function Dispose()
+    {
+        parent::Dispose();
+    }
+    /**
+     * Add a title to layout
+     * @param type $title
+     * @throws \zinux\kernel\exceptions\invalideArgumentException
+     */
+    public function AddTitle($title = "")
+    {
+        if(!is_string($title))
+            throw new \zinux\kernel\exceptions\invalideArgumentException
+                ("The title should be a string");
+        $this->title = $title;
+    }
 	/**
 	 * Add a css tags to html doc
 	 * 
@@ -82,10 +97,10 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	public function AddCSS($URI, $name = NULL, $options = array(), $overwrite_on_existance = 0)
 	{
-            if(!isset($name))
-                $name = sha1($URI);
-            if(isset($this->CSSImports[$name]) && !$overwrite_on_existance) return;
-            $this->CSSImports[$name] = array('uri' => $URI, 'options' => $options);
+        if(!isset($name))
+            $name = sha1($URI);
+        if(isset($this->CSSImports[$name]) && !$overwrite_on_existance) return;
+        $this->CSSImports[$name] = array('uri' => $URI, 'options' => $options);
 	}
 
 	/**
@@ -98,10 +113,10 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	public function AddJS($URI, $name = NULL, $options = array(), $overwrite_on_existance = 0)
 	{
-            if(!isset($name))
-                $name = sha1($URI);
-            if(isset($this->JSImports[$name]) && !$overwrite_on_existance) return;
-            $this->JSImports[$name] = array('uri' => $URI, 'options' => $options);
+        if(!isset($name))
+            $name = sha1($URI);
+        if(isset($this->JSImports[$name]) && !$overwrite_on_existance) return;
+        $this->JSImports[$name] = array('uri' => $URI, 'options' => $options);
 	}
 
 	/**
@@ -115,15 +130,15 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	public function AddMeta($name, $content, $options = array(), $overwrite_on_existance = 0)
 	{
-            if(isset($this->MetaImports[$name]) && !$overwrite_on_existance) return;
-            $this->MetaImports[$name] = array('content' =>$content, 'options' => $options);
+        if(isset($this->MetaImports[$name]) && !$overwrite_on_existance) return;
+        $this->MetaImports[$name] = array('content' =>$content, 'options' => $options);
 	}
 	/**
 	 * Check status of view suppression
 	 */
 	public function IsLayoutSuppressed()
 	{
-            return $this->suppress_layout;
+        return $this->suppress_layout;
 	}
 
 	/**
@@ -133,7 +148,7 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	public function RemoveCSS($name)
 	{
-            unset($this->CSSImports[$name]);
+        unset($this->CSSImports[$name]);
 	}
 
 	/**
@@ -143,7 +158,7 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	public function RemoveJS($name)
 	{
-            unset($this->JSImports[$name]);
+        unset($this->JSImports[$name]);
 	}
 
 	/**
@@ -153,7 +168,7 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	public function RemoveMeta($name)
 	{
-            unset($this->MetaImports[$name]);
+        unset($this->MetaImports[$name]);
 	}
 
 	/**
@@ -170,16 +185,16 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	protected function RenderCSSImports()
 	{
-            foreach($this->CSSImports as $css)
+        foreach($this->CSSImports as $css)
+        {
+            if(!isset($css['options']) || !is_array($css['options'])) $css['options'] = array(); 
+            echo "<link rel='stylesheet' type='text/css' href='${css['uri']}'";
+            foreach($css['options'] as $key=> $value)
             {
-                if(!isset($css['options']) || !is_array($css['options'])) $css['options'] = array(); 
-                echo "<link rel='stylesheet' type='text/css' href='${css['uri']}'";
-                foreach($css['options'] as $key=> $value)
-                {
-                    echo " $key='$value'";
-                }
-                echo ">";
+                echo " $key='$value'";
             }
+            echo ">";
+        }
 	}
 
 	/**
@@ -187,9 +202,9 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	protected function RenderImports()
 	{
-           $this->RenderMetaImports();
-           $this->RenderJSImports();
-           $this->RenderCSSImports();
+        $this->RenderMetaImports();
+        $this->RenderJSImports();
+        $this->RenderCSSImports();
 	}
 
 	/**
@@ -197,16 +212,16 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	protected function RenderJSImports()
 	{ 
-            foreach($this->JSImports as $js)
+        foreach($this->JSImports as $js)
+        {
+            if(!isset($js['options']) || !is_array($js['options'])) $js['options'] = array(); 
+            echo "<script type='text/javascript' src='${js['uri']}'";
+            foreach($js['options'] as $key=> $value)
             {
-                if(!isset($js['options']) || !is_array($js['options'])) $js['options'] = array(); 
-                echo "<script type='text/javascript' src='${js['uri']}'";
-                foreach($js['options'] as $key=> $value)
-                {
-                    echo " $key='$value'";
-                }
-                echo "></script>";
+                echo " $key='$value'";
             }
+            echo "></script>";
+        }
 	}
 
 	/**
@@ -214,27 +229,27 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	protected function RenderLayout()
 	{
-            if(!$this->layout_rendered)
+        if(!$this->layout_rendered)
+        {
+            if(!file_exists($this->metadata->GetPath()))
             {
-                if(!file_exists($this->metadata->GetPath()))
-                {
-                    echo "<div>Notice: The layout '<b>".$this->metadata->full_name."</b>' not found!<div>";
-                    $this->SuppressLayout();
-                }
-                if(!$this->view->IsViewSuppressed() && !$this->IsLayoutSuppressed())
-                {
-                    # we cannot use $this->metadata->Load(); 'cause then the layout's 
-                    # file would operate unser \zinux\kernel\mvc\layout instance!!
-                    require $this->metadata->GetPath();
-                }
-                else
-                    echo $this->content;
-                $this->layout_rendered = true;
+                echo "<div>Notice: The layout '<b>".$this->metadata->full_name."</b>' not found!<div>";
+                $this->SuppressLayout();
+            }
+            if(!$this->view->IsViewSuppressed() && !$this->IsLayoutSuppressed())
+            {
+                # we cannot use $this->metadata->Load(); 'cause then the layout's 
+                # file would operate unser \zinux\kernel\mvc\layout instance!!
+                require $this->metadata->GetPath();
             }
             else
-            {
-                throw new \Exceptions\AppException("The view has been rendered already...");
-            }
+                echo $this->content;
+            $this->layout_rendered = true;
+        }
+        else
+        {
+            throw new \Exceptions\AppException("The view has been rendered already...");
+        }
 	}
 
 	/**
@@ -242,24 +257,31 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	protected function RenderMetaImports()
 	{
-            foreach($this->MetaImports as $name => $meta)
+        foreach($this->MetaImports as $name => $meta)
+        {
+            if(!isset($meta['options']) || !is_array($meta['options'])) $meta['options'] = array(); 
+            echo "<meta name='$name' content='${meta['content']}'";
+            foreach($meta['options'] as $key=> $value)
             {
-                if(!isset($meta['options']) || !is_array($meta['options'])) $meta['options'] = array(); 
-                echo "<meta name='$name' content='${meta['content']}'";
-                foreach($meta['options'] as $key=> $value)
-                {
-                    echo " $key='$value'";
-                }
-                echo ">";
+                echo " $key='$value'";
             }
+            echo ">";
+        }
 	}
+    /**
+     * Render the title
+     */
+    protected function RenderTitle()
+    {
+        echo $this->title;
+    }
 
-	/**
+    /**
 	 * Renders View
 	 */
 	protected function RenderView()
 	{
-            $this->content = $this->view->Render(0);
+        $this->content = $this->view->Render(0);
 	}
 
 	/**
@@ -267,7 +289,7 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	public function SetDefaultLayout()
 	{
-            $this->SetLayout('default');
+        $this->SetLayout('default');
 	}
 
 	/**
@@ -277,7 +299,7 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	public function SetLayout($name)
 	{
-            $this->metadata =  new \zinux\kernel\mvc\layout($name, $this->request->module);
+        $this->metadata =  new \zinux\kernel\mvc\layout($name, $this->request->module);
 	}
 	/**
 	 * change layout suppression status
@@ -286,7 +308,7 @@ class baseLayout extends \zinux\baseZinux
 	 */
 	public function SuppressLayout($should_suppress = 1)
 	{
-            $this->suppress_layout = $should_suppress;
+        $this->suppress_layout = $should_suppress;
 	}
 
 }
