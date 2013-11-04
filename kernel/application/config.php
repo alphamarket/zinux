@@ -65,7 +65,13 @@ __RETURN:
         # return configs
         return $c->config;
     }
-    
+    /**
+     * Get related config value
+     * @param string $path
+     * @param string $_
+     * @return string the config value
+     * @throws \zinux\kernel\exceptions\invalideArgumentException if the config path not found
+     */
     public static function GetConfig($path = NULL, $_ =NULL)
     {
         $conf = self::GetAll();
@@ -78,6 +84,12 @@ __RETURN:
         return $conf;
     }
     
+    /**
+     * Check if an config loaded and exists
+     * @param string $path
+     * @param string $_
+     * @return boolean
+     */
     public static function Exists($path = NULL, $_ =NULL)
     {
         $conf = self::GetAll();
@@ -89,12 +101,16 @@ __RETURN:
         }
         return true;
     }
-    
+    /**
+     * Get all loaded config
+     * @return array
+     * @throws \zinux\kernel\exceptions\invalideOperationException if no config ever loaded
+     */
     public static function GetAll()
     {
         $xf = new \zinux\kernel\caching\xCache(__CLASS__);
         
-        if(!self::$load_cache_sig || !count(self::$load_cache_sig))
+        if(!self::HasLoaded())
             throw new \zinux\kernel\exceptions\invalideOperationException("The config file has not been loaded");
         
         $conf = array();
@@ -110,6 +126,14 @@ __RETURN:
         
         return $conf;
     }
-
-    public function Initiate(){}
+    /**
+     * Check if any config loaded
+     * @return boolean 
+     */
+    public static function HasLoaded()
+    {
+        if(!self::$load_cache_sig || !count(self::$load_cache_sig))
+            return false;
+        return true;
+    }
 }
