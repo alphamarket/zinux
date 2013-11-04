@@ -107,7 +107,7 @@ class security
             # checking for checksums
             foreach($check_sum_array as $key=> $value)
             {
-                if($target_array[$key] != $value)
+                if($target_array[$key] != $target_array[$value])
                 {
                      $exception_verbose_msg = "The `$key`'s value didn't match with `$value`";
                      goto __THROW_EXCEPTION;
