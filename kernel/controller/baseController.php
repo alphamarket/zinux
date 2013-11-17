@@ -30,25 +30,18 @@ abstract class baseController extends \zinux\baseZinux
         * @var \zinux\kernel\view\baseView
         */
 	public $view;
-
-	function __construct()
-	{
-	}
-   
-        public function Initiate()
-        {
-            $this->request = new \zinux\kernel\routing\request();
-            $this->view = new \zinux\kernel\view\baseView($this->request);
-            $this->layout =  new \zinux\kernel\layout\baseLayout($this->view);
-        }
+        /**
+         * Dispose the controller
+         */
         public function Dispose()
         {
             $this->view->Dispose();
             $this->layout->Dispose();
             parent::Dispose();   
         }
-
+        /**
+         * The indexAction abstract
+         */
 	abstract public function IndexAction();
-
 }
 ?>
