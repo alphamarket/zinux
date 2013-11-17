@@ -19,7 +19,7 @@ class module extends mvc
             $name=preg_replace('/module$/i', "", $name);
         }
         parent::__construct($name, "{$name}Module");
-        $this->SetPath($path);
+        $this->SetPath(realpath($path));
     }
 
     public function GetNameSpace()

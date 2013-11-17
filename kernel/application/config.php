@@ -33,10 +33,10 @@ class config extends \zinux\baseZinux
      */
     public function Load()
     {
-        $s = serialize($this->config_initializer);
+        $s = $this->config_initializer->file_address;
         $sh = md5($s);
         # store the sig
-        self::$load_cache_sig[$sh] = $s;
+        self::$load_cache_sig[$sh] = $this->config_initializer->file_address;
         # open cache
         # don't use xCache it will overload the session file
         $fc = new \zinux\kernel\caching\fileCache(__CLASS__);

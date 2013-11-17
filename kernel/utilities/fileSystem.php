@@ -19,7 +19,14 @@ class fileSystem extends \zinux\baseZinux
         $fc = new \zinux\kernel\caching\fileCache(__CLASS__);
         return $fc->fetchAll();
     }
-    public static function resolve_path($path, $convert_to_real_path = 1)
+    /**
+     * resolve the path with insensitive behavioral pattern
+     * @param string $path target path to resolve
+     * @param boolean $convert_to_real_path should the function convert the ultimate to realpath?
+     * @param boolean $cache_built_path should enable caching during the building path?
+     * @return string|null is path exists the resolved path will be returned otherwise null
+     */
+    public static function resolve_path($path, $convert_to_real_path = 1, $cache_built_path = 0)
     {
         # check if string is valid
         if(!strlen($path)) return FALSE;
@@ -98,7 +105,8 @@ class fileSystem extends \zinux\baseZinux
                 # check target path
                 if(file_exists($target_path))
                 {
-                    $fc->save($this_cache_sig, $target_path);
+                    if($cache_built_path)
+                        $fc->save($this_cache_sig, $target_path);
                     $resolved_path = $target_path;
                     continue;
                 }

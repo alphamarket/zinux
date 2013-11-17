@@ -214,4 +214,6 @@ class fileCache extends cache
     {
         parent::setCacheName($name);
     }
+    
+    public static function getInternalCaches() { return self::$_soft_cache; }
 }
