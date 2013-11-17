@@ -41,7 +41,6 @@ abstract class cache {
      * @return boolean
      */
     public function isCached($key) {
-        $this->deleteExpired();
         $cachedData = $this->_loadCache();
         return isset($cachedData[$key]['data']);
     }
@@ -77,7 +76,6 @@ abstract class cache {
      * @return string
      */
     public function fetch($key, $meta = false, $timestamp = false) {
-        $this->deleteExpired();
         $cachedData = $this->_loadCache();
         if(!isset($cachedData[$key])) return NULL;
         if($meta) return $cachedData[$key];
@@ -92,7 +90,6 @@ abstract class cache {
      * @return array
      */
     public function fetchAll($meta = false) {
-        $this->deleteExpired();
         if ($meta === false) {
             $results = array();
             $cachedData = $this->_loadCache();
