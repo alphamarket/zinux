@@ -37,13 +37,14 @@ class config extends \zinux\baseZinux
         $sh = md5($s);
         # store the sig
         self::$load_cache_sig[$sh] = $s;
-         # open cache
-        $xc = new \zinux\kernel\caching\xCache(__CLASS__);
+        # open cache
+        # don't use xCache it will overload the session file
+        $fc = new \zinux\kernel\caching\fileCache(__CLASS__);
         # if configs cached
-        if($xc->isCached(self::$load_cache_sig[$sh]))
+        if($fc->isCached(self::$load_cache_sig[$sh]))
         {
             # fetch cache configs
-            $c = $xc->fetch(self::$load_cache_sig[$sh]);
+            $c = $fc->fetch(self::$load_cache_sig[$sh]);
             # check if file modified
             if($c->modif_time==filemtime($this->config_initializer->file_address))
                 goto __RETURN;
@@ -60,7 +61,7 @@ class config extends \zinux\baseZinux
         # set file modified datetime
         $c->modif_time = filemtime($this->config_initializer->file_address); 
         # cache the result
-        $xc->save(self::$load_cache_sig[$sh], $c);
+        $fc->save(self::$load_cache_sig[$sh], $c);
 __RETURN:
         # return configs
         return $c->config;
@@ -108,7 +109,8 @@ __RETURN:
      */
     public static function GetAll()
     {
-        $xf = new \zinux\kernel\caching\xCache(__CLASS__);
+        # don't use xCache it will overload the session file
+        $xf = new \zinux\kernel\caching\fileCache(__CLASS__);
         
         if(!self::HasLoaded())
             throw new \zinux\kernel\exceptions\invalideOperationException("The config file has not been loaded");

@@ -170,11 +170,12 @@ __LOADING_CACHE:
             if(!count($modules))
                 die("No module found.");
             # checking if modules has been cached or not
-            $xc = new \zinux\kernel\caching\xCache(__CLASS__);
-            if($xc->isCached(__FUNCTION__))
+            # don't use xCache it will overload the session file
+            $fc = new \zinux\kernel\caching\fileCache(__CLASS__);
+            if($fc->isCached(__FUNCTION__))
             {
                 # catch maintaining optz. 
-                $mc = $xc->fetch(__FUNCTION__);
+                $mc = $fc->fetch(__FUNCTION__);
                 # if the module directory has been updated
                 if($mc->modified_time !=filemtime($module_dir))
                 {
@@ -201,7 +202,7 @@ __LOAD_MODULES:
             }
             # now module collection is ready
             # caching module collections data
-            $xc->save(__FUNCTION__, $mc);
+            $fc->save(__FUNCTION__, $mc);
             # fetching related modules accoring to requested URI
 __FETCHING_MODULES:
             # if not parts provided picking up default module
@@ -215,7 +216,7 @@ __FETCHING_MODULES:
                     if(!file_exists($module->GetPath()))
                     {
                         # delete cached data
-                        $xc->deleteAll();
+                        $fc->deleteAll();
                         # throw exception
                         throw new \zinux\kernel\exceptions\notFoundException("Wired! `{$module->module_name}` not found at `{$module->module_path}`");
                     }
