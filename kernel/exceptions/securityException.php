@@ -15,7 +15,6 @@ class securityException extends appException
             $message = "Security error";
         }
         parent::__construct($message, $code, $previous);
-        $this->SendErrorCode(403);
     }
 }
 ?>

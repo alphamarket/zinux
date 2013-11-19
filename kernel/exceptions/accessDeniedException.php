@@ -20,7 +20,6 @@ class accessDeniedException extends appException
 	function __construct($message = null, $code = null, $previous = null)
 	{
             parent::__construct($message, $code, $previous);
-            $this->SendErrorCode(403);
 	}
 
 }

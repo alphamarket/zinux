@@ -26,7 +26,6 @@ class dbException extends appException
         {
             parent::__construct($message, $code, $previous);
             $this->createException($message? $message:  '<b>#'.  mysql_errno().'</b> - '.mysql_error());
-            $this->SendErrorCode(500);
         }
         /**
          * automaticly create mysql exception

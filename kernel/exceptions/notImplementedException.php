@@ -22,7 +22,6 @@ class notImplementedException extends appException
             if(!isset($message) || !strlen($message))
                     $message = "The method has not implemented...";
             parent::__construct($message, $code, $previous);
-            $this->SendErrorCode(404);
         }
 
 }

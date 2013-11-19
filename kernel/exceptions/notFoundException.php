@@ -21,7 +21,6 @@ class notFoundException extends appException
 	public function __construct($message = null, $code = null, $previous = null)
 	{
             parent::__construct($message, $code, $previous);
-            $this->SendErrorCode(404);
 	}
 
 }
