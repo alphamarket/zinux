@@ -80,7 +80,7 @@ class security
                }
             }
             # it is essentional for checksum opt. that the fields name should be in existance array
-            if(!count($check_sum_array) && !count($existance_array))
+            if(count($check_sum_array) && !count($existance_array))
                 throw new \InvalidArgumentException("\$existance_array is not supplied but demads operation on \$check_sum_array!!");
            
             # a forehead existance checking 
