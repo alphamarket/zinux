@@ -135,7 +135,7 @@ class baseView extends \zinux\baseZinux
                 throw new \zinux\kernel\exceptions\InvalideOperationException("Cannot partially load the currently loaded view...");
 
             // create a fake view handler
-            $nv = new \zinux\View\BaseView($this->request);
+            $nv = new baseView($this->request);
             // set view's name
             $nv->SetView($view_name);
             // is any args are set load it.
