@@ -3,7 +3,7 @@ namespace zinux;
 
 if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
 {
-    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "3.1.6");
+    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "3.1.7");
 
     defined("ZINUX_BUILD_PHP_VERSION") || define("ZINUX_BUILD_PHP_VERSION", "5.3.10");
 
@@ -21,7 +21,7 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
     ini_set('include_path', implode(PATH_SEPARATOR, array(ini_get('include_path'),  PROJECT_ROOT)));
     # require plugin file
     require_once 'kernel/application/plugin.php';
-    # initiate a new plugin 
+    # initiate a new plugin
     $plugin = new kernel\application\plugin();
     # treat current project as a plugin
     $plugin->registerPlugin("PROJECT_ROOT");

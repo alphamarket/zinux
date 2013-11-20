@@ -235,7 +235,7 @@ __FETCHING_MODULES:
 	protected function FetchControllerName()
 	{
             # default controller
-            $this->controller = new \zinux\kernel\mvc\controller("Index", $this->module);
+            $this->controller = new \zinux\kernel\mvc\controller("index", $this->module);
             # head for locating controller
             if(isset($this->_parts[0]) &&
                 ($file = \zinux\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory().$this->_parts[0]."Controller.php")))
@@ -245,9 +245,9 @@ __FETCHING_MODULES:
                 array_shift($this->_parts);
             }
             # try to locate the actual indexController IO address
-            elseif(($file = \zinux\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory()."IndexController.php")))
+            elseif(($file = \zinux\kernel\utilities\fileSystem::resolve_path($this->controller->GetRootDirectory()."indexController.php")))
             {
-                $this->controller = new \zinux\kernel\mvc\controller("Index", $this->module);
+                $this->controller = new \zinux\kernel\mvc\controller("index", $this->module);
             }
             # we found target file
             # validating controller
@@ -267,7 +267,7 @@ __FETCHING_MODULES:
         */
 	protected function FetchActionName()
 	{
-            $this->action = new \zinux\kernel\mvc\action("Index", $this->controller);
+            $this->action = new \zinux\kernel\mvc\action("index", $this->controller);
             # the class is safe and loaded & checked in FetchControllerName
             # check for method existance
             if(isset($this->_parts[0]) && method_exists($this->controller->GetInstance(), "{$this->_parts[0]}Action"))
