@@ -37,7 +37,7 @@ abstract class routerBootstrap extends \zinux\baseZinux
         foreach($this->routes as $key=> $value)
         {
             $pp = $this->regexPath($key);
-            $uri = trim($request->GetURI(), "/");
+            $uri = "/".trim($request->GetURI(), "/");
             if(preg_match($pp, $uri))
             {
                 $request->SetURI("/".preg_replace($pp, $value, $uri));
