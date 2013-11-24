@@ -86,6 +86,7 @@ class request extends \zinux\baseZinux
         */
 	public function SetURI($uri)
 	{
+            $this->is_proccessed = false;
             $this->requested_uri = $uri;
 	}
         /**
