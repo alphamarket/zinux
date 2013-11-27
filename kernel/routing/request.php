@@ -66,19 +66,36 @@ class request extends \zinux\baseZinux
          
 	public function __construct(request $request = NULL)
 	{
+            # set the current URI by default
+            $this->SetURI($_SERVER['REQUEST_URI']);
+            # initiate the initiation
             $this->Initiate();
+            # if request was set
             if($request)
-                throw new \zinux\kernel\exceptions\notImplementedException;
+            {
+                # clone the request in $this
+                foreach($request as $name=> $value)
+                {
+                    # clone the $name => $value
+                    $this->$name =$value;
+                }
+            }
 	}
         /**
          * Initializing the instance
          */
         public function Initiate()
         {
-            $this->SetURI($_SERVER['REQUEST_URI']);
             $this->type = "html";
             $this->params = array();
+            $this->indexed_param = array();
+            $this->GET = array();
+            $this->POST = array();
             $this->is_proccessed = false;
+            $this->action = NULL;
+            $this->controller = NULL;
+            $this->module = NULL;
+            $this->view = NULL;
         }
 
 	/**
@@ -111,6 +128,7 @@ class request extends \zinux\baseZinux
 	{
             if($this->is_proccessed) 
                 return;
+            $this->Initiate();
             $this->DepartURI();
             $this->FetchModuleName();
             $this->FetchControllerName();
