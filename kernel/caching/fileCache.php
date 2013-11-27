@@ -154,10 +154,10 @@ class fileCache extends cache
      * @return boolean
      */
     protected function _checkCacheDir() {
-        if (!is_dir($this->getCacheDirectory()) && !mkdir($this->getCacheDirectory(), 0775, true)) {
+        if (!@(is_dir($this->getCacheDirectory()) || mkdir($this->getCacheDirectory(), 0775, true))) {
             throw new \Exception('Unable to create cache directory ' . $this->getCacheDirectory());
         } elseif (!is_readable($this->getCacheDirectory()) || !is_writable($this->getCacheDirectory())) {
-            if (!chmod($this->getCacheDirectory(), 0775)) {
+            if (!@chmod($this->getCacheDirectory(), 0775)) {
                 throw new \Exception($this->getCacheDirectory() . ' must be readable and writeable');
             }
         }
