@@ -88,6 +88,13 @@ class baseLayout extends \zinux\baseZinux
         $this->title = $title;
     }
     /**
+     * Returns title
+     */
+    public function  GetTitle()
+    {
+        return $this->title;
+    }
+    /**
      * Add a css tags to html doc
      * 
      * @param URI    css uri address
