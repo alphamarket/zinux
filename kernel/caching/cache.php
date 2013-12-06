@@ -79,7 +79,7 @@ abstract class cache {
         $cachedData = $this->_loadCache();
         if(!isset($cachedData[$key])) return NULL;
         if($meta) return $cachedData[$key];
-        (false === $timestamp) ? $type = 'data' : $type = 'time';
+        $type = ((false === $timestamp) ? 'data' : 'time');
         return $cachedData[$key][$type];
     }
 
@@ -216,5 +216,13 @@ abstract class cache {
             throw new \ErrorException("`$key` does not exists");
         }
         $this->save($key, $f, $expiration);
+    }
+    /**
+     * Get count of items that has been cached
+     * @return integer
+     */
+    public function count()
+    {
+        return count($this->fetchAll());
     }
 }
