@@ -33,9 +33,9 @@ class pipe extends \zinux\baseZinux
      * Write some data into pipe
      * @param mixed $data
      */
-    public function write($data)
+    public function write($data, $expiration = 0)
     {
-        $this->session_cache->save($this->session_cache->count() + 1, $data);
+        $this->session_cache->save($this->session_cache->count() + 1, $data, $expiration);
     }
     /**
      * Read an item from pipe and remove it from pipe
@@ -45,7 +45,10 @@ class pipe extends \zinux\baseZinux
     {
         foreach($this->session_cache->fetchAll() as $key=> $value)
         {
+            $expired = $this->session_cache->isExpired($key);                
             $this->session_cache->delete($key);
+            if($expired)
+                continue;
             return $value;
         }
         return NULL;
