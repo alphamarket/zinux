@@ -46,6 +46,38 @@ class string extends \zinux\baseZinux
        {
            return (strpos($haystack, $needle) !== false);
        }
-
-    public function Initiate(){}  
+        /**
+         * inverse the preg_quote()'s effects in a string
+         * @param string $str target string
+         * @param string $delimiter the delimiter user in string
+         * @return string inversed string
+         */
+        public static function inverse_preg_quote($str, $delimiter = NULL)
+        {
+            $ar = array(
+                '\\.'  => '.',
+                '\\\\' => '\\',
+                '\\+'  => '+',
+                '\\*'  => '*',
+                '\\?'  => '?',
+                '\\['  => '[',
+                '\\^'  => '^',
+                '\\]'  => ']',
+                '\\$'  => '$',
+                '\\('  => '(',
+                '\\)'  => ')',
+                '\\{'  => '{',
+                '\\}'  => '}',
+                '\\='  => '=',
+                '\\!'  => '!',
+                '\\<'  => '<',
+                '\\>'  => '>',
+                '\\|'  => '|',
+                '\\:'  => ':',
+                '\\-'  => '-'
+            );
+            if($delimiter)
+                $ar["\\$delimiter"] = $delimiter;
+            return strtr($str, $ar);
+        }
 }
