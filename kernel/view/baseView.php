@@ -133,9 +133,10 @@ class baseView extends \zinux\baseZinux
 	{
             if($view_name == $this->metadata->name)
                 throw new \zinux\kernel\exceptions\InvalideOperationException("Cannot partially load the currently loaded view...");
-
+            // backup current view name
+            $current_view_name = $this->metadata->name;
             // create a fake view handler
-            $nv = new baseView($this->request);
+            $nv = $this;
             // set view's name
             $nv->SetView($view_name);
             // is any args are set load it.
@@ -149,8 +150,8 @@ class baseView extends \zinux\baseZinux
             }
             // render fake view which is going to be our partial view
             $nv->Render();
-            // dispose values
-            $nv->Dispose();
+            // reset the view name
+            $this->setView($current_view_name);
 	}
 
 }
