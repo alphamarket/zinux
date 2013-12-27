@@ -80,4 +80,16 @@ class string extends \zinux\baseZinux
                 $ar["\\$delimiter"] = $delimiter;
             return strtr($str, $ar);
         }
+        /**
+        * Normalizes the given name and removes special characters and spaces and replaces them by '_' character. 
+        * @param string $string target string to normalize
+        * @param string $fix the fix part of name that should exists at end of $string 
+        */
+       public static function remove_special_chars(&$string, $fix = "")
+       {
+           $string = preg_replace (array('/[^\p{L}\p{N}]+/ui', "#^[0-9]+#i", '/^_/u', '/_$/u'), array("_", "", "", ""), $string);
+           $string = preg_replace (array("#^[0-9]+#i", '/^_/u', '/_$/u'), array("", "", ""), $string);
+           if(!strlen($fix)) return;
+           $string = preg_replace("#(\w+)$fix$#i", "$1", $string).ucfirst($fix);
+       }
 }
