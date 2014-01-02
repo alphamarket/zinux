@@ -19,7 +19,7 @@ class hash
      */
     public static function Generate($content, $regular_shuf = 1, $long_version = 0)
     {
-            $h = md5(sha1('@ha5Anbo0r'.md5($content).'dAr!u5h~#'));
+            $h = sha1(md5(sha1('@ha5Anbo0r'.md5($content).'dAr!u5h~#')));
             if($long_version)
                 $h.=md5($content);
             $o = $h;
