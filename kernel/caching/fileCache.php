@@ -66,7 +66,21 @@ class fileCache extends cache
           self::$_soft_cache[$this->getCacheName()] = $cacheData;
           $cacheData['hash-sum'] = $this->_getHash(serialize($cacheData));
           $cacheData = serialize($cacheData);
-          file_put_contents($this->getCacheFile(), $cacheData);
+          static $error_tracks = array();
+          # check if file exists?
+          if(!\file_exists($this->getCacheFile()))
+          {
+              # if not, create new one
+              \touch($this->getCacheFile());
+              # set permissions to global rw access
+              \chmod($this->getCacheFile(), 0666);
+          }
+          # fail safe for file streaming
+          if(!@file_put_contents($this->getCacheFile(), $cacheData) && !@$error_tracks[$this->getCacheFile()])
+          {
+                \trigger_error("<b>Permission denied for writing into</b> {$this->getCacheFile()} <b>[ any following errors on this file suppressed ]</b>", E_USER_WARNING);
+                $error_tracks[$this->getCacheFile()] = 1;
+          }
     }
     /**
      * Erase all cached entries
