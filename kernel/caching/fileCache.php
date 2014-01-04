@@ -34,8 +34,7 @@ class fileCache extends cache
         $path = self::$_cachedirectory;
         if(!isset($path) || !is_string($path) || !strlen($path))
         {
-            $path = sys_get_temp_dir()."/zinux-cache";
-            $this->setCachePath($path);
+            $this->setCachePath(self::getDefaultCacheDirectory());
         }
     }
 
@@ -184,21 +183,33 @@ class fileCache extends cache
     public function getExtension() {
         return $this->_extension;
     }
-    
-    public static function RegisterCachePath($path)
+    /**
+     * Register the global cache directory path
+     * @param string $path the cache directory path
+     * @param boolean $validate should validate the path existance?
+     * @throws \zinux\kernel\exceptions\notFoundException if cache directory not found
+     */
+    public static function RegisterCachePath($path, $validate = 1)
     {
         if(!strlen($path))
             throw new \zinux\kernel\exceptions\notFoundException("Cache directory address is empty ...");
         if($path[strlen($path)-1]!=DIRECTORY_SEPARATOR)
             $path = $path.DIRECTORY_SEPARATOR;
         self::$_cachedirectory=$path;
-        $c = new self;
-        $c->_checkCacheDir();
+        if($validate)
+        {
+            $c = new self;
+            $c->_checkCacheDir();
+        }
     }
-    
-    public function setCachePath($path)
+    /**
+     * Set cache direectory path
+     * @param string $path The cache directory path
+     * @param boolean $validate should validate the path existance?
+     */
+    public function setCachePath($path, $validate = 1)
     {
-        self::RegisterCachePath($path);
+        self::RegisterCachePath($path, $validate);
     }
 
     /**
@@ -209,11 +220,25 @@ class fileCache extends cache
     public function getCacheDirectory() {
         return self::$_cachedirectory;
     }
-    
+    /**
+     * Get cache name
+     * @param string $name
+     */
     public function setCacheName($name)
     {
         parent::setCacheName($name);
     }
-    
+    /**
+     * Get internal cached caches
+     * @return array
+     */
     public static function getInternalCaches() { return self::$_soft_cache; }
+    /**
+     * Get default cache directory
+     * @return string 
+     */
+    public static function getDefaultCacheDirectory()
+    {
+        return sys_get_temp_dir()."/zinux-cache";
+    }
 }
