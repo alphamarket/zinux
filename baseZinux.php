@@ -3,7 +3,7 @@ namespace zinux;
 
 if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
 {
-    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "3.2.6");
+    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "3.2.7");
 
     defined("ZINUX_BUILD_PHP_VERSION") || define("ZINUX_BUILD_PHP_VERSION", "5.3.10");
 
@@ -33,18 +33,35 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
             # fetch relative path using namespace map
             $c = str_replace("\\", DIRECTORY_SEPARATOR, $class);
             require_once 'kernel/utilities/fileSystem.php';
-            foreach(kernel\application\plugin::$plug_lists as $dir)
+            require_once "kernel/caching/fileCache.php";
+            # open up a file cache socket
+            $fc = new \zinux\kernel\caching\fileCache(PROJECT_ROOT."spl_autoload_register");
+            # fetch current cache directory
+            $current_cache_path = $fc->getCacheDirectory();
+            # switch cache directory to zinux's default cache directory
+            $fc->setCachePath($fc->getDefaultCacheDirectory());
+            # check if the class has been cached
+            if($fc->isCached($class))
+            {
+                # if so just require it
+                require_once $fc->fetch($class);
+            }
+            else foreach(kernel\application\plugin::$plug_lists as $dir)
             {
                 # include once the class' file using dynamic path finder!
                 $path = kernel\utilities\fileSystem::resolve_path("$dir"."$c.php");
                 # if file exists
                 if($path)
                 {
+                    # add the class with the its required path to cache
+                    $fc->save($class, $path);
                     # include it
                     require_once $path;
                     break;
                 }
             }
+            # switch back to previous cache direcotry
+            $fc->setCachePath($current_cache_path);
         },1,1);
 }
 /**
