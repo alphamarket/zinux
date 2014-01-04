@@ -43,7 +43,7 @@ class application extends \zinux\baseZinux
     protected $router;
     
     public function __construct($module_path = "../modules")
-    {            
+    {
         # this cannot move into init()
         $this->_startup_invoked = false;
         # initialize current application instance
@@ -52,7 +52,7 @@ class application extends \zinux\baseZinux
         if(!file_exists(\zinux\kernel\utilities\fileSystem::resolve_path($module_path)))
             die("Module directory not found!");
         # define module ROOT if not defined
-        defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path($module_path."/"));
+        defined('MODULE_ROOT') || define('MODULE_ROOT', \realpath(\zinux\kernel\utilities\fileSystem::resolve_path($module_path."/"))."/");
     }
     
     public function SetDBInitializer(dbInitializer $dbi)
