@@ -173,11 +173,9 @@ class request extends \zinux\baseZinux
 __LOADING_CACHE:
             # all folders in ../modules folders considered a module folder
             # define module root dir
-            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(
-                ZINUX_ROOT.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'modules'));
-            $namespace_prex = \trim(\str_replace(array(PROJECT_ROOT, "/"), array("", "\\"), MODULE_ROOT), "\\");
+            defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(ZINUX_ROOT.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'modules'));
             # define default module
-            $this->module = new \zinux\kernel\mvc\module("default", MODULE_ROOT."defaultModule", $namespace_prex);
+            $this->module = new \zinux\kernel\mvc\module("default", MODULE_ROOT."defaultModule");
             $module_dir = dirname($this->module->GetPath());
             # module collection instance
             $mc = new \stdClass();
@@ -192,6 +190,7 @@ __LOADING_CACHE:
             # checking if modules has been cached or not
             # don't use xCache it will overload the session file
             $fc = new \zinux\kernel\caching\fileCache(__CLASS__);
+            # checking if module cached
             if($fc->isCached(__FUNCTION__))
             {
                 # catch maintaining optz. 
@@ -211,13 +210,15 @@ __LOAD_MODULES:
             $mc->modules = array();
             # save directory modified time
             $mc->modified_time = filemtime($module_dir);
+            # fetching namespace prefixes for modules
+            $namespace_prex = \trim(\str_replace(array(PROJECT_ROOT, \DIRECTORY_SEPARATOR), array("", "\\"), MODULE_ROOT), "\\");
             # foreach module found 
             foreach($modules as $module)
             {
                 # add current module into our module collections
                 # except default module every other module
                 # has namespace with the module's name prefix
-                $m = new \zinux\kernel\mvc\module(basename($module), $module);
+                $m = new \zinux\kernel\mvc\module(basename($module), $module, $namespace_prex);
                 $mc->modules[] = $m;
             }
             # now module collection is ready
@@ -273,6 +274,7 @@ __FETCHING_MODULES:
             # validating controller
             if(!$this->controller->Load() || !$this->controller->CheckControllerExists())
             {
+                \zinux\kernel\utilities\debug::_var($this->controller,1);
                 # we don't have our class
                 throw new \zinux\kernel\exceptions\notFoundException("The controller `{$this->controller->full_name}` does not exists");
             }
