@@ -12,7 +12,7 @@ class module extends mvc
 {    
     public function Initiate(){}
     
-    public function __construct($name, $path = "")
+    public function __construct($name, $path = "", $namespace_prefix = "modules")
     {
         if(preg_match('/(\w+)module$/i', $name))
         {
@@ -20,10 +20,11 @@ class module extends mvc
         }
         parent::__construct($name, "{$name}Module");
         $this->SetPath(realpath($path));
+        $this->namespace_prex = $namespace_prefix;
     }
 
     public function GetNameSpace()
     {
-        return "modules\\{$this->full_name}";
+        return "{$this->namespace_prex}\\{$this->full_name}";
     }
 }
