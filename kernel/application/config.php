@@ -73,13 +73,15 @@ __RETURN:
      * @return string the config value
      * @throws \zinux\kernel\exceptions\invalideArgumentException if the config path not found
      */
-    public static function GetConfig($path = NULL, $_ =NULL)
+    public static function GetConfig($path, $splitter = ".")
     {
+        if(!$path || !\is_string($path))
+            throw new \zinux\kernel\exceptions\invalideArgumentException("The path not well-initialized!");
         $conf = self::GetAll();
-        foreach(func_get_args() as $arg)
+        foreach(array_filter(\explode($splitter, $path)) as $arg)
         {
             if(!isset($conf[$arg]))
-                throw new \zinux\kernel\exceptions\invalideArgumentException("index $arg does not exists in configuration array");
+                throw new \zinux\kernel\exceptions\invalideArgumentException("Index `$arg` does not exists in configuration array");
             $conf = $conf[$arg];
         }
         return $conf;
@@ -91,10 +93,12 @@ __RETURN:
      * @param string $_
      * @return boolean
      */
-    public static function Exists($path = NULL, $_ =NULL)
+    public static function Exists($path, $splitter = ".")
     {
+        if(!$path || !\is_string($path))
+            throw new \zinux\kernel\exceptions\invalideArgumentException("The path not well-initialized!");
         $conf = self::GetAll();
-        foreach(func_get_args() as $arg)
+        foreach(array_filter(\explode($splitter, $path)) as $arg)
         {
             if(!isset($conf[$arg]))
                 return false;
