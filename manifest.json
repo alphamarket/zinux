@@ -4,11 +4,5 @@
     "repo" : "https://github.com/dariushha/zinux",
     "modules":
     {
-        "zg" : 
-        {
-            "name" : "zg", 
-            "path" : "zg",
-            "repo" : "https://github.com/dariushha/zg"
-        }
     }
 }
