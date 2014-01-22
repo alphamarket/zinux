@@ -18,6 +18,8 @@ cd "$HOME/.zinux"
 echo -e "Starting to cloning \e[33mzinux\e[m..."
 echo -e "\e[33m\c"
 git clone --recursive https://github.com/dariushha/zinux.git
+git clone https://github.com/dariushha/zg.git
+cp zinux zg
 echo -e "\e[m\c"
 cd "$HOME/.zinux"
 echo -e "Modifing \e[33m\$HOME\e[m varibale content ..."
