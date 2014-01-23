@@ -3,7 +3,7 @@ namespace zinux;
 
 if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
 {
-    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "3.4.3");
+    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "3.4.4");
 
     defined("ZINUX_BUILD_PHP_VERSION") || define("ZINUX_BUILD_PHP_VERSION", "5.3.10");
 
@@ -27,14 +27,16 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
     $plugin->registerPlugin("PROJECT_ROOT");
     # dispose the instance
     unset($plugin);
-    /**
-     * caching suppression flag
-     */
+    # caching suppression flag
     $suppress_caching = 0;
+    # defines caching method in zinux autoloader
+    # set to FALSE to use fileSystem method
+    # set to TRUE to use memCache method
+    $use_memcache = 0;
     # register the general autoloader
     spl_autoload_register(
         function ($class) {
-            global $suppress_caching;
+            global $suppress_caching, $use_memcache;
             # fetch relative path using namespace map
             $c = str_replace("\\", DIRECTORY_SEPARATOR, $class);
             require_once 'kernel/utilities/fileSystem.php';
@@ -44,7 +46,7 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
                 # set a cache sig.
                 $cache_sig = PROJECT_ROOT."spl_autoload_register";
                 # flag if memcache is supported in system
-                $mem_cache_supported = \zinux\kernel\caching\memCache::Is_memCache_Supported();
+                $mem_cache_supported = $use_memcache && \zinux\kernel\caching\memCache::Is_memCache_Supported();
                 # if memcache not supported
                 if(!$mem_cache_supported)
                 {
@@ -102,10 +104,11 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
          */
         function delete_zinux_autoloader_caches()
         {
+            global $use_memcache;
             # set a cache sig.
             $cache_sig = PROJECT_ROOT."spl_autoload_register";
             # flag if memcache is supported in system
-            $mem_cache_supported = \zinux\kernel\caching\memCache::Is_memCache_Supported();
+            $mem_cache_supported = $use_memcache && \zinux\kernel\caching\memCache::Is_memCache_Supported();
             # if memcache not supported
             if(!$mem_cache_supported)
             {
@@ -130,10 +133,22 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
                 $cache->setCachePath($current_cache_path);
             }
         }
+        /**
+         * suppress autoloader caching functionality
+         */
         function suppress_zinux_autoloader_caching($should_suppress = 1)
         {
             global $suppress_caching;
             $suppress_caching = $should_suppress ? TRUE : FALSE;
+        }
+        /**
+         * set autloader caching method to memcache
+         * @param boolean $set_to_memcache set TRUE to let memcache handle things, otherwise filesystem will handler the caching
+         */
+        function set_zinux_autoloader_caching_handler($set_to_memcache = 0)
+        {
+            global $use_memcache;
+            $use_memcache = $set_to_memcache ? TRUE : FALSE;
         }
 }
 /**
