@@ -1,5 +1,6 @@
 <?php
 namespace zinux\kernel\caching;
+require_once 'arrayCache.php';
 /**
  * Represents a connection to a set of memcache servers.
  * @link http://www.php.net/manual/en/class.memcache.php
@@ -40,6 +41,11 @@ class memCache
      * @var \Memcache
      */
     protected $mem_cache_instace = null;
+    /**
+     * internal soft cache
+     * @var \zinux\kernel\caching\arrayCache
+     */
+    protected static $_soft_cache = array();
 
     /**
      * Create a new instance of memCache
@@ -72,7 +78,7 @@ class memCache
             # test connection with configurations
             $this->testConnection(1);
             # load relative key list
-            $this->loadkeys();
+            $this->loadcache();
         }
         else
         {
@@ -112,32 +118,57 @@ class memCache
      * connect to memCache and load keys
      * @link http://www.php.net/manual/en/memcache.connect.php
      */
-    protected function connect()
+     function connect()
     {
         if (!@$this->mem_cache_instace->connect($this->_host, $this->_port))
         {
             $this->mem_cache_instace = null;
-            throw new \Exception("Unable to connect to memCacher server at '{$this->_host}::{$this->_port}'.");
+            throw new \Exception("Unable to connect to memCacher server at '{$this->_host}:{$this->_port}'.");
         }
     }
     /**
      * loads relative key lists to current cache name
      */
-    protected function loadkeys()
+    protected function loadcache()
     {
         $this->connect();
-        if(!isset(self::$_keys[$this->_cachename]))
+        if(!isset(self::$_soft_cache[$this->_cachename]))
         {
-            $keys = $this->mem_cache_instace->get("keys-{$this->_cachename}");
-            self::$_keys[$this->_cachename] = ($keys === false ? array() : $keys);
+            $cache = $this->mem_cache_instace->get($this->genKey());
+            self::$_soft_cache[$this->_cachename] = ($cache === false ? new \zinux\kernel\caching\arrayCache($this->genKey()) : $cache);
         }
         $this->disconnect();
+    }
+    /**
+     * get relative internal cache
+     * @return \zinux\kernel\caching\arrayCache
+     */
+    protected function get_internal_cache()
+    {
+        return isset(self::$_soft_cache[$this->_cachename]) ? self::$_soft_cache[$this->_cachename] : NULL;
+    }
+    /**
+     * initialize relative internal cache
+     * @return \zinux\kernel\caching\arrayCache
+     */
+    protected function init_internal_cache()
+    {
+        self::$_soft_cache[$this->_cachename] = new \zinux\kernel\caching\arrayCache($this->genKey());
+        return self::$_soft_cache[$this->_cachename];
+    }
+    /**
+     * deinitialize relative internal cache
+     */
+    protected function deinit_internal_cache()
+    {
+        unset(self::$_soft_cache[$this->_cachename]);
+        $this->init_internal_cache();
     }
     /**
      * disconnect from memCache
      * @link http://www.php.net/manual/en/memcache.close.php
      */
-    protected function disconnect()
+     function disconnect()
     {
         $this->mem_cache_instace->close();
     }
@@ -146,9 +177,11 @@ class memCache
      * @param string $key
      * @return string
      */
-    protected function genKey($key)
+     function genKey(\zinux\kernel\caching\memCache $mc = NULL)
     {
-        return $this->_cachename.$key;
+        if(!$mc)
+            $mc = $this;
+        return "cache-{$mc->_cachename}";
     }
     /**
      * Retrieve cached data by its key
@@ -157,13 +190,22 @@ class memCache
      * @return mixed
      * @link http://www.php.net/manual/en/memcache.get.php
      */
-    public function fetch($key) {
-        $this->connect();
-        $data = $this->mem_cache_instace->get($this->genKey($key));
-        $this->disconnect();
-        return ($data === false) ? null : $data;
+    public function fetch($key, $meta = false)
+    {
+        $iCache = $this->get_internal_cache();
+        if($iCache && $iCache->isCached($key))
+            return $this->get_internal_cache()->fetch($key, $meta);
+        return NULL;
     }
-
+    /**
+     * @param timespan $expiration the expiration will sum with NOW datetime
+     */
+    public function setExpireTime($key, $expiration)
+    {
+        if(!$this->get_internal_cache()->isCached($key)) return FALSE;
+        $this->get_internal_cache()->setExpireTime($key, $expiration);
+        $this->mem_cache_instace->replace($this->genKey(), $this->get_internal_cache());
+    }
     /**
      * Store data in the cache
      *
@@ -173,13 +215,22 @@ class memCache
      * @return object
      * @link http://www.php.net/manual/en/memcache.set.php
      */
-    public function save($key, $data, $expire = 0) {
+    public function save($key, $data, $expire = 0) 
+    {
+        require_once PROJECT_ROOT."/zinux/kernel/utilities/debug.php";
+        #\zinux\kernel\utilities\debug::stack_trace();
+        $this->get_internal_cache()->save($key, $data, $expire);
+//        \zinux\kernel\utilities\debug::_var($this->get_internal_cache());
         $this->connect();
-        $res = $this->mem_cache_instace->set($this->genKey($key), $data, $expire);
-        if($this->mem_cache_instace->get($this->genKey($key)) != $data)
+        if(!($res = $this->mem_cache_instace->replace($this->genKey(), $this->get_internal_cache())))
+        {
+            $res = $this->mem_cache_instace->set($this->genKey(), $this->get_internal_cache());
+        }
+        if($this->mem_cache_instace->get($this->genKey()) != $this->get_internal_cache())
+        {
+            $this->disconnect();
             return FALSE;
-        self::$_keys[$this->_cachename][$key] = $key;
-        $this->mem_cache_instace->set("keys-{$this->_cachename}", self::$_keys[$this->_cachename]);
+        }
         $this->disconnect();
         return $res;
     }
@@ -190,11 +241,17 @@ class memCache
      * @return boolean TRUE if deletion was successful; otherwise FALSE
      * @link http://www.php.net/manual/en/memcache.get.php
      */
-    public function delete($key) {
+    public function delete($key)
+    {
+        if(!$this->get_internal_cache()->isCached($key)) return TRUE;
+        $this->get_internal_cache()->delete($key);
         $this->connect();
-        $res = $this->mem_cache_instace->delete($this->genKey($key));
-        unset(self::$_keys[$this->_cachename][$key]);
-        $this->mem_cache_instace->set("keys-{$this->_cachename}", self::$_keys[$this->_cachename]);
+        $res = $this->mem_cache_instace->replace($this->genKey(), $this->get_internal_cache());
+        if($this->mem_cache_instace->get($this->genKey()) != $this->get_internal_cache())
+        {
+            $this->disconnect();
+            return FALSE;
+        }
         $this->disconnect();
         return $res;
     }
@@ -203,24 +260,9 @@ class memCache
      *
      * @return array
      */
-    public function fetchAll()
+    public function fetchAll($meta = false)
     {
-        $this->connect();
-        $data = array();
-        foreach(self::$_keys[$this->_cachename] as $key)
-        {
-            $data[$key] = $this->mem_cache_instace->get($this->genKey($key));
-        }
-        $this->disconnect();
-        return $data;
-    }
-    /**
-     * get all keys registered with this cache
-     * @return array
-     */
-    public function getKeys()
-    {
-        return isset(self::$_keys[$this->_cachename]) ? self::$_keys[$this->_cachename] : array();
+        return $this->get_internal_cache()->fetchAll($meta);
     }
     /**
      * Erase all cached entries
@@ -228,13 +270,9 @@ class memCache
     public function deleteAll()
     {
         $this->connect();
-        foreach(self::$_keys[$this->_cachename] as $key)
-        {
-            $this->mem_cache_instace->delete($this->genKey($key));
-        }
-        $this->mem_cache_instace->delete("keys-{$this->_cachename}");
+        $this->mem_cache_instace->delete($this->genKey());
         $this->disconnect();
-        unset(self::$_keys[$this->_cachename]);
+        $this->deinit_internal_cache();
     }
     /**
      * Check whether data accociated with a key
@@ -244,7 +282,7 @@ class memCache
      */
     public function isCached($key)
     {
-        return $this->fetch($key) !== NULL ? true : false;
+        return $this->get_internal_cache()->isCached($key);
     }
     /**
      * Cache name Setter
@@ -254,7 +292,7 @@ class memCache
      */
     public function setCacheName($name) {
         $this->_cachename = $name;
-        return $this;
+        
     }
 
     /**
@@ -262,8 +300,8 @@ class memCache
      *
      * @return void
      */
-    public function getCacheName(){
-        return $this->_cachename;
+    public function getCacheName($real_name = 0){
+        return $real_name ? $this->genKey() : $this->_cachename;
     }
 
     /**
@@ -272,7 +310,7 @@ class memCache
      */
     public function count()
     {
-        return count(self::$_keys[$this->_cachename]);
+        return $this->get_internal_cache()->count();
     }
     /**
      * Flush all existing items at the server
