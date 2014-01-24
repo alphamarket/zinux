@@ -32,10 +32,10 @@ class memCache
      */
     protected $_port;
     /**
-     * the keys holder
-     * @var array
+     * save updates on destruction
+     * @var boolean
      */
-    protected static $_keys = array();
+    protected $_save_on_destruction;
     /**
      * the memcache object
      * @var \Memcache
@@ -46,6 +46,11 @@ class memCache
      * @var \zinux\kernel\caching\arrayCache
      */
     protected static $_soft_cache = array();
+    /**
+     * dirty flager
+     * @var array 
+     */
+    protected static $_dirty = array();
 
     /**
      * Create a new instance of memCache
@@ -54,6 +59,7 @@ class memCache
      * {
      *      "host" : the memcache host address,
      *      "port" : the memcache server port number
+     *      "save_on_destruction" : should updates get saved on destruction, or not [ default:false ]
      * } </pre>
      * @link http://www.php.net/manual/en/book.memcache.php Memcache official page
      */
@@ -69,10 +75,23 @@ class memCache
                 $options["host"] = self::DEFAULT_MEMCACHE_HOST;
             if(!isset($options["port"]))
                 $options["port"] = self::DEFAULT_MEMCACHE_PORT;
+            if(!isset($options["save_on_destruction"]))
+                $options["save_on_destruction"] = false;
             # set host address
             $this->_host = $options["host"];
             # set port address
             $this->_port = $options["port"];
+            # save changes on destruction
+            $this->_save_on_destruction = $options["save_on_destruction"];
+            if($this->_save_on_destruction)
+            {
+                static $shutdown_in_effect_array = array();
+                if(!isset($shutdown_in_effect_array[$name]))
+                {
+                    $shutdown_in_effect_array[$name] = true;
+                    register_shutdown_function(array(__CLASS__, 'Dispose'), $name, $options);
+                }
+            }
             # set cache name
             $this->_cachename = $name;
             # test connection with configurations
@@ -84,6 +103,23 @@ class memCache
         {
             \trigger_error("\Memcache not found for furture information check <a href='http://www.php.net/manual/en/book.memcache.php' target='__blank'>this</a>.", \E_USER_ERROR);
         }
+    }
+    public static function Dispose($cache_name, $options = array())
+    {
+        unset($options["save_on_destruction"]);
+        $mc = new self($cache_name, $options);
+        if(!$mc->is_dirty()) return;
+        $mc->connect();
+        if(!($res = $mc->mem_cache_instace->replace($mc->genKey(), $mc->get_internal_cache())))
+        {
+            $res = $mc->mem_cache_instace->set($mc->genKey(), $mc->get_internal_cache());
+        }
+        if($mc->mem_cache_instace->get($mc->genKey()) != $mc->get_internal_cache())
+        {
+            $mc->disconnect();
+            throw new \Exception("It seems race condition happened on saving cache updates, updates not saved!");
+        }
+        $mc->disconnect();
     }
     /**
      * check if memcache supported with current system configurations
@@ -139,6 +175,14 @@ class memCache
         }
         $this->disconnect();
     }
+    protected function is_dirty()
+    {
+        return isset(self::$_dirty[$this->_cachename]) ? self::$_dirty[$this->_cachename] : FALSE;
+    }
+    protected function make_dirty()
+    {
+        self::$_dirty[$this->_cachename] = TRUE;
+    }
     /**
      * get relative internal cache
      * @return \zinux\kernel\caching\arrayCache
@@ -162,6 +206,7 @@ class memCache
     protected function deinit_internal_cache()
     {
         unset(self::$_soft_cache[$this->_cachename]);
+        $this->make_dirty();
         $this->init_internal_cache();
     }
     /**
@@ -204,6 +249,8 @@ class memCache
     {
         if(!$this->get_internal_cache()->isCached($key)) return FALSE;
         $this->get_internal_cache()->setExpireTime($key, $expiration);
+        $this->make_dirty();
+        if($this->_save_on_destruction) return true;
         $this->mem_cache_instace->replace($this->genKey(), $this->get_internal_cache());
     }
     /**
@@ -217,10 +264,9 @@ class memCache
      */
     public function save($key, $data, $expire = 0) 
     {
-        require_once PROJECT_ROOT."/zinux/kernel/utilities/debug.php";
-        #\zinux\kernel\utilities\debug::stack_trace();
         $this->get_internal_cache()->save($key, $data, $expire);
-//        \zinux\kernel\utilities\debug::_var($this->get_internal_cache());
+        $this->make_dirty();
+        if($this->_save_on_destruction) return true;
         $this->connect();
         if(!($res = $this->mem_cache_instace->replace($this->genKey(), $this->get_internal_cache())))
         {
@@ -245,6 +291,8 @@ class memCache
     {
         if(!$this->get_internal_cache()->isCached($key)) return TRUE;
         $this->get_internal_cache()->delete($key);
+        $this->make_dirty();
+        if($this->_save_on_destruction) return true;
         $this->connect();
         $res = $this->mem_cache_instace->replace($this->genKey(), $this->get_internal_cache());
         if($this->mem_cache_instace->get($this->genKey()) != $this->get_internal_cache())
@@ -322,7 +370,8 @@ class memCache
         $this->connect();
         $this->mem_cache_instace->flush();
         $this->disconnect();
-        self::$_keys = array();
+        self::$_soft_cache = array();
+        $this->deinit_internal_cache();
         if($wait_on_flush)
             \sleep(1);
     }
