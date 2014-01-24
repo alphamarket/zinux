@@ -3,7 +3,7 @@ namespace zinux;
 
 if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
 {
-    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "3.4.4");
+    defined("ZINUX_BUILD_VERSION") || define("ZINUX_BUILD_VERSION", "3.4.5");
 
     defined("ZINUX_BUILD_PHP_VERSION") || define("ZINUX_BUILD_PHP_VERSION", "5.3.10");
 
@@ -33,18 +33,21 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
     # set to FALSE to use fileSystem method
     # set to TRUE to use memCache method
     $use_memcache = 0;
+    # options container for memcache
+    $mem_cache_options = array();
     # register the general autoloader
     spl_autoload_register(
         function ($class) {
-            global $suppress_caching, $use_memcache;
+            global $suppress_caching, $use_memcache, $mem_cache_options;
             # fetch relative path using namespace map
             $c = str_replace("\\", DIRECTORY_SEPARATOR, $class);
-            require_once 'kernel/utilities/fileSystem.php';
             if(!$suppress_caching)
             {
-                require_once "kernel/caching/memCache.php";
                 # set a cache sig.
-                $cache_sig = PROJECT_ROOT."spl_autoload_register";
+                static $cache_sig = NULL;
+                if(!$cache_sig)
+                    $cache_sig = PROJECT_ROOT."spl_autoload_register";
+                require_once "kernel/caching/memCache.php";
                 # flag if memcache is supported in system
                 $mem_cache_supported = $use_memcache && \zinux\kernel\caching\memCache::Is_memCache_Supported();
                 # if memcache not supported
@@ -62,7 +65,7 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
                 else
                 {
                     # open up a memcache cache socket
-                    $cache = new \zinux\kernel\caching\memCache($cache_sig);
+                    $cache = new \zinux\kernel\caching\memCache($cache_sig, $mem_cache_options);
                 }
                 # check if the class has been cached
                 if($cache->isCached($class))
@@ -78,6 +81,7 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
             # look into plugins
             foreach(kernel\application\plugin::$plug_lists as $dir)
             {
+                require_once 'kernel/utilities/fileSystem.php';
                 # include once the class' file using dynamic path finder!
                 $path = kernel\utilities\fileSystem::resolve_path("$dir"."$c.php");
                 # if file exists
@@ -149,6 +153,14 @@ if(!defined("ZINUX_ROOT") || !defined('PROJECT_ROOT'))
         {
             global $use_memcache;
             $use_memcache = $set_to_memcache ? TRUE : FALSE;
+        }
+        /**
+         * get memcache options for zinux autloader
+         */
+        function set_zinux_autoloader_memCache_options(array $options)
+        {
+            global $mem_cache_options;
+            $mem_cache_options = $options;
         }
 }
 /**
