@@ -53,7 +53,6 @@ class sessionCache extends cache
     protected function _saveData(array $cacheData){
         $this->_cachepath = self::$_cachedirectory;
         self::$_soft_cache[$this->_cachepath][$this->_cachename] = $cacheData;
-        $cacheData['hash-sum'] = $this->_getHash(serialize($cacheData));
         $cacheData = serialize($cacheData);
         if(!session_id() && !headers_sent())
             session_start();
@@ -71,22 +70,7 @@ class sessionCache extends cache
             return self::$_soft_cache[$this->_cachepath][$this->_cachename];
         if(!isset($_SESSION[$this->_cachepath][$this->_cachename]))
             return  false;
-        $u = unserialize($_SESSION[$this->_cachepath][$this->_cachename]);
-        if(!isset($u['hash-sum']))
-        {
-            unset($_SESSION[$this->_cachepath][$this->_cachename]);
-            trigger_error("cache data miss-hashed, cache file deleted...");
-            return false;
-        }
-        $h = $u['hash-sum'];
-        unset($u['hash-sum']);
-        if($h != $this->_getHash(serialize($u)))
-        {
-            unset($_SESSION[$this->_cachepath][$this->_cachename]);
-            trigger_error("cache data miss-hashed, cache file deleted...");
-            return false;
-        }  
-        return $u;
+        return (self::$_soft_cache[$this->_cachepath][$this->_cachename] = unserialize($_SESSION[$this->_cachepath][$this->_cachename]));
     }
     /**
      * Delete all data in current cache 
@@ -104,8 +88,7 @@ class sessionCache extends cache
     public function setCachePath($path) {
         self::$_cachedirectory = $path;
         $this->save("", "");
-        $this->delete("");
-        return $this;
+        $this->delete("");        
     }
     /**
      * Cache path Getter

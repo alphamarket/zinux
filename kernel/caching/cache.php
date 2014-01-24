@@ -42,7 +42,7 @@ abstract class cache {
      */
     public function isCached($key) {
         $cachedData = $this->_loadCache();
-        return isset($cachedData[$key]['data']);
+        return isset($cachedData[$key]);
     }
 
     /**
@@ -55,10 +55,13 @@ abstract class cache {
      */
     public function save($key, $data, $expiration = 0) {
         $storeData = array(
-            'time'   => time(),
-            'expire' => $expiration,
             'data'   => $data
         );
+        if($expiration)
+        {
+            $storeData['time'] = time();
+            $storeData['expire'] = $expiration;
+        }
         $dataArray = $this->_loadCache();
         if (true === is_array($dataArray)) {
             $dataArray[$key] = $storeData;
@@ -66,7 +69,6 @@ abstract class cache {
             $dataArray = array($key => $storeData);
         }
         $this->_saveData($dataArray);
-        return $this;
     }
     /**
      * Retrieve cached data by its key
@@ -75,12 +77,13 @@ abstract class cache {
      * @param boolean [optional] $timestamp
      * @return string
      */
-    public function fetch($key, $meta = false, $timestamp = false) {
+    public function fetch($key, $meta = false) {
+        if($this->deleteExpired($key))
+            return NULL;
         $cachedData = $this->_loadCache();
         if(!isset($cachedData[$key])) return NULL;
         if($meta) return $cachedData[$key];
-        $type = ((false === $timestamp) ? 'data' : 'time');
-        return $cachedData[$key][$type];
+        return $cachedData[$key]["data"];
     }
 
     /**
@@ -90,12 +93,14 @@ abstract class cache {
      * @return array
      */
     public function fetchAll($meta = false) {
-        if ($meta === false) {
+        if (!$meta) {
             $results = array();
             $cachedData = $this->_loadCache();
             if ($cachedData) {
                 foreach ($cachedData as $k => $v) {
-                  $results[$k] = $v['data'];
+                    if($this->deleteExpired($k))
+                        continue;
+                    $results[$k] = $v['data'];
                 }
             }
             return $results;
@@ -117,24 +122,30 @@ abstract class cache {
                 unset($cacheData[$key]);
                 $this->_saveData($cacheData);
             }
-        }
-        return $this;
+        }        
     }
 
     /**
      * Erase all expired entries
-     * 
+     * @param string $key if a key passed, only delete the key if it is expired; otherwise checks expired keys in all cached data
      * @return integer
      */
-    public function deleteExpired() {
+    public function deleteExpired($key = NULL) {
         $cacheData = $this->_loadCache();
         if (true === is_array($cacheData)) {
             $counter = 0;
-            foreach ($cacheData as $key => $entry) {
-            if (true === $this->_checkExpired($entry['time'], $entry['expire'])) {
-                unset($cacheData[$key]);
-                $counter++;
-            }
+            if($key)
+                if(!isset($cacheData[$key]))
+                    return true;
+                elseif (isset($cacheData[$key]['expire']) && true === $this->_checkExpired($cacheData[$key]['time'], $cacheData[$key]['expire'])) {
+                    unset($cacheData[$key]);
+                    $counter++;
+                }
+            else foreach ($cacheData as $key => $entry) {
+                if (isset($cacheData[$key]['expire']) && true === $this->_checkExpired($entry['time'], $entry['expire'])) {
+                    unset($cacheData[$key]);
+                    $counter++;
+                }
             }
             if ($counter > 0) {
                 $this->_saveData($cacheData);
@@ -142,10 +153,19 @@ abstract class cache {
             return $counter;
         }
     }
-    public function isExpired($key)
+    public function isExpired($key, $is_meta = 0)
     {
-        $cacheData = $this->fetch($key, 1);
-        return $this->_checkExpired($cacheData['time'], $cacheData['expire']);
+        if($is_meta)
+            $meta = $key;
+        else
+        {
+            $cacheData = $this->_loadCache();
+            if(!isset($cacheData[$key])) return TRUE;
+            $meta = $cacheData[$key];
+        }
+        if(!isset($cacheData[$key]['expire']))
+            return false;
+        return $this->_checkExpired($meta['time'], $meta['expire']);
     }
     /**
      * Get the filename hash
@@ -164,12 +184,11 @@ abstract class cache {
      * @return boolean
      */
     protected function _checkExpired($timestamp, $expiration) {
-        $result = false;
         if ($expiration !== 0) {
             $timeDiff = time() - $timestamp;
-            ($timeDiff > $expiration) ? $result = true : $result = false;
+            return ($timeDiff > $expiration) ? true : false;
         }
-        return $result;
+        return false;
     }
 
     /**
@@ -194,8 +213,7 @@ abstract class cache {
      * @return object
      */
     public function setCacheName($name) {
-        $this->_cachename = $name;
-        return $this;
+        $this->_cachename = $name;        
     }
 
     /**
@@ -223,6 +241,7 @@ abstract class cache {
      */
     public function count()
     {
-        return count($this->fetchAll());
+        if(!($cachedData = $this->_loadCache())) return 0;
+        return count($cachedData);
     }
 }
