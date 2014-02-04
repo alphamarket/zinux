@@ -46,7 +46,7 @@ Topics
 
 Requirements
 --
-* PHP version 5.3.10 or greater
+* PHP version 5.5.8 or greater
 
 Installation
 --

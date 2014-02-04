@@ -20,5 +20,5 @@ abstract class baseConfigLoader extends \zinux\kernel\application\baseInitialize
      * @var string
      */
     public $file_address;
-    public abstract function __construct($config_file_address, array $options = array());
+    public function __construct($config_file_address, array $options = array()){ }
 }

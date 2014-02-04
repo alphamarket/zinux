@@ -94,10 +94,10 @@ class xCache extends cache
         $this->_file_cache->deleteAll();
     }
     
-    public function deleteExpired()
+    public function deleteExpired($key = NULL)
     {
-        $this->_session_cache->deleteExpired();
-        $this->_file_cache->deleteExpired();
+        $this->_session_cache->deleteExpired($key);
+        $this->_file_cache->deleteExpired($key);
     }
     
     public function isCached($key)
