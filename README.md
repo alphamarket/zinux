@@ -1,10 +1,10 @@
-zinux 
+zinux
 ====
 <i>A simple and lightweight but powerful framework supporting MVC design pattern</i>
 --
 In this project i have tried to make its uses so simple.
 The <i>zinux</i>'s policy is [Convention Over Configuration](http://en.wikipedia.org/wiki/Convention_over_configuration)
-which leads it to run with minimal configuration and much more flexibility, 
+which leads it to run with minimal configuration and much more flexibility,
 you will find it very convenient to use and develop.
 
 > There are also a [demo project](#demo-project) and a [zinux generator tool](#zinux-generator-tool) available.
@@ -13,7 +13,7 @@ Topics
 --
 * [Requirements](#requirements)
 * [Installation](#installation)
-  * [Windows Users](#windows-users) 
+  * [Windows Users](#windows-users)
 * [Directory Structure](#directory-structure)
 * [Quick Setup](#quick-setup)
 * [MVC Entities](#mvc-entities)
@@ -28,15 +28,15 @@ Topics
 		* [Module Bootstrap Example](#module-bootstrap-example)
 * [Working With MVC Entities (Basics)](#working-with-mvc-entities-basics)
   * [Passing Variables To View](#passing-variables-to-view)
-  * [Passing Variables To Layout](#passing-variables-to-layout)  
+  * [Passing Variables To Layout](#passing-variables-to-layout)
   * [Changing View](#changing-view)
   * [Changing Layout](#changing-layout)
   * [Loading Models](#loading-models)
   * [Loading Helpers](#loading-helpers)
   * [A Controller Example](#a-controller-example)
 * [Adavnced](#adavnced)
-  * [Custom Routing](#custom-routing) 
-  		* [How To Register Routers](#how-to-register-routers) 
+  * [Custom Routing](#custom-routing)
+	* [How To Register Routers](#how-to-register-routers)
   * [Binding Custom Configuration File to Application](#binding-custom-configuration-file-to-application)
   * [Binding Database Handler To Application](#binding-database-handler-to-application)
   * [Adding Plugins](#adding-plugins)
@@ -47,29 +47,37 @@ Topics
 Requirements
 --
 * PHP version 5.5.8 or greater
+> If your PHP version is less than v5.5.8 but greater or equal then v5.3.10 you can use the latest version of <i>zinux</i>
+which is compatible with PHP v5.3.10. but consider that this version won't be updated with changes made in <i>zinux</i>
+v4.0.0 or greater. The latest version of can be found at [zinux@3.4.6](https://github.com/dariushha/zinux/tree/3.4.6).
+but we strongly suggest that you upgrade your PHP version, because there are lots of new feature and some bug fixes in
+<i>zinux</i> v4.0.0 or greater.
+<hr />
+> <b>Note:</b> The original <i>zinux</i> was written and tested in PHP v5.3.10, there is no WARRANTY for PHP's other versions
+syntax/work-arounds compatibilities for this product.
 
 Installation
 --
-There is a [zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer) shell script, it will 
+There is a [zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer) shell script, it will
 automatically download and configure your system to use <i>zinux</i> project freely in your system.<br />
 It also installs [zinux generator tool](https://github.com/dariushha/zg) which is an handy tool to create, manipulate
 and provides solid security for your <i>zinux</i> project, for more information see
 [Zinux Generator Tool](#zinux-generator-tool).
 
 > You will need to have [Git](http://git-scm.com/) installed before using
-[zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer). 
+[zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer).
 
-For installation just download the [zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer) 
-and save it at anywhere, and run the following command `bash /path/to/your/zinux/installer` it will do the reset. 
+For installation just download the [zinux installer](https://raw.github.com/dariushha/zinux/master/zinux-installer)
+and save it at anywhere, and run the following command `bash /path/to/your/zinux/installer` it will do the reset.
 
 Windows Users
 --
-For technical reasons zinux generator does not support Windows!! 
+For technical reasons zinux generator does not support Windows!!
 You just have to clone and use the framework manually.<br />
 We are sorry about this....
- 
+
 > Some advise for PHP developers, you cannot become a professional PHP developer and develop a full
-scale PHP application within windows, you just cannot!! so maybe it is time to move your PHP developments 
+scale PHP application within windows, you just cannot!! so maybe it is time to move your PHP developments
 on linux.
 
 Directory Structure
@@ -85,7 +93,7 @@ Create project directory structure as follow.( or `zg new PROJECT_NAME` command 
                 |_ Layout
                 |_ Helper
                 |_ View
-                
+
     |_ zinux (the library)
     |_ public_html
     |_ *
@@ -100,24 +108,24 @@ Quick Setup
 Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index.php</b> file add following codes
 
 ```php
-<?php    
+<?php
     # PROJECT-ROOT/public_html/index.php
-    
+
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
-    
+
     require_once '../zinux/baseZinux.php';
-    
+
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
-    
+
     $app ->Startup()
          ->Run()
          ->Shutdown();
-         
+
 ```
 
-and also create a <b><i>.htaccess</i></b> in the same directory as your <b>index.php</b> is and add 
+and also create a <b><i>.htaccess</i></b> in the same directory as your <b>index.php</b> is and add
 following code route requestes to index.php.
 
 ```
@@ -157,13 +165,13 @@ See [naming convention](#naming-conventsion) for MVC Entities
 
 Autoloading Classes and Files
 ---
-<i>zinux</i> uses [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) 
-namespace conventions to load [MVC Entities](#mvc-entities). so as long as [MVC Entities](#mvc-entities) follow 
-[PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) 
-the <i>zinux</i>'s autoloader may be able to load those classes and beside `require_once '../zinux/baseZinux.php'` 
-no `require` needed for loading classes!  
+<i>zinux</i> uses [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
+namespace conventions to load [MVC Entities](#mvc-entities). so as long as [MVC Entities](#mvc-entities) follow
+[PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
+the <i>zinux</i>'s autoloader may be able to load those classes and beside `require_once '../zinux/baseZinux.php'`
+no `require` needed for loading classes!
 
-> <b>Note:</b> classes and relative files should have same name. [not necessarily case-sensitive] 
+> <b>Note:</b> classes and relative files should have same name. [not necessarily case-sensitive]
 
 
 
@@ -311,7 +319,7 @@ MVC entities naming convension is as following table:
 
 Path Resolver
 ---
-In UNIX style OS(e.g Linux) which the directory mapping is case-sensitive so sometimes it gets hard when we developing 
+In UNIX style OS(e.g Linux) which the directory mapping is case-sensitive so sometimes it gets hard when we developing
 large scale projects and keeping in mind that every file and folder should named as library's defined standard naming
 (i.e you cannot miss-case a letter in your namings) <b>it sucks!!</b><br />
 So i have developed a very fast and effective <b>path solver</b> which empower the library with non-case sensitive files and folders
@@ -320,7 +328,7 @@ naming style!<br /><br />
 
 > <b>Note:</b> The path solver class is as fast as `file_exist()` operation which is inevitable when loading items!
 it uses custom made cache system which is very very fast and effective and makes path solver very smooth!
-so you don't need to worry about runtime factors, when it comes to path resolver! 
+so you don't need to worry about runtime factors, when it comes to path resolver!
 
 Bootstraping
 ---
@@ -344,12 +352,12 @@ Application Bootstraps
 <dl>
   <dt>pre-straps</dt>
   <dd>
-    <b>Before</b> executing any operation regaurding to application, <i>zinux</i> launches <b>pre-straps</b>  
+    <b>Before</b> executing any operation regaurding to application, <i>zinux</i> launches <b>pre-straps</b>
     methods, of course if any defined.(See [bellow](#registering-application-bootstrap) for how to definition pre-straps.)
   <dd>
   <dt>post-straps</dt>
   <dd>
-    <b>After</b> executing the application, <i>zinux</i> launches <b>post-straps</b>  
+    <b>After</b> executing the application, <i>zinux</i> launches <b>post-straps</b>
     methods, of course if any defined.(See bellow for how to definition post-straps.)
   <dd>
 </dl>
@@ -362,7 +370,7 @@ in following directory path
     |_ application
        |_ SomeAppBootstrap.php
        |_ AnotherAppBoostrap.php
-       
+
     |_ Modules
     |_ zinux (the library)
     |_ public_html
@@ -381,42 +389,42 @@ Assume we have boostrap class called <b>appBoostrap</b> under <b>PROJECT-ROOT/ap
 <?php
     # PROJECT-ROOT/application/appBoostrap.php
     namespace application;
-    
+
     class appBoostrap extends \zinux\kernel\application\applicationBootstrap
     {
         public function PRE_CHECK(\zinux\kernel\routing\request &$request)
         {
             /**
              * this is a pre-strap function use this on pre-bootstrap opt.
-             * @param \zinux\kernel\routing\request $request 
+             * @param \zinux\kernel\routing\request $request
              */
         }
-        
+
         public function post_FOO(\zinux\kernel\routing\request $request)
         {
             /**
              * this is a post-strap function use this on post-bootstrap opt.
-             * @param \zinux\kernel\routing\request $request 
+             * @param \zinux\kernel\routing\request $request
              */
         }
     }
 ```
-> <b>Note:</b> Application bootsrap classes should inherit from `\zinux\kernel\application\applicationBootstrap`. 
+> <b>Note:</b> Application bootsrap classes should inherit from `\zinux\kernel\application\applicationBootstrap`.
 
 By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 
 ```php
-<?php    
+<?php
     # PROJECT-ROOT/public_html/index.php
-    
+
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
-    
+
     require_once '../zinux/baseZinux.php';
-    
+
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
-    
+
     $app ->Startup()
          /*
          * This part is added to previous
@@ -425,7 +433,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
          ->SetBootstrap(new \application\appBootstrap)
          ->Run()
          ->Shutdown();
-         
+
 ```
 Now your <b>appBootstrap</b> is registered in <i>zinux</i> and will get called automatically, through booting project.
 
@@ -433,7 +441,7 @@ Now your <b>appBootstrap</b> is registered in <i>zinux</i> and will get called a
 have multiple project bootstrap file: (But of course i discourage to have multiple project boostrap file, it may cause
 confusion at application level.)
 
-```PHP    
+```PHP
   $app ->Startup()
        /*
         * 1'st boostrap file
@@ -449,7 +457,7 @@ confusion at application level.)
 
 Modules Bootstrap
 ---
-<i>zinux</i> uses bootstrap file(if any exists when loading modules) to bootstrap the modules, 
+<i>zinux</i> uses bootstrap file(if any exists when loading modules) to bootstrap the modules,
 bootstrap files are at following map:
 
 <pre>
@@ -466,7 +474,7 @@ bootstrap files are at following map:
             |_ Models
             |_ Views
             |_ DefaultBootstrap.php *(your module bootstrap)
-                
+
     |_ zinux (the library)
     |_ public_html
     |_ *
@@ -480,7 +488,7 @@ In bootstrap file which is a class file there are 2 kind of methods <b>Predispat
    <dt>Predispatch</dt>
    <dd>
       Runs before dispatching to action method!
-      good for operations like detecting language 
+      good for operations like detecting language
       or checking if user is logged in or not
    </dd>
    <dt>Postdispatch</dt>
@@ -490,7 +498,7 @@ In bootstrap file which is a class file there are 2 kind of methods <b>Predispat
    </dd>
 </dl>
 
-> <b>Note:</b> <i>zinux</i> does not allow multiple boostrap file for boostraping modules.  
+> <b>Note:</b> <i>zinux</i> does not allow multiple boostrap file for boostraping modules.
 
 Module Bootstrap Example
 ---
@@ -506,7 +514,7 @@ Module Bootstrap Example
       public function PRE_echo(\zinux\kernel\routing\request $request)
       {
         echo "I am predispatch #1<br />";
-        
+
         echo "<div style='color:darkred'>";
         echo "<br />You have requested:";
         echo "<br />Module : ".$request->module->full_name;
@@ -521,7 +529,7 @@ Module Bootstrap Example
       {
           echo "I am predispatch #2<br />";
       }
-      
+
       # Postdispatch method #1
       public function POST_echo(\zinux\kernel\routing\request $request)
       {
@@ -534,7 +542,7 @@ Module Bootstrap Example
           echo "I am postdispatch #2<br />";
       }
 
-      # This function would never gets called beacause 
+      # This function would never gets called beacause
       # It does not have 'pre_' OR 'post_' naming prefix
       public function FooFunc()
       {
@@ -554,7 +562,7 @@ Varibales can passed to view in <b>Controllers</b> via following codes
 ```PHP
    # in our controller we path varibales like this
    $this->view->passed_from_controller = $some_value;
-   
+
    # in our view we access variable like this
    echo $this->passed_from_controller;
 ```
@@ -567,7 +575,7 @@ Varibales can passed to view in <b>Controllers</b> and <b>Views</b> via followin
 ```PHP
    # in our controller OR view we path varibales like this
    $this->layout->passed_from_controller_or_view = $some_value;
-   
+
    # in our layout we access variable like this
    echo $this->passed_from_controller_or_view;
 ```
@@ -580,10 +588,10 @@ View can change in <b>Controllers</b> via following codes
 
 ```PHP
   # Assume that we have Layout named 'LoginView'(case-insensitve) under current module/controller
-  
+
   # following code will change current view to 'LoginView'
-  $this->view->SetView("Login"); 
-  
+  $this->view->SetView("Login");
+
   # disable view(i.e loading no view only view)
   $this->view->SuppressView();
 ```
@@ -595,10 +603,10 @@ Layout can change in <b>Controllers</b> and <b>Views</b> via following codes
 
 ```PHP
   # Assume that we have Layout named 'CoolLayout'(case-insensitve) under current module
-  
+
   # following code will change current layout to 'CoolLayout'
-  $this->layout->SetLayout("COOL"); 
-  
+  $this->layout->SetLayout("COOL");
+
   # disable any layouting(i.e loading no layout only view)
   $this->layout->SuppressLayout();
 ```
@@ -624,9 +632,9 @@ following code
   #   {Model}
   #   {View}
   #   {Layout}
-  
+
   new \zinux\kernel\mvc\helper("foo", $this->request->module);
-  
+
   # now we can use functions in 'fOoHelper.php' file
   some_Function_In_fOo('Hello, world')
 ```
@@ -636,45 +644,45 @@ A Controller Example
 --
 > In this example we will have a demonstration of what we talked about above
 
-Lets assume that we have a hypothetical controller under `SomeModule` define in 
+Lets assume that we have a hypothetical controller under `SomeModule` define in
 [directory structure](#directory-structure) Here is a controller example <i>(pay attention to namespace and
 relative controller path)</i>.
 
 ```PHP
 <?php
-    # this controller locates at  
+    # this controller locates at
     # PROJECT-ROOT/Modules/SomeModule/Controllers/FooController.php
     namespace \Modules\SomeController\Controllers;
-    
+
     /**
      *
      * Remember that files pathes are not case sensitive
      *
      */
-    
+
     class FooController extends \zinux\kernel\controller\baseController
     {
        public function Initiate()
        {
          /**
           * Do your init stuffs here
-          * This method will get called 
+          * This method will get called
           * just before invoking actions
           */
        }
-       
+
        /**
-        * Url map to this controller : 
-        *   
+        * Url map to this controller :
+        *
         *  /some/foo/some/var?or=GET
         *
-        *  |OR| 
-        *  
+        *  |OR|
+        *
         *  /some/foo/index/some/var?or=GET
         */
        public function IndexAction()
        {
-         # lets see that is the request's params are 
+         # lets see that is the request's params are
          \zinux\kernel\utilities\debug::_var($this->request->params);
          /**
           * output:
@@ -687,17 +695,17 @@ relative controller path)</i>.
           *
           */
        }
-       
+
        /**
-        * Url map to this controller : 
-        *   
+        * Url map to this controller :
+        *
         *  /some/foo/feed
         */
        public function FeedAction()
        {
-         # let assume that we have some data 
+         # let assume that we have some data
          $data = some_data_generator();
-         
+
          # if the 'json' format is requested
          # i.e the uri is :
          # /some/foo/feed.json
@@ -720,18 +728,18 @@ relative controller path)</i>.
            \zinux\kernel\utilities\debug::_var($data);
            return;
          }
-         
+
          # if was not a json request
          # pass data to view
          $this->view->some_data = $data;
-         
+
          # set layout to feedLayout
          $this->layout->SetLayout("feed");
        }
-       
+
        /**
-        * Url map to this controller : 
-        *   
+        * Url map to this controller :
+        *
         *  /some/foo/modeluse
         */
        public function ModelUseAction()
@@ -755,7 +763,7 @@ relative controller path)</i>.
            new \zinux\kernel\mvc\helper("a_helper", $this->request->module);
            # in A_helper.php we have bellow function
            $this->view->proc_data = proccess_data($this->view->new_data);
-           # change the view 
+           # change the view
            $this->view->SetView("ValidData");
          }
          else
@@ -764,16 +772,16 @@ relative controller path)</i>.
          }
        }
     }
-    
+
 ```
 
-> At above demo all basic operations are demonstrated. 
+> At above demo all basic operations are demonstrated.
 so if you catchup with the above codes you are 100% ready to use <b>zinux</b> library.<br />
 <b>Cheers!</b>
 
 Adavnced
 ==
-As i mentioned before, the porpuse of <i>zinux</i> is convention over configuration, and the most challenging 
+As i mentioned before, the porpuse of <i>zinux</i> is convention over configuration, and the most challenging
 topics in developing any applications are <b>Project Configuration</b> and <b>Databse Integration</b>.<br />
 <i>zinux</i> provides a very simple and flexible manner in other to bind a configuration file and database initializer.<br />
 <b>These are optional</b>.
@@ -781,12 +789,12 @@ topics in developing any applications are <b>Project Configuration</b> and <b>Da
 Custom Routing
 --
 Some times in developing its good to have URL name convention, i.e for editing notes instead of linking `/note/edit/123`
-you can link `/note/123/edit` this cause a naming unifying at URI level, i.e cou can also have `/note/123/delete` and ... 
+you can link `/note/123/edit` this cause a naming unifying at URI level, i.e cou can also have `/note/123/delete` and ...
 which is much pretty and user-friendly than `/note/edit/123` and also `/note/delete/123`.<br />
 <i>Zinux</i> made it very simple to have such custom routing maps, to doing so you have to have <b>some classes</b>
 (<i>zinux</i> supports multiple routing class, but having multiple routing classes are discouraged for sake of clean project.)
 which inherit from `\zinux\kernel\routing\routerBootstrap`, you can put your routers any where under <b>PROJECT-ROOT</b>
-directory, <b>i suggest</b> put it under <b>PROJECT-ROOT/application</b> nearby your [application  boostrap](#application-bootstraps) files, 
+directory, <b>i suggest</b> put it under <b>PROJECT-ROOT/application</b> nearby your [application  boostrap](#application-bootstraps) files,
 there is an example:
 
 ```PHP
@@ -802,7 +810,7 @@ there is an example:
 	    {
 	        /**
 	         * Route Example For This:
-	         *      /note/1234/edit/what/so/ever?nonsences=passed => /note/edit/1234/what/so/ever?nonsences=passed 
+	         *      /note/1234/edit/what/so/ever?nonsences=passed => /note/edit/1234/what/so/ever?nonsences=passed
 	         */
 	        $this->addRoute("/note/$1/edit$2", "/note/edit/$1$2");
 	    }
@@ -812,25 +820,25 @@ there is an example:
 In `someRoutes` class in <b>any function</b> called from `someRoutes::Fetch()` by adding a route `$this->addRoute()`
 you can define custom made routes.
 
-> <b>Note:</b> The `$1`,`$2` markers provide order in uri parts.  
+> <b>Note:</b> The `$1`,`$2` markers provide order in uri parts.
 
 How To Register Routers
 --
 It is simple! By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 
 ```PHP
-<?php    
+<?php
     # PROJECT-ROOT/public_html/index.php
-    
+
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
-    
+
     require_once '../zinux/baseZinux.php';
-    
+
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
-    
-    $app 
+
+    $app
     	/*
         * This part is added to previous
         * version of index.php
@@ -845,13 +853,13 @@ Binding Custom Configuration File to Application
 ---
 When creating `\zinux\kernel\application\application` instance in `PROJECT-ROOT/public_html/index.php` file
 you can pass a instance of `\zinux\kernel\application\baseConfigLoader` to <b>Startup()</b>.<br />
-and somewhere in your module you define a class which <b>extents</b> the abstract class 
+and somewhere in your module you define a class which <b>extents</b> the abstract class
 `\zinux\kernel\application\baseConfigLoader` which would be resposible for to load configurations for your application.
-It can be a ini loader or XML loader, etc. 
+It can be a ini loader or XML loader, etc.
 
 <b>Usage example:</b><br />
 <hr />
-Lets suppose that we have a class named <b>\vendor\tools\iniParser</b> which is responsible for 
+Lets suppose that we have a class named <b>\vendor\tools\iniParser</b> which is responsible for
 loading configurations from an ini file for your project.
 
 > <b>Note:</b> The <i>zinux</i> has its own ini parser you can use it, or define your config handler, your call.
@@ -859,24 +867,24 @@ loading configurations from an ini file for your project.
 By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 
 ```PHP
-<?php    
+<?php
     # PROJECT-ROOT/public_html/index.php
-    
+
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
-    
+
     require_once '../zinux/baseZinux.php';
-    
+
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
-    
-    $app 
+
+    $app
     	/*
         * This part is added to previous
         * version of index.php
         */
     	# Note that this registration is OPTIONAL
-    	# you don't come up with any cache directory 
+        # you don't come up with any cache directory
     	# the zinux will pick /tmp/zinux-cache as its cache directory
     	->SetCacheDirectory("/path/to/cache/dir")
     	# setting Config iniliazer
@@ -900,17 +908,17 @@ project via `\zinux\kernel\config\config` class!
    * config.db.password = PASSWORD
    * config.db.dbname = DB_NAME
    */
-   
-  
+
+
   # output: localhost
   echo \zinux\kernel\application\config::GetConfig("config", "db", "host");
-  
+
   # output: USERNAME
   echo \zinux\kernel\application\config::GetConfig("config", "db", "username");
-  
+
   # output: PASSWORD
   echo \zinux\kernel\application\config::GetConfig("config", "db", "password");
-  
+
   # output: DB_NAME
   echo \zinux\kernel\application\config::GetConfig("config", "db", "dbname");
 ```
@@ -922,9 +930,9 @@ project via `\zinux\kernel\config\config` class!
 Binding Database Handler To Application
 ---
 When creating `\zinux\kernel\application\application` instance in `PROJECT-ROOT/public_html/index.php` file
-you can pass a instance of `\zinux\kernel\application\dbInitializer` as a secondary argument to <b>constructor</b>.<br />
-and somewhere in your module you define a class which <b>extents</b> the abstract class 
-`\zinux\kernel\application\dbInitializer` which would be resposible for configuring database for your application
+you can pass a instance of `\zinux\kernel\application\baseInitializer` as a secondary argument to <b>constructor</b>.<br />
+and somewhere in your module you define a class which <b>extents</b> the abstract class
+`\zinux\kernel\application\baseInitializer` which would be resposible for configuring database for your application
 
 <b>Usage example:</b><br />
 <hr />
@@ -934,55 +942,61 @@ Lets suppose that we have a class named <b>\vendor\db\ActiveRecord\initializer</
 ```PHP
 <?php
   # file : PROJECT-ROOT/vendor/db/ActiveRecord/initializer.php
-  
+
   namespace vendor\db\ActiveRecord;
-  
-  # Where PHPActive-record lib. is stored 
-  # location:  PROJECT-ROOT/vendor/db/ActiveRecord/vendor
-  require_once 'vendor/ActiveRecord.php';
-  
+
   /**
    * php-activerecord initializer
    * @author dariush
    * @version 1.0
    */
-  class initializer extends \zinux\kernel\application\dbInitializer
+  class ARInitializer extends \zinux\kernel\application\baseInitializer
   {
-      public function Execute($request)
+      public function Execute()
       {
-        ActiveRecord\Config::initialize(function($cfg) use ($request)
+	    # Where PHPActive-record lib. is stored
+	    # location:  PROJECT-ROOT/vendor/db/ActiveRecord/vendor
+	    require_once 'vendor/ActiveRecord.php';
+        /**
+        * For sake of following codes, you can do them in your `appBootstrap` too!
+        * Its much better if only invoke the php-activerecord's autoloader and let its
+        * configurations to be done in latter at a higher level code snap.
+		* (e.g. in your `application/appBootstrap.php`.)
+        ActiveRecord\Config::initialize(function($cfg)
         {
             $cfg->set_model_directory('models');
             $cfg->set_connections(array(
                 'development' => 'mysql://username:password@localhost/database_name'));
         });
+		*
+		**/
       }
   }
 ```
 
 By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 ```php
-<?php    
+<?php
     # PROJECT-ROOT/public_html/index.php
-    
+
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
-    
+
     require_once '../zinux/baseZinux.php';
-    
+
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
-    
+
     $app
     	/*
         * This part is added to previous
         * version of index.php
         */
-    	->SetDBInitializer(new \vendor\db\ActiveRecord\initializer())
-    	->Startup()
-    	->Run()
+        ->SetInitializer(new \vendor\db\ActiveRecord\ARInitializer())
+        ->Startup()
+        ->Run()
         ->Shutdown();
-         
+
 ```
 
 Your application is configured to use [PHP ActiveRecord](#http://www.phpactiverecord.org/) as database handler and
@@ -994,10 +1008,10 @@ you can use <b>PHP ActiveRecord</b> framework freely through your project.<br />
 
 Adding Plugins
 ---
-Add plugins is so simple in <i>zinux</i> you just add the plugin in where 
+Add plugins is so simple in <i>zinux</i> you just add the plugin in where
 ever you want under <b>PROJECT-ROOT</b> and start using it with out any registration or configuration!!!<br />
 <b>What!?!?!</b> Yup, you got it right! but make sure your have followed
-[PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) discussed in 
+[PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/) discussed in
 [Autoloading Classes And Files](#autoloading-classes-and-files) in your plugins.
 
 > Actually the <i>zinux</i> looks the entire project as pluging by itself!!
@@ -1014,7 +1028,7 @@ ever you want under <b>PROJECT-ROOT</b> and start using it with out any registra
      */
     # require plugin file
     require_once 'kernel/application/plugin.php';
-    # initiate a new plugin 
+    # initiate a new plugin
     $plugin = new kernel\application\plugin();
     # treat current project as a plugin
     $plugin->registerPlugin("PROJECT_ROOT");
@@ -1032,18 +1046,18 @@ you can introduce its <b>root directory</b> to <i>zinux</i> like bellow.
 By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 
 ```php
-<?php    
+<?php
     # PROJECT-ROOT/public_html/index.php
-    
+
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
-    
+
     require_once '../zinux/baseZinux.php'
-    
+
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
-    
-    
+
+
     $app
     	/*
 	     *
@@ -1058,7 +1072,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     	->Startup()
         ->Run()
         ->Shutdown();
-         
+
 ```
 > <b>Note:</b> If the <b>third-party</b> does not follow [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
 you have to apply the <b>Situation #2</b> bellow. actually both are the same, but in <b>Situation #1</b>
@@ -1071,35 +1085,35 @@ In case of using <b>third-party</b> libraries <b>has not applied [PSR-0 Standard
 and also which is hard to apply [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
 to it, following <b>Tip</b> may become usefull!
 
-> <b>Tip:</b> If you are using and <b>third-party plugin</b>, you <b>don't need</b> to standardize 
+> <b>Tip:</b> If you are using and <b>third-party plugin</b>, you <b>don't need</b> to standardize
 <b>entire plugin</b> with <b><i>PSR-0 Standard</i></b> (notice that we <b>didn't change</b> any
 <b>PHP-ActiveRecord</b> namespaces in [Binding Database Handler To Application](#binding-database-handler-to-application)!!)<br />
 You just create a <b>initializer class</b> in that plugin which <b>define a autoloader</b> for that pluging!
-In [Binding Database Handler To Application](#binding-database-handler-to-application) example the autoloader 
-is defined in : 
+In [Binding Database Handler To Application](#binding-database-handler-to-application) example the autoloader
+is defined in :
 
 ```PHP
 
-  # Where PHPActive-record lib. is stored 
+  # Where PHPActive-record lib. is stored
   # location:  PROJECT-ROOT/vendor/db/ActiveRecord/vendor
   require_once 'vendor/ActiveRecord.php';
-  
+
 ```
-> Then you call the plugin autoloader <b>just before</b> making application run! i.e 
+> Then you call the plugin autoloader <b>just before</b> making application run! i.e
 by overwriting the index file introduced in [How To Use](#how-to-use) as follow:
 
 ```php
-<?php    
+<?php
     # PROJECT-ROOT/public_html/index.php
-    
+
     defined("RUNNING_ENV") || define("RUNNING_ENV", "DEVELOPMENT");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
-    
+
     require_once '../zinux/baseZinux.php'
-    
+
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
-    
+
     /**
      *
      * Call the pluging initliazer here!
@@ -1110,12 +1124,12 @@ by overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # Just do class the `\Some\Where\In\Project\FOO_PLUGIN_INITIALIZER` here!
     $plugin_init = \Some\Where\In\Project\FOO_PLUGIN_INITIALIZER();
     $plugin_init->A_Func_To_Add_Plugins_Autoloader()
-    
-    
+
+
     $app ->Startup()
          ->Run()
          ->Shutdown();
-         
+
 ```
 
 Tips
@@ -1123,8 +1137,8 @@ Tips
 
 Request Types
 --
-The <i>zinux</i> supports request types i.e you can have a URI like `/news/feed.json` which points to <b>NewsController</b> 
-and <b>FeedAction</b> you can ouput feeds according to request type (in here `json`) in <b>NewsController::FeedAction()</b>! default is `html`. 
+The <i>zinux</i> supports request types i.e you can have a URI like `/news/feed.json` which points to <b>NewsController</b>
+and <b>FeedAction</b> you can ouput feeds according to request type (in here `json`) in <b>NewsController::FeedAction()</b>! default is `html`.
 
 
 Demo Project
@@ -1138,12 +1152,12 @@ Zinux Generator Tool
 project even easier than it is, and also makes you develop more, in a short time.<br />
 For an example, just by typing following command you will have your preoject ready:<br />
 ```RUBY
-# shortcut form: 
+# shortcut form:
 # zg n new_project
 zg new new_project
 ```
 
-> The above command will creates a whole new project containing `defaultModule`, `appBootstrap`, `appRoutes`, 
+> The above command will creates a whole new project containing `defaultModule`, `appBootstrap`, `appRoutes`,
 `indexConroller`, etc.
 
 Or for an other example the following command will creates a new action and its related view in any
