@@ -47,6 +47,7 @@ Topics
 Requirements
 --
 * PHP version 5.5.8 or greater
+
 > If your PHP version is less than v5.5.8 but greater or equal then v5.3.10 you can use the latest version of <i>zinux</i>
 which is compatible with PHP v5.3.10. but consider that this version won't be updated with changes made in <i>zinux</i>
 v4.0.0 or greater. The latest version of can be found at [zinux@3.4.6](https://github.com/dariushha/zinux/tree/3.4.6).
