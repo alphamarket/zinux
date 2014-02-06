@@ -136,7 +136,7 @@ class baseView extends \zinux\baseZinux
             // backup current view name
             $current_view_name = $this->metadata->name;
             // create a fake view handler
-            $nv = $this;
+            $nv = clone $this;
             // set view's name
             $nv->SetView($view_name);
             // is any args are set load it.
