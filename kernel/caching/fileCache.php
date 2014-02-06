@@ -21,26 +21,53 @@ class fileCache extends cache
      * @var type 
      */
     protected static $_soft_cache = array();
-
+    /**
+     * choosen serialize function
+     */
+    protected $serialize_func = 'serialize';
+    /**
+     * choosen unserialize function
+     */
+    protected $unserialize_func = 'unserialize';
+    
     /**
      * Default constructor
-     *
-     * @param string|array [optional] $config
-     * @return void
+     * @param string[optional] $cache_name the cache name
+     * @param string[optional] $serialize_func the function used for serializing the data
+     * @param string[optional] $unserialize_func the function used for unserializing the serialized data
+     * @throws \zinux\kernel\exceptions\notFoundException if any of serialization functions not found
      */
-    public function __construct($name = "default"){
-        if(isset($name) &&strlen($name))
-            $this->setCacheName($name);
+    public function __construct($cache_name = "default", $serialize_func = "serialize", $unserialize_func = "unserialize"){
+        if(isset($cache_name) && strlen($cache_name))
+            $this->setCacheName($cache_name);
         $path = self::$_cachedirectory;
         if(!isset($path) || !is_string($path) || !strlen($path))
         {
             $this->setCachePath(self::getDefaultCacheDirectory());
         }
+        # one-time check functions
+        static $func_check = array();
+        # validate serialize function
+        if(!isset($func_check[$serialize_func]))
+            if(!\function_exists($serialize_func))
+                throw new \zinux\kernel\exceptions\notFoundException("Function `$serialize_func` not found!");
+            else
+                $func_check[$serialize_func] = 1;
+        # validate unserialize function
+        if(!isset($func_check[$unserialize_func]))
+            if(!\function_exists($unserialize_func))
+                throw new \zinux\kernel\exceptions\notFoundException("Function `$unserialize_func` not found!");
+            else
+                $func_check[$unserialize_func] = 1;
+        # introduce the serialize function
+        $this->serialize_func = $serialize_func;
+        # introduce the unserialize function
+        $this->unserialize_func = $unserialize_func;
     }
     protected function _saveData(array $cacheData)
     {
           self::$_soft_cache[$this->getCacheName()] = $cacheData;
-          $cacheData = serialize($cacheData);
+          $cacheData = \call_user_func($this->serialize_func, $cacheData);
           static $error_tracks = array();
           # check if file exists?
           if(!\file_exists($this->getCacheFile()))
@@ -85,7 +112,7 @@ class fileCache extends cache
         if (true === file_exists($this->getCacheFile())) {
             $file = file_get_contents($this->getCacheFile());
             # cache the cache!
-            self::$_soft_cache[$this->getCacheName()] = unserialize($file);
+            self::$_soft_cache[$this->getCacheName()] = \call_user_func($this->unserialize_func, $file);
             return self::$_soft_cache[$this->getCacheName()];
           }
           else {
