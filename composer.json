@@ -2,7 +2,7 @@
     "name": "zinux",
     "type": "framework",
     "description": "A simple and lightweight but powerful framework supporting MVC design pattern",
-    "version": "03.00.08",
+    "version": "4.1.0",
     "homepage": "http://dariushha.github.io/zinux/",
     "keywords": ["PHP","MVC","lightweight","powerful", "design pattern", "zinux", "simple"],
     "license": "MIT",
@@ -14,6 +14,6 @@
         }
     ],
     "require": {
-        "php": ">=5.3"
+        "php": ">=5.5.8"
     }
 }
