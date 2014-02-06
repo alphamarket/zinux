@@ -48,11 +48,7 @@ Requirements
 --
 * PHP version 5.5.8 or greater
 
-> If your PHP version is less than v5.5.8 but greater or equal then v5.3.10 you can use the latest version of <i>zinux</i>
-which is compatible with PHP v5.3.10. but consider that this version won't be updated with changes made in <i>zinux</i>
-v4.0.0 or greater. The latest version of can be found at [zinux@3.4.6](https://github.com/dariushha/zinux/tree/3.4.6).
-but we strongly suggest that you upgrade your PHP version, because there are lots of new feature and some bug fixes in
-<i>zinux</i> v4.0.0 or greater.
+> If your PHP version is less than v5.5.8 but greater or equal then v5.3.10 you can use the latest version of [zinux@3.4.6](https://github.com/dariushha/zinux/tree/3.4.6) which is compatible with PHP v5.3.10. but consider that this version won't be updated with any changes may be made in <i>zinux</i> v4.0.0 or greater. But we strongly suggest that you upgrade your PHP version, because there are lots of new feature and some bug fixes in <i>zinux</i> v4.0.0 or greater.
 <hr />
 > <b>Note:</b> The original <i>zinux</i> was written and tested in PHP v5.3.10, there is no WARRANTY for PHP's other versions
 syntax/work-arounds compatibilities for this product.
