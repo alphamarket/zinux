@@ -22,10 +22,10 @@ class application extends \zinux\baseZinux
      */
     protected $config_initializer;
     /**
-     * db initializer instance
+     * initializers instance
      * @var \zinux\kernel\application\baseInitializer
      */
-    protected $dbInit;
+    protected $initializers;
     /**
      * Application boostrap
      * @var bootstrap
@@ -55,9 +55,9 @@ class application extends \zinux\baseZinux
         defined('MODULE_ROOT') || define('MODULE_ROOT', \realpath(\zinux\kernel\utilities\fileSystem::resolve_path($module_path."/"))."/");
     }
     
-    public function SetDBInitializer(dbInitializer $dbi)
+    public function SetInitializer(\zinux\kernel\application\baseInitializer $initializer)
     {
-        $this->dbInit = $dbi;
+        $this->initializers[] = $initializer;
         return $this;
     }
     
@@ -95,6 +95,8 @@ class application extends \zinux\baseZinux
 
     public function Initiate()
     {
+        # init the initializer
+        $this->initializers = array();
         # create an router
         $this->router = new \zinux\kernel\routing\router;
         # initialize plugins
@@ -147,16 +149,19 @@ class application extends \zinux\baseZinux
     public function Startup()
     {
         # no initializer return
-        if(!$this->config_initializer) goto __DB_INIT;
+        if(!$this->config_initializer) goto __INITIALIZERS;
         # create config instance
         $config = new config($this->config_initializer);
         # load configs
         $config->Load();
-__DB_INIT:
-        if($this->dbInit)
+__INITIALIZERS:
+        if($this->initializers)
         {
-            $this->dbInit->Initiate();
-            $this->dbInit->Execute($this->request);
+            foreach($this->initializers as $initializer)
+            {
+                $initializer->Initiate();
+                $initializer->Execute($this->request);
+            }
         }
         # set default module root
         defined('MODULE_ROOT') || define('MODULE_ROOT',  \zinux\kernel\utilities\fileSystem::resolve_path(ZINUX_ROOT.'/../modules/')."/");
