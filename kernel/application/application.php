@@ -42,8 +42,11 @@ class application extends \zinux\baseZinux
      */
     protected $router;
     
-    public function __construct($module_path = "../modules")
+    public function __construct($module_path = NULL)
     {
+        #this is safer by doing ZINUX_ROOT
+        if(!$module_path)
+            $module_path = ZINUX_ROOT."../modules";
         # this cannot move into init()
         $this->_startup_invoked = false;
         # initialize current application instance
