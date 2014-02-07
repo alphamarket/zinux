@@ -9,7 +9,7 @@ class sessionCache extends cache
      *
      * @var string
      */
-    protected static $_cachedirectory = '';
+    protected $_cachedirectory = '';
     /**
      * uses for internal cache upgrading
      * @var type 
@@ -41,20 +41,12 @@ class sessionCache extends cache
         if(isset($cache_name) && strlen($cache_name))
             $this->setCacheName($cache_name);
         $this->setCachePath('cache');
-        # one-time check functions [ for speen boostups ]
-        static $func_check = array();
         # validate serialize function
-        if(!isset($func_check[$serialize_func]))
-            if(!\function_exists($serialize_func))
-                throw new \zinux\kernel\exceptions\notFoundException("Function `$serialize_func` not found!");
-            else
-                $func_check[$serialize_func] = 1;
+        if(!\function_exists($serialize_func))
+            throw new \zinux\kernel\exceptions\notFoundException("Function `$serialize_func` not found!");
         # validate unserialize function
-        if(!isset($func_check[$unserialize_func]))
-            if(!\function_exists($unserialize_func))
-                throw new \zinux\kernel\exceptions\notFoundException("Function `$unserialize_func` not found!");
-            else
-                $func_check[$unserialize_func] = 1;
+        if(!\function_exists($unserialize_func))
+            throw new \zinux\kernel\exceptions\notFoundException("Function `$unserialize_func` not found!");
         # introduce the serialize function
         $this->serialize_func = $serialize_func;
         # introduce the unserialize function
@@ -69,16 +61,16 @@ class sessionCache extends cache
             # unset the current cache placeholder
             $this->deleteAll();
         # if no cache presented at cache directory
-        if(!count($_SESSION[self::$_cachedirectory]))
+        if(!count($_SESSION[$this->_cachedirectory]))
             # unset it
-            unset($_SESSION[self::$_cachedirectory]);
+            unset($_SESSION[$this->_cachedirectory]);
     }
     /**
      * save the data into cache
      * @param array $cacheData
      */
     protected function _saveData(array $cacheData){
-        $this->_cachepath = self::$_cachedirectory;
+        $this->_cachepath = $this->_cachedirectory;
         self::$_soft_cache[$this->_cachepath][$this->_cachename] = $cacheData;
         $cacheData = \call_user_func($this->serialize_func, $cacheData);
         if(!session_id() && !headers_sent())
@@ -91,7 +83,7 @@ class sessionCache extends cache
      * @return mixed
      */
     protected function _loadCache() {
-        $this->_cachepath = self::$_cachedirectory;
+        $this->_cachepath = $this->_cachedirectory;
         # relative caching
         if(isset(self::$_soft_cache[$this->_cachepath][$this->_cachename]))
             return self::$_soft_cache[$this->_cachepath][$this->_cachename];
@@ -113,9 +105,7 @@ class sessionCache extends cache
      * @return object
      */
     public function setCachePath($path) {
-        self::$_cachedirectory = $path;
-        $this->save("", "");
-        $this->delete("");        
+        $this->_cachedirectory = $path;
     }
     /**
      * Cache path Getter
@@ -123,6 +113,6 @@ class sessionCache extends cache
      * @return string
      */
     public function getCacheDirectory() {
-        return self::$_cachedirectory;
+        return $this->_cachedirectory;
     }
 }

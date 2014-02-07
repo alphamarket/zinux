@@ -42,23 +42,13 @@ class fileCache extends cache
             $this->setCacheName($cache_name);
         $path = self::$_cachedirectory;
         if(!isset($path) || !is_string($path) || !strlen($path))
-        {
             $this->setCachePath(self::getDefaultCacheDirectory());
-        }
-        # one-time check functions
-        static $func_check = array();
         # validate serialize function
-        if(!isset($func_check[$serialize_func]))
-            if(!\function_exists($serialize_func))
-                throw new \zinux\kernel\exceptions\notFoundException("Function `$serialize_func` not found!");
-            else
-                $func_check[$serialize_func] = 1;
+        if(!\function_exists($serialize_func))
+            throw new \zinux\kernel\exceptions\notFoundException("Function `$serialize_func` not found!");
         # validate unserialize function
-        if(!isset($func_check[$unserialize_func]))
-            if(!\function_exists($unserialize_func))
-                throw new \zinux\kernel\exceptions\notFoundException("Function `$unserialize_func` not found!");
-            else
-                $func_check[$unserialize_func] = 1;
+        if(!\function_exists($unserialize_func))
+            throw new \zinux\kernel\exceptions\notFoundException("Function `$unserialize_func` not found!");
         # introduce the serialize function
         $this->serialize_func = $serialize_func;
         # introduce the unserialize function
