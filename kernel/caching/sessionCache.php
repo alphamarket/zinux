@@ -61,7 +61,7 @@ class sessionCache extends cache
             # unset the current cache placeholder
             $this->deleteAll();
         # if no cache presented at cache directory
-        if(!count($_SESSION[$this->_cachedirectory]))
+        if(!@count($_SESSION[$this->_cachedirectory]))
             # unset it
             unset($_SESSION[$this->_cachedirectory]);
     }
