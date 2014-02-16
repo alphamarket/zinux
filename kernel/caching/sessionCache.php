@@ -95,6 +95,7 @@ class sessionCache extends cache
      * Delete all data in current cache 
      */
     public function deleteAll() {
+        $this->_cachepath = $this->_cachedirectory;
         unset(self::$_soft_cache[$this->_cachepath][$this->_cachename]);
         unset($_SESSION[$this->_cachepath][$this->_cachename]);
     }
