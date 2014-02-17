@@ -18,8 +18,12 @@ class module extends mvc
         {
             $name=preg_replace('/module$/i', "", $name);
         }
+        if(!\strlen($path))
+        {
+            $path = MODULE_ROOT."{$name}Module";
+        }
         parent::__construct($name, "{$name}Module");
-        $this->SetPath(realpath($path));
+        $this->SetPath($path);
         $this->namespace_prex = $namespace_prefix;
     }
 
