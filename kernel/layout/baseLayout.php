@@ -236,6 +236,8 @@ class baseLayout extends \zinux\baseZinux
      */
     protected function RenderLayout()
     {
+        if($this->view->IsViewSuppressed())
+            return;
         if(!$this->layout_rendered)
         {
             if(!file_exists($this->metadata->GetPath()))
@@ -246,7 +248,7 @@ class baseLayout extends \zinux\baseZinux
             if(!$this->view->IsViewSuppressed() && !$this->IsLayoutSuppressed())
             {
                 # we cannot use $this->metadata->Load(); 'cause then the layout's 
-                # file would operate unser \zinux\kernel\mvc\layout instance!!
+                # file would operate under \zinux\kernel\mvc\layout instance!!
                 require $this->metadata->GetPath();
             }
             else
@@ -255,7 +257,7 @@ class baseLayout extends \zinux\baseZinux
         }
         else
         {
-            throw new \Exceptions\AppException("The view has been rendered already...");
+            throw new \zinux\kernel\exceptions\appException("The view has been rendered already...");
         }
     }
 
