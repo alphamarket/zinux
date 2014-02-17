@@ -48,29 +48,29 @@ namespace zinux\kernel\utilities;
  */
 class iniParser extends \zinux\kernel\application\baseConfigLoader
 {
-        /**
-	 * Internal storage array
-	 * @var array
-	 */
-	private static $_result = array();
+    /**
+     * Internal storage array
+     * @var array
+     */
+    private static $_result = array();
 
-	/**
-	 * Loads in the ini file specified in filename, and returns the settings in it as
-	 * an associative multi-dimensional array
-	 * @param string $filename          The filename of the ini file being parsed
-	 * @param boolean $section_name By setting the process_sections parameter to
-	 * TRUE, you get a multidimensional array, with the section names and settings
-	 * included. The default for process_sections is FALSE
-	 * @param string $process_sections      Specific section name to extract upon
-	 * processing
-	 * @return array|boolean
-	 * 
-	 * @param filename
-	 * @param process_sections
-	 * @param section_name
-	 */
-	public static function parse($filename, $section_name = NULL, $process_sections = true)
-	{
+    /**
+     * Loads in the ini file specified in filename, and returns the settings in it as
+     * an associative multi-dimensional array
+     * @param string $filename          The filename of the ini file being parsed
+     * @param boolean $section_name By setting the process_sections parameter to
+     * TRUE, you get a multidimensional array, with the section names and settings
+     * included. The default for process_sections is FALSE
+     * @param string $process_sections      Specific section name to extract upon
+     * processing
+     * @return array|boolean
+     * 
+     * @param filename
+     * @param process_sections
+     * @param section_name
+     */
+    public static function parse($filename, $section_name = NULL, $process_sections = true)
+    {
             // load the raw ini file
             $ini = parse_ini_file($filename, $section_name);
             
@@ -78,10 +78,10 @@ class iniParser extends \zinux\kernel\application\baseConfigLoader
             if ($ini === false) {
                 return false;
             }
-            
+
             // reset the result array
             self::$_result = array();
-            
+
             if ($process_sections) {
                 // loop through each section
                 foreach ($ini as $section => $contents) {
@@ -106,19 +106,19 @@ class iniParser extends \zinux\kernel\application\baseConfigLoader
 
             // if no specific section is required, just return the whole result
             return self::$_result;
-	}
+    }
 
-	/**
-	 * Process contents of the specified section
-	 * @param string $section Section name
-	 * @param array $contents Section contents
-	 * @return void
-	 * 
-	 * @param section
-	 * @param contents
-	 */
-	private static function _processSection($section, array $contents)
-	{
+    /**
+     * Process contents of the specified section
+     * @param string $section Section name
+     * @param array $contents Section contents
+     * @return void
+     * 
+     * @param section
+     * @param contents
+     */
+    private static function _processSection($section, array $contents)
+    {
             // the section does not extend another section
             if (stripos($section, ':') === false) {
                 self::$_result[$section] = self::_processSectionContents($contents);
@@ -141,7 +141,7 @@ class iniParser extends \zinux\kernel\application\baseConfigLoader
                 // merge the new section with the existing section values
                 self::$_result[$ext_target] = self::_arrayMergeRecursive(self::$_result[$ext_source], self::$_result[$ext_target]);
             }
-	}
+    }
 
         /**
             * Process contents of a section
@@ -230,7 +230,7 @@ class iniParser extends \zinux\kernel\application\baseConfigLoader
     {
         return $this->parse($this->file_address, $this->section_name, $this->process_sections);
     }
-    
+
     /**
      * @param string $config_file_address config file address
      * @param string $section_name section_name in ini file
@@ -239,12 +239,12 @@ class iniParser extends \zinux\kernel\application\baseConfigLoader
     public function __construct($config_file_address, $section_name = NULL)
     {
         $this->file_address  = \zinux\kernel\utilities\fileSystem::resolve_path($config_file_address);
-        
+
         if(!$this->file_address)
             throw new \zinux\kernel\exceptions\invalideArgumentException("config file not found at '$config_file_address'");
-        
-        $this->process_sections = 1;
-        
+
+        $this->process_sections = isset($section_name);
+
         $this->section_name = $section_name;
     }
 }

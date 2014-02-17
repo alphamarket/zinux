@@ -20,5 +20,15 @@ abstract class baseConfigLoader extends \zinux\kernel\application\baseInitialize
      * @var string
      */
     public $file_address;
+    /**
+     * should process config's sections
+     * @var boolean
+     */
+    public $process_sections = 1;
+    /**
+     * section name in configuration to process
+     * @var string
+     */
+    public $section_name = "";
     public function __construct($config_file_address, array $options = array()){ }
 }
