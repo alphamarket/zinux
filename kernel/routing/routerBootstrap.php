@@ -31,7 +31,7 @@ abstract class routerBootstrap extends \zinux\baseZinux
         $this->routes[$pattern] = $target;
     }
     
-    public function process(request &$request)
+    public function process(request $request)
     {
         $matched = false;
         foreach($this->routes as $key=> $value)
