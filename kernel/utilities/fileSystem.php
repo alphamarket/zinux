@@ -52,7 +52,10 @@ class fileSystem extends \zinux\baseZinux
         # depart the path
         # normalizing array's parts
         require_once '_array.php';
-        $path_parts = _array::array_normalize(explode(DIRECTORY_SEPARATOR, strtolower($path)));
+        # create a path part
+        $path_parts = explode(DIRECTORY_SEPARATOR, strtolower($path));
+        # normalize the path parts
+        _array::array_normalize($path_parts);
         # a fail safe 
         if(!count($path_parts)) return false;
         # UNIX fs style
@@ -64,8 +67,10 @@ class fileSystem extends \zinux\baseZinux
             $is_absolute_path = 1;
             $resolved_path = $is_absolute_path ? "{$path_parts[0]}:" : ".".DIRECTORY_SEPARATOR;
         }
+        # create a departed array
+        $depart = explode(DIRECTORY_SEPARATOR, $path);
         # normalize the array
-        $depart = _array::array_normalize(explode(DIRECTORY_SEPARATOR, $path));
+        _array::array_normalize($depart);
         # fetch the target file's name
         $file = $depart[count($depart)-1];
         # unset the file's name

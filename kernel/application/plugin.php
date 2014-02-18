@@ -31,11 +31,12 @@
          */
         public function registerPlugin($name, $plugin_addres = "")
         {
-            # first posible place
-            if(!($rpath = \zinux\kernel\utilities\fileSystem::resolve_path(PROJECT_ROOT.$plugin_addres)))
-            {
+            # first possible place
+            if(($rpath = \zinux\kernel\utilities\fileSystem::resolve_path(PROJECT_ROOT.$plugin_addres))) ;
+            # second possible place, examin the pure plugin address see if it is the case
+            elseif(!($rpath = \zinux\kernel\utilities\fileSystem::resolve_path($plugin_addres)))
+                # if not the not found!
                 throw new \zinux\kernel\exceptions\notFoundException("'$plugin_addres' not found!");
-            }  
             
             if(is_file($rpath))
                 $rpath = dirname($rpath);
