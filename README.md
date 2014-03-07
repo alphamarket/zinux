@@ -112,7 +112,7 @@ Considering above directory structure; in your <b>PROJECT-ROOT/public_html/index
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
 
-    require_once '../zinux/baseZinux.php';
+    require_once '../zinux/zinux.php';
 
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
 
@@ -165,7 +165,7 @@ Autoloading Classes and Files
 <i>zinux</i> uses [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
 namespace conventions to load [MVC Entities](#mvc-entities). so as long as [MVC Entities](#mvc-entities) follow
 [PSR-0 Standard](http://www.sitepoint.com/autoloading-and-the-psr-0-standard/)
-the <i>zinux</i>'s autoloader may be able to load those classes and beside `require_once '../zinux/baseZinux.php'`
+the <i>zinux</i>'s autoloader may be able to load those classes and beside `require_once '../zinux/zinux.php'`
 no `require` needed for loading classes!
 
 > <b>Note:</b> classes and relative files should have same name. [not necessarily case-sensitive]
@@ -418,7 +418,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
 
-    require_once '../zinux/baseZinux.php';
+    require_once '../zinux/zinux.php';
 
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
 
@@ -831,7 +831,7 @@ It is simple! By overwriting the index file introduced in [How To Use](#how-to-u
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
 
-    require_once '../zinux/baseZinux.php';
+    require_once '../zinux/zinux.php';
 
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
 
@@ -871,7 +871,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
 
-    require_once '../zinux/baseZinux.php';
+    require_once '../zinux/zinux.php';
 
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
 
@@ -980,7 +980,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
 
-    require_once '../zinux/baseZinux.php';
+    require_once '../zinux/zinux.php';
 
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
 
@@ -1050,7 +1050,7 @@ By overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
 
-    require_once '../zinux/baseZinux.php'
+    require_once '../zinux/zinux.php'
 
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
 
@@ -1107,7 +1107,7 @@ by overwriting the index file introduced in [How To Use](#how-to-use) as follow:
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "PRODUCTION");
     # defined("RUNNING_ENV") || define("RUNNING_ENV", "TEST");
 
-    require_once '../zinux/baseZinux.php'
+    require_once '../zinux/zinux.php'
 
     $app = new \zinux\kernel\application\application("PROJECT-ROOT/mOdUlEs");
 
