@@ -274,9 +274,8 @@ __FETCHING_MODULES:
             # validating controller
             if(!$this->controller->Load() || !$this->controller->CheckControllerExists())
             {
-                \zinux\kernel\utilities\debug::_var($this->controller,1);
                 # we don't have our class
-                throw new \zinux\kernel\exceptions\notFoundException("The controller `{$this->controller->full_name}` does not exists");
+                throw new \zinux\kernel\exceptions\notFoundException("The controller `{$this->controller->GetClassFullName()}` does not exists at `{$this->controller->GetPath()}`!");
             }
             if(!$this->controller->IsValid())
             {
