@@ -129,7 +129,7 @@ class request extends \zinux\baseZinux
             if($this->is_proccessed) 
                 return;
             $this->Initiate();
-            $this->DepartURI();
+            $this->TokenizeURI();
             $this->FetchModuleName();
             $this->FetchControllerName();
             $this->FetchActionName();
@@ -141,7 +141,7 @@ class request extends \zinux\baseZinux
 	/**
         * Depart and normalize the requested URI
         */
-	protected function DepartURI()
+	protected function TokenizeURI()
 	{
             $this->_parts = array_filter(\explode('?', $this->requested_uri));
             if(count($this->_parts)===0)
@@ -339,12 +339,7 @@ __FETCHING_MODULES:
                 array_shift($this->_parts);
             }
             # add to items into indexed params
-            foreach($this->params as $key => $param)
-            {
-                $this->indexed_param[] = $key;
-                if($param)
-                    $this->indexed_param[] = $param;
-            }
+            $this->GenerateIndexedParams();
             # merging $_GET, $_POST into $params 
             # we need to do it at the end of fetching 
             # params 'cause its imposible to use
@@ -353,7 +348,24 @@ __FETCHING_MODULES:
             # we don't need this var anymore >:)
             unset($this->_parts);
 	}
-    
+        /**
+        * Generates an indexed params array base on `$this->params`
+        * @return array The index params
+        */
+        public function GenerateIndexedParams()
+        {
+            # clear the indexed params
+            $this->indexed_param = array();
+            # add to items into indexed params
+            foreach($this->params as $key => $param)
+            {
+                $this->indexed_param[] = $key;
+                if($param)
+                    $this->indexed_param[] = $param;
+            }
+            # return the indexed params
+            return $this->indexed_param;
+        }
         /**
         * Get URI params base on its index
         * @param integer $index
