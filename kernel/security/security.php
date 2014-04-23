@@ -126,10 +126,8 @@ class security
                      $exception_verbose_msg = "Unable to call `$func()`";
                      goto __THROW_EXCEPTION;
                  }
-                 if(is_string($arg))
-                     $arg = "'$arg'";
                  # asserting the function call
-                 if(!assert("$func($arg)"))
+                 if(!assert($func($arg)))
                  {
                      $exception_verbose_msg = "assertion failed on calling `$func($args)`";
                      goto __THROW_EXCEPTION;
