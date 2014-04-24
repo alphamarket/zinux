@@ -338,13 +338,13 @@ __FETCHING_MODULES:
                 array_shift($this->_parts);
                 array_shift($this->_parts);
             }
-            # add to items into indexed params
-            $this->GenerateIndexedParams();
             # merging $_GET, $_POST into $params 
             # we need to do it at the end of fetching 
             # params 'cause its imposible to use
             # GetIndexedParam()
             $this->params += array_merge($_GET, $_POST);
+            # add to items into indexed params
+            $this->GenerateIndexedParams();
             # we don't need this var anymore >:)
             unset($this->_parts);
 	}
