@@ -42,18 +42,47 @@ class security
             $link = $link."&$hn=$h";
             return $link;
     }
+    /* 
+     * Get a secure GET/POST compatible array
+     * @param array $based_upon an array to create secure string based upon it
+     * @param boolean $has_expire_date the secure string should has expiration date
+     * @param unsigned integer $second_to_expire_from_now the seconds to expire the secure string
+     * @return array the secure string array
+     * @throws \InvalidArgumentException arises if condition <b>$has_expire_date && $seconds_to_expire_from_now<=0</b> satisfied
+     */
+    public static function GetHashArray(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0)
+    {
+            if($has_expire_date && $seconds_to_expire_from_now<=0)
+                throw new \InvalidArgumentException("The '\$second_to_expire_from_now' didn't provide");
+            $t = time();
+            $based_upon[] = $t;
+            $tn = "s_".substr(sha1('t'), 0, 5);
+            $link =array($tn => $t);
+            if($has_expire_date)
+            {
+                $en = "s_".substr(sha1('e'), 0, 5);
+                $et = time()+$seconds_to_expire_from_now;
+                $based_upon[] = $et;
+                $link .= "&$en=$et";
+            }
+            require_once 'hash.php';
+            $h = hash::Generate(implode("", $based_upon));
+            $hn = "s_".substr(sha1('h'), 0, 5);
+            $link[$hn] = $h;
+            return $link;
+    }
 
-	/**
-	 * Checks if URI is secure with provided parameters
-	 * 
-	 * @param array $target_array    Target array to examine parameters
-	 * @param array $existance_array    array to check for item existance in target array
-	 * @param array $assertion_array    do a operation like ` $key($value) `  foreach item in this array!
-	 * @param array $check_sum_array    do a checksum on elements like ` $key =C= $value `
-	 * @param boolean $throw_exception    Throw exception if any error occures while processing $target_array
-	 * @param boolean $verbose_exception    check if when throwing exceptions the message should be verbose or not
-	 */
-	public static function IsSecure(
+    /**
+     * Checks if URI is secure with provided parameters
+     * 
+     * @param array $target_array    Target array to examine parameters
+     * @param array $existance_array    array to check for item existance in target array
+     * @param array $assertion_array    do a operation like ` $key($value) `  foreach item in this array!
+     * @param array $check_sum_array    do a checksum on elements like ` $key =C= $value `
+     * @param boolean $throw_exception    Throw exception if any error occures while processing $target_array
+     * @param boolean $verbose_exception    check if when throwing exceptions the message should be verbose or not
+     */
+    public static function IsSecure(
                 array $target_array, 
                 array $existance_array = array(), 
                 array $assertion_array = array(), 
@@ -61,7 +90,7 @@ class security
                 $throw_exception = 1,
                 $verbose_exception = 0
         )
-	{
+    {
             # initializing expcetions message templates
             $exception_verbose_msg = "Invalid argument.";
             $exception_mini_msg = "Invalid argument.";
@@ -82,7 +111,7 @@ class security
             # it is essentional for checksum opt. that the fields name should be in existance array
             if(count($check_sum_array) && !count($existance_array))
                 throw new \InvalidArgumentException("\$existance_array is not supplied but demads operation on \$check_sum_array!!");
-           
+
             # a forehead existance checking 
             if(count($existance_array) && !count($target_array))
             {
@@ -139,14 +168,14 @@ class security
              # if we reach here its all OK
              return true;
              # throw exception section
-__THROW_EXCEPTION:
+    __THROW_EXCEPTION:
             # if throw expection is enabled
             if($throw_exception)
                 # throw invalid argument exception using provided msg
                 throw new \InvalidArgumentException($verbose_exception ? $exception_verbose_msg : $exception_mini_msg);
             # otherwise return false
             else return false;
-	}
+    }
 
     /**
      * check if passed string is secured compatible operations in `GetSecureString()` function
