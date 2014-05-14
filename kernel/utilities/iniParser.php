@@ -234,14 +234,14 @@ class iniParser extends \zinux\kernel\application\baseConfigLoader
     /**
      * @param string $config_file_address config file address
      * @param string $section_name section_name in ini file
-     * @throws \zinux\kernel\exceptions\invalideArgumentException
+     * @throws \zinux\kernel\exceptions\invalidArgumentException
      */
     public function __construct($config_file_address, $section_name = NULL)
     {
         $this->file_address  = \zinux\kernel\utilities\fileSystem::resolve_path($config_file_address);
 
         if(!$this->file_address)
-            throw new \zinux\kernel\exceptions\invalideArgumentException("config file not found at '$config_file_address'");
+            throw new \zinux\kernel\exceptions\invalidArgumentException("config file not found at '$config_file_address'");
 
         $this->process_sections = isset($section_name);
 

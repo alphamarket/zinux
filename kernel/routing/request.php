@@ -306,7 +306,7 @@ __FETCHING_MODULES:
             # validating the action
             if(!$this->action->IsActionCallable())
             {
-                throw new \zinux\kernel\exceptions\invalideOperationException("The action `{$this->action->full_name}` is not callable!");
+                throw new \zinux\kernel\exceptions\invalidOperationException("The action `{$this->action->full_name}` is not callable!");
             }
 	}
 
@@ -373,7 +373,7 @@ __FETCHING_MODULES:
         */
         public function GetIndexedParam($index)
         {
-            if(!is_integer($index)) throw new \zinux\kernel\exceptions\invalideArgumentException;
+            if(!is_integer($index)) throw new \zinux\kernel\exceptions\invalidArgumentException;
             return $this->indexed_param[$index];
         }
         /**
@@ -383,7 +383,7 @@ __FETCHING_MODULES:
         */
         public function SetIndexedParam($index, $value)
         {
-            if(!is_integer($index)) throw new \zinux\kernel\exceptions\invalideArgumentException;
+            if(!is_integer($index)) throw new \zinux\kernel\exceptions\invalidArgumentException;
             $this->indexed_param[$index] = $value;
         }
         /**

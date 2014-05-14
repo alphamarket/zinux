@@ -78,12 +78,12 @@ class baseLayout extends \zinux\baseZinux
     /**
      * Add a title to layout
      * @param type $title
-     * @throws \zinux\kernel\exceptions\invalideArgumentException
+     * @throws \zinux\kernel\exceptions\invalidArgumentException
      */
     public function AddTitle($title = "")
     {
         if(!is_string($title))
-            throw new \zinux\kernel\exceptions\invalideArgumentException
+            throw new \zinux\kernel\exceptions\invalidArgumentException
                 ("The title should be a string");
         $this->title = $title;
     }

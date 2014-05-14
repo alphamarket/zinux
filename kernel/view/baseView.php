@@ -132,7 +132,7 @@ class baseView extends \zinux\baseZinux
 	public function RenderPartial($view_name, array $partial_view_params = array())
 	{
             if($view_name == $this->metadata->name)
-                throw new \zinux\kernel\exceptions\InvalideOperationException("Cannot partially load the currently loaded view...");
+                throw new \zinux\kernel\exceptions\invalidOperationException("Cannot partially load the currently loaded view...");
             // backup current view name
             $current_view_name = $this->metadata->name;
             // create a fake view handler

@@ -19,9 +19,9 @@ class api extends \zinux\baseZinux
     {
         # verify the uri arg
         if(!$uri || !is_string($uri) || !strlen($uri))
-            throw new \zinux\kernel\exceptions\invalideArgumentException("Invalid \$uri supplied....");
+            throw new \zinux\kernel\exceptions\invalidArgumentException("Invalid \$uri supplied....");
         if(filter_var($uri, FILTER_VALIDATE_URL))
-            throw new \zinux\kernel\exceptions\invalideOperationException("The '$uri' cannot be a direct link!");
+            throw new \zinux\kernel\exceptions\invalidOperationException("The '$uri' cannot be a direct link!");
         # fail safe for GET arg
         if(!$GET) $GET = array();
         # fail safe for POST arg
@@ -64,7 +64,7 @@ class api extends \zinux\baseZinux
         if($current_req->module->full_name == $api_req->module->full_name)
             if($current_req->controller->full_name == $api_req->controller->full_name)
                 if($current_req->action->full_name == $api_req->action->full_name)
-                    throw new \zinux\kernel\exceptions\invalideOperationException("Cannot do a recursive api-call to current action!");
+                    throw new \zinux\kernel\exceptions\invalidOperationException("Cannot do a recursive api-call to current action!");
         /**
          * End of recursive api-call fail safe
          */

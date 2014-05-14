@@ -24,7 +24,7 @@ class config extends \zinux\baseZinux
     public function __construct(baseConfigLoader $config_initializer)
     {
         if(!$config_initializer)
-            throw new \zinux\kernel\exceptions\invalideArgumentException("The config initializer cannot be NULL");
+            throw new \zinux\kernel\exceptions\invalidArgumentException("The config initializer cannot be NULL");
         
         $this->config_initializer = $config_initializer;
     }
@@ -57,7 +57,7 @@ class config extends \zinux\baseZinux
         $c->config = $this->config_initializer->Execute();
         # validate return type 
         if(!is_array($c->config))
-            throw new \zinux\kernel\exceptions\invalideOperationException("The config initliazer output should be and array() but recieved ".gettype($c->config));
+            throw new \zinux\kernel\exceptions\invalidOperationException("The config initliazer output should be and array() but recieved ".gettype($c->config));
         # set file modified datetime
         $c->modif_time = filemtime($this->config_initializer->file_address); 
         # cache the result
@@ -71,17 +71,17 @@ __RETURN:
      * @param string $path
      * @param string $_
      * @return string the config value
-     * @throws \zinux\kernel\exceptions\invalideArgumentException if the config path not found
+     * @throws \zinux\kernel\exceptions\invalidArgumentException if the config path not found
      */
     public static function GetConfig($path, $splitter = ".")
     {
         if(!$path || !\is_string($path))
-            throw new \zinux\kernel\exceptions\invalideArgumentException("The path not well-initialized!");
+            throw new \zinux\kernel\exceptions\invalidArgumentException("The path not well-initialized!");
         $conf = self::GetAll();
         foreach(array_filter(\explode($splitter, $path)) as $arg)
         {
             if(!isset($conf[$arg]))
-                throw new \zinux\kernel\exceptions\invalideArgumentException("Index `$arg` does not exists in configuration array");
+                throw new \zinux\kernel\exceptions\invalidArgumentException("Index `$arg` does not exists in configuration array");
             $conf = $conf[$arg];
         }
         return $conf;
@@ -96,7 +96,7 @@ __RETURN:
     public static function Exists($path, $splitter = ".")
     {
         if(!$path || !\is_string($path))
-            throw new \zinux\kernel\exceptions\invalideArgumentException("The path not well-initialized!");
+            throw new \zinux\kernel\exceptions\invalidArgumentException("The path not well-initialized!");
         $conf = self::GetAll();
         foreach(array_filter(\explode($splitter, $path)) as $arg)
         {
@@ -109,7 +109,7 @@ __RETURN:
     /**
      * Get all loaded config
      * @return array
-     * @throws \zinux\kernel\exceptions\invalideOperationException if no config ever loaded
+     * @throws \zinux\kernel\exceptions\invalidOperationException if no config ever loaded
      */
     public static function GetAll()
     {
@@ -117,7 +117,7 @@ __RETURN:
         $xf = new \zinux\kernel\caching\fileCache(__CLASS__);
         
         if(!self::HasLoaded())
-            throw new \zinux\kernel\exceptions\invalideOperationException("The config file has not been loaded");
+            throw new \zinux\kernel\exceptions\invalidOperationException("The config file has not been loaded");
         
         $conf = array();
         
