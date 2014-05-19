@@ -236,8 +236,6 @@ class baseLayout extends \zinux\baseZinux
      */
     protected function RenderLayout()
     {
-        if($this->view->IsViewSuppressed())
-            return;
         if(!$this->layout_rendered)
         {
             if(!file_exists($this->metadata->GetPath()))
@@ -245,7 +243,7 @@ class baseLayout extends \zinux\baseZinux
                 echo "<div>Notice: The layout '<b>".$this->metadata->full_name."</b>' not found!<div>";
                 $this->SuppressLayout();
             }
-            if(!$this->view->IsViewSuppressed() && !$this->IsLayoutSuppressed())
+            if(!$this->IsLayoutSuppressed())
             {
                 # we cannot use $this->metadata->Load(); 'cause then the layout's 
                 # file would operate under \zinux\kernel\mvc\layout instance!!
