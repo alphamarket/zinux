@@ -267,7 +267,7 @@ class baseLayout extends \zinux\baseZinux
         foreach($this->MetaImports as $name => $meta)
         {
             if(!isset($meta['options']) || !is_array($meta['options'])) $meta['options'] = array(); 
-            echo "<meta name='$name' content='${meta['content']}'";
+            echo "<meta name='$name' content=\"".str_replace('"', "'", $meta['content'])."\"";
             foreach($meta['options'] as $key=> $value)
             {
                 echo " $key='$value'";
