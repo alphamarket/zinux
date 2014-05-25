@@ -360,7 +360,7 @@ __FETCHING_MODULES:
             foreach($this->params as $key => $param)
             {
                 $this->indexed_param[] = $key;
-                if($param)
+                if(!is_null($param))
                     $this->indexed_param[] = $param;
             }
             # return the indexed params
