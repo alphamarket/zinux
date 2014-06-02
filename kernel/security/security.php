@@ -125,11 +125,11 @@ class security
                     $existance_array[] = $key;
             }
             # checking for existance
-            foreach($existance_array as $value)
+            foreach($existance_array as $key)
             {
-                if(!isset($target_array[$value]))
+                if(!key_exists($key, $target_array))
                 {
-                     $exception_verbose_msg = "The argumen `$value` didn't supplied";
+                     $exception_verbose_msg = "The argumen `$key` didn't supplied";
                      goto __THROW_EXCEPTION;
                 }
             }
