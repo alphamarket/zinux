@@ -374,7 +374,7 @@ __FETCHING_MODULES:
         public function GetIndexedParam($index)
         {
             if(!is_integer($index)) throw new \zinux\kernel\exceptions\invalidArgumentException;
-            return $this->indexed_param[$index];
+            return @$this->indexed_param[$index];
         }
         /**
         * Set URI params base on its index
