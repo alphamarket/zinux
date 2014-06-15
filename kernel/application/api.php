@@ -17,6 +17,7 @@ class api extends \zinux\baseZinux
      */
     public static function call($uri, array $GET = array(), array $POST = array())
     {
+        trigger_error("This method is deprecated please use `\\zinux\\kernel\\application\\httpRequest` instead.", E_USER_DEPRECATED);
         # verify the uri arg
         if(!$uri || !is_string($uri) || !strlen($uri))
             throw new \zinux\kernel\exceptions\invalidArgumentException("Invalid \$uri supplied....");
