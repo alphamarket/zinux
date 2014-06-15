@@ -97,7 +97,7 @@ class httpRequest extends \zinux\baseZinux
         # close current session file
         session_write_close();
             # send/get the request
-            $content = file_get_contents($this->uri, false, stream_context_create($options));
+            $content = @file_get_contents($this->uri, false, stream_context_create($options));
         # re-open the session file 
         session_start();
         # if there were any failure the content will be FALSE
