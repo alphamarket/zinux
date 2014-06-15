@@ -33,7 +33,7 @@ class baseView extends \zinux\baseZinux
      */
     public $helper;
     /**
-     *
+     * The current view's meta data
      * @var \zinux\kernel\mvc\view
      */
     public $metadata;

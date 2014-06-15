@@ -10,7 +10,11 @@ require_once (dirname(__FILE__).'/../../baseZinux.php');
  */
 class baseLayout extends \zinux\baseZinux
 {
-
+    /**
+     * The current layout's meta data
+     * @var \zinux\kernel\mvc\layout
+     */
+    public $metadata;
     /**
     * View object related to layout
     * @var \zinux\kernel\view\baseView  
