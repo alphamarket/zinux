@@ -173,12 +173,11 @@ class security
 
     /**
      * check if passed string is secured compatible operations in `GetSecureString()` function
-     * 
      * @param \zinux\kernel\security\type $target_string
      * @param array $based_upon
      * @param type $has_expire_date
      */
-    public static function ArrayHashCheck(array $target_array, array $based_upon = array(), $has_expire_date = 0)
+    public static function __validate_request(array $target_array, array $based_upon = array(), $has_expire_date = 0)
     {
         # generating security fields name
         $tn  = "__s_".substr(sha1('t'), 0,5);
