@@ -23,24 +23,11 @@ class security
      */
     public static function GetHashString(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0)
     {
-            if($has_expire_date && $seconds_to_expire_from_now<=0)
-                throw new \InvalidArgumentException("The '\$second_to_expire_from_now' didn't provide");
-            $t = time();
-            $based_upon[] = $t;
-            $tn = "s_".substr(sha1('t'), 0, 5);
-            $link ="&$tn=$t";
-            if($has_expire_date)
-            {
-                $en = "s_".substr(sha1('e'), 0, 5);
-                $et = time()+$seconds_to_expire_from_now;
-                $based_upon[] = $et;
-                $link .= "&$en=$et";
-            }
-            require_once 'hash.php';
-            $h = hash::Generate(implode("", $based_upon));
-            $hn = "s_".substr(sha1('h'), 0, 5);
-            $link = $link."&$hn=$h";
-            return $link;
+        $hash = "";
+        foreach(self::GetHashArray($based_upon, $has_expire_date, $seconds_to_expire_from_now) as $key => $value) {
+            $hash = "$hash&$key=$value";
+        }
+        return $hash;
     }
     /* 
      * Get a secure GET/POST compatible array
@@ -56,25 +43,32 @@ class security
                 throw new \InvalidArgumentException("The '\$second_to_expire_from_now' didn't provide");
             $t = time();
             $based_upon[] = $t;
-            $tn = "s_".substr(sha1('t'), 0, 5);
+            $tn = "__s_".substr(sha1('t'), 0, 5);
             $link =array($tn => $t);
             if($has_expire_date)
             {
-                $en = "s_".substr(sha1('e'), 0, 5);
+                $en = "__s_".substr(sha1('e'), 0, 5);
                 $et = time()+$seconds_to_expire_from_now;
                 $based_upon[] = $et;
                 $link .= "&$en=$et";
             }
             require_once 'hash.php';
             $h = hash::Generate(implode("", $based_upon));
-            $hn = "s_".substr(sha1('h'), 0, 5);
+            $hn = "__s_".substr(sha1('h'), 0, 5);
             $link[$hn] = $h;
+            $refer =self::getURIHash($t.@$_SERVER["REQUEST_SCHEME"]."://".@$_SERVER["SERVER_NAME"].@$_SERVER['REQUEST_URI']);
+            $hrefer = "__s_".substr(sha1('r'), 0, 5);
+            $link[$hrefer] = $refer;
             return $link;
     }
-
+    /**
+     * Get a proper hash for a URI
+     * @param string $uri the URI
+     * @return string The hash
+     */
+    private static function getURIHash($uri) { return sha1("__R3F3R__{$uri}__53CUR!TY__"); }
     /**
      * Checks if URI is secure with provided parameters
-     * 
      * @param array $target_array    Target array to examine parameters
      * @param array $existance_array    array to check for item existance in target array
      * @param array $assertion_array    do a operation like ` $key($value) `  foreach item in this array!
@@ -187,13 +181,14 @@ class security
     public static function ArrayHashCheck(array $target_array, array $based_upon = array(), $has_expire_date = 0)
     {
         # generating security fields name
-        $tn = "s_".substr(sha1('t'), 0,5);
-        $hn = "s_".substr(sha1('h'), 0,5);
-        $en = "s_".substr(sha1('e'), 0,5);
+        $tn  = "__s_".substr(sha1('t'), 0,5);
+        $hn = "__s_".substr(sha1('h'), 0,5);
+        $en = "__s_".substr(sha1('e'), 0,5);
+        $rn  = "__s_".substr(sha1('r'), 0,5);
         # assertion array for security checking 
         $asserts = array();
         # final $based_upon array for asserting $target_array
-        $isSecure_based_upon = array($tn, $hn);
+        $isSecure_based_upon = array($tn, $hn, $rn);
         # essential component of secure Array
         self::IsSecure($target_array, $isSecure_based_upon);
         # add time value of array to $based_upon[] required for hash
@@ -223,7 +218,7 @@ class security
         }
         require_once 'hash.php';
         # final checking of $target_array via its assertions
-        self::IsSecure($target_array, $isSecure_based_upon, $asserts , array($hn=>hash::Generate(implode("", $based_upon))));
+        self::IsSecure($target_array, $isSecure_based_upon, $asserts , array($hn=>hash::Generate(implode("", $based_upon)), $rn => self::getURIHash(@$target_array[$tn].@$_SERVER["HTTP_REFERER"])));
         # if we reach this line its all OK
         return true;
     }
