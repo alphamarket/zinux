@@ -43,6 +43,7 @@ class security
                 throw new \InvalidArgumentException("The '\$second_to_expire_from_now' didn't provide");
             $t = time();
             $based_upon[] = $t;
+            $based_upon[] = @session_id();
             $tn = "__s_".substr(sha1('t'), 0, 5);
             $link =array($tn => $t);
             if($has_expire_date)
@@ -192,6 +193,7 @@ class security
         self::IsSecure($target_array, $isSecure_based_upon);
         # add time value of array to $based_upon[] required for hash
         $based_upon[] = $target_array[$tn];
+        $based_upon[] = @session_id();
         # if array should has expiration value
         if($has_expire_date)
         {
