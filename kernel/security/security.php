@@ -21,7 +21,7 @@ class security
      * @return string the secure string
      * @throws \InvalidArgumentException arises if condition <b>$has_expire_date && $seconds_to_expire_from_now<=0</b> satisfied
      */
-    public static function GetHashString(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0)
+    public static function __get_uri_hash_string(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0)
     {
         $hash = "";
         foreach(self::GetHashArray($based_upon, $has_expire_date, $seconds_to_expire_from_now) as $key => $value) {
