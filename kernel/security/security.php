@@ -16,15 +16,16 @@ class security
     /* 
      * Get a secure GET/POST compatible string
      * @param array $based_upon an array to create secure string based upon it
+     * @param string $for_uri Explicitly define the target uri(default: @$_SERVER['REQUEST_URI'])
      * @param boolean $has_expire_date the secure string should has expiration date
      * @param unsigned integer $second_to_expire_from_now the seconds to expire the secure string
      * @return string the secure string
      * @throws \InvalidArgumentException arises if condition <b>$has_expire_date && $seconds_to_expire_from_now<=0</b> satisfied
      */
-    public static function __get_uri_hash_string(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0)
+    public static function __get_uri_hash_string(array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0, $seconds_to_expire_from_now = 0)
     {
         $hash = "";
-        foreach(self::__get_uri_hash_array($based_upon, $has_expire_date, $seconds_to_expire_from_now) as $key => $value) {
+        foreach(self::__get_uri_hash_array($based_upon, $for_uri, $has_expire_date, $seconds_to_expire_from_now) as $key => $value) {
             $hash = "$hash&$key=$value";
         }
         return $hash;
@@ -32,12 +33,13 @@ class security
     /* 
      * Get a secure GET/POST compatible array
      * @param array $based_upon an array to create secure string based upon it
+     * @param string $for_uri Explicitly define the target uri(default: @$_SERVER['REQUEST_URI'])
      * @param boolean $has_expire_date the secure string should has expiration date
      * @param unsigned integer $second_to_expire_from_now the seconds to expire the secure string
      * @return array the secure string array
      * @throws \InvalidArgumentException arises if condition <b>$has_expire_date && $seconds_to_expire_from_now<=0</b> satisfied
      */
-    public static function __get_uri_hash_array(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0)
+    public static function __get_uri_hash_array(array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0, $seconds_to_expire_from_now = 0)
     {
             if($has_expire_date && $seconds_to_expire_from_now<=0)
                 throw new \InvalidArgumentException("The '\$second_to_expire_from_now' didn't provide");
@@ -57,9 +59,13 @@ class security
             $h = hash::Generate(implode("", $based_upon));
             $hn = "__s_".substr(sha1('h'), 0, 5);
             $link[$hn] = $h;
-            $refer =self::getURIHash($t.@$_SERVER["REQUEST_SCHEME"]."://".@$_SERVER["SERVER_NAME"].@$_SERVER['REQUEST_URI']);
+            $refer = $for_uri;
+            if($refer && !is_string($refer))
+                throw new \InvalidArgumentException("Expecting \$for_uri be a string instance");
+            if(!$refer || !strlen($refer))
+                $refer = @$_SERVER["REQUEST_SCHEME"]."://".@$_SERVER["SERVER_NAME"].@$_SERVER['REQUEST_URI'];
             $hrefer = "__s_".substr(sha1('r'), 0, 5);
-            $link[$hrefer] = $refer;
+            $link[$hrefer] = self::getURIHash($t.$refer);
             return $link;
     }
     /**
@@ -83,7 +89,7 @@ class security
                 array $assertion_array = array(), 
                 array $check_sum_array = array(), 
                 $throw_exception = 1,
-                $verbose_exception = 0
+                $verbose_exception = 1
         )
     {
             # initializing expcetions message templates
@@ -176,9 +182,10 @@ class security
      * check if passed string is secured compatible operations in `GetSecureString()` function
      * @param \zinux\kernel\security\type $target_string
      * @param array $based_upon
+     * @param string $for_uri Explicitly define the uri that request has come from(default: @$_SERVER['HTTP_REFERER'])
      * @param type $has_expire_date
      */
-    public static function __validate_request(array $target_array, array $based_upon = array(), $has_expire_date = 0)
+    public static function __validate_request(array $target_array, array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0)
     {
         # generating security fields name
         $tn  = "__s_".substr(sha1('t'), 0,5);
@@ -217,9 +224,17 @@ class security
             # register expiration assertion function/value
             $asserts[$expire_checkFunc]= $target_array[$en]; 
         }
+        /**
+         * Validating $refer string here.
+         */
+        $refer = $for_uri;
+        if($refer && !is_string($refer))
+            throw new \InvalidArgumentException("Expecting \$for_uri be a string instance");
+        if(!$refer || !strlen($refer))
+            $refer = @$_SERVER["HTTP_REFERER"];
         require_once 'hash.php';
         # final checking of $target_array via its assertions
-        self::IsSecure($target_array, $isSecure_based_upon, $asserts , array($hn=>hash::Generate(implode("", $based_upon)), $rn => self::getURIHash(@$target_array[$tn].@$_SERVER["HTTP_REFERER"])));
+        self::IsSecure($target_array, $isSecure_based_upon, $asserts , array($hn=>hash::Generate(implode("", $based_upon)), $rn => self::getURIHash(@$target_array[$tn].$refer)));
         # if we reach this line its all OK
         return true;
     }
