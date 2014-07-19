@@ -57,6 +57,8 @@ class api extends \zinux\baseZinux
         $current_req->Process();
         # setup the target api-call uri
         $_SERVER['REQUEST_URI'] = preg_replace("#(.*)(\?.*)$#i", "$1", $uri)."?".http_build_query($_GET);
+        # setup the referer page to current request's URI
+        $_SERVER["HTTP_REFERER"] = $server["REQUEST_SCHEME"]."://".$server["HTTP_HOST"].$server["REQUEST_URI"];
         # generate a request instance for requested api-call uri
         $api_req = new \zinux\kernel\routing\request;
         # process the api-call request 

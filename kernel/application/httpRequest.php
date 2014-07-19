@@ -89,7 +89,9 @@ class httpRequest extends \zinux\baseZinux
         $options = array(
             'http' => array(
                 'header'  => "Content-type: application/x-www-form-urlencoded\r\n".
-                                    "Cookie: {$this->COOKIE}\r\n",
+                                    "Cookie: {$this->COOKIE}\r\n".
+                                    "Referer: ".($_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"])."\r\n".
+                                    "User-Agent: {$_SERVER["HTTP_USER_AGENT"]}\r\n",
                 'method'  => $this->method,
                 'content' => $this->POST,
             ),
