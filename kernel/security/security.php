@@ -78,7 +78,15 @@ class security
      * Checks if URI is secure with provided parameters
      * @param array $target_array    Target array to examine parameters
      * @param array $existance_array    array to check for item existance in target array
-     * @param array $assertion_array    do a operation like ` $key($value) `  foreach item in this array!
+     * @param array $assertion_array    do a operation like ` $value($target_array[$key]) `  foreach item in this array! Example:<br />
+     * <pre><code>
+     * $assertion_array = array(
+     *      "messages" => array("\is_array", "\count", "!\is_null"),
+     *      "item"          => array("some_func", function(data) { 
+     *                                                                          return strlen(data);
+     *                                                                    }
+     * )
+     * </code></pre>
      * @param array $check_sum_array    do a checksum on elements like ` $key =C= $value `
      * @param boolean $throw_exception    Throw exception if any error occures while processing $target_array
      * @param boolean $verbose_exception    check if when throwing exceptions the message should be verbose or not
@@ -148,20 +156,38 @@ class security
              $asrt_bk_qe = assert_options(ASSERT_QUIET_EVAL);
              # suppressing assertion warnings
              assert_options(ASSERT_WARNING, 0);
-             foreach($assertion_array as $func=> $arg)
+             $__FUNCS = array();
+             $_is__FUNC_avail = function($__FUNCS) { return $__FUNCS && is_array($__FUNCS) && count($__FUNCS); };
+             foreach($assertion_array as $arg => $func)
              {
+__ASSERT_FUNCS:
+                if(is_array($func))
+                    $__FUNCS  = $func;
+                if($_is__FUNC_avail($__FUNCS))
+                    $func = array_shift($__FUNCS);
+                $should_neg = $should_neg = (@$func[0] === "!");
+                if($should_neg)
+                    $func = substr($func, 1);
                  # checking for function existance
                  if(!function_exists($func) || !is_callable($func))
                  {
                      $exception_verbose_msg = "Unable to call `$func()`";
                      goto __THROW_EXCEPTION;
                  }
+                print_r(array($should_neg ? "TRUE" : "FALSE", $func => array($target_array[$arg])));
+                 if($should_neg && !assert(!$func($target_array[$arg]))) {
+                     $exception_verbose_msg = "assertion failed on calling `[!]".($func instanceof Closure ? "Anonymous" : "$func")."(".json_encode($target_array[$arg]).")`";
+                     goto __THROW_EXCEPTION;  
+                 }
                  # asserting the function call
-                 if(!assert($func($arg)))
+                 elseif(!$should_neg && !assert($func($target_array[$arg])))
                  {
-                     $exception_verbose_msg = "assertion failed on calling `$func($args)`";
+                     $exception_verbose_msg = "assertion failed on calling `".($func instanceof Closure ? "__Anonymous__Func__" : "$func")."(".json_encode($target_array[$arg]).")`";
                      goto __THROW_EXCEPTION;
                  }
+__ASSERT_FUNCS_ARRAY:
+                if($_is__FUNC_avail($__FUNCS))
+                    goto __ASSERT_FUNCS;
              }
              #restore assertion option values
              assert_options(ASSERT_WARNING, $asrt_bk_w);
