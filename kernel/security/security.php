@@ -22,8 +22,7 @@ class security
      * @return string the secure string
      * @throws \InvalidArgumentException arises if condition <b>$has_expire_date && $seconds_to_expire_from_now<=0</b> satisfied
      */
-    public static function __get_uri_hash_string(array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0, $seconds_to_expire_from_now = 0)
-    {
+    public static function __get_uri_hash_string(array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0, $seconds_to_expire_from_now = 0) {
         $hash = "";
         foreach(self::__get_uri_hash_array($based_upon, $for_uri, $has_expire_date, $seconds_to_expire_from_now) as $key => $value) {
             $hash = "$hash&$key=$value";
@@ -39,8 +38,7 @@ class security
      * @return array the secure string array
      * @throws \InvalidArgumentException arises if condition <b>$has_expire_date && $seconds_to_expire_from_now<=0</b> satisfied
      */
-    public static function __get_uri_hash_array(array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0, $seconds_to_expire_from_now = 0)
-    {
+    public static function __get_uri_hash_array(array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0, $seconds_to_expire_from_now = 0) {
             if($has_expire_date && $seconds_to_expire_from_now<=0)
                 throw new \InvalidArgumentException("The '\$second_to_expire_from_now' didn't provide");
             $t = time();
@@ -48,8 +46,7 @@ class security
             $based_upon[] = @session_id();
             $tn = "__s_".substr(sha1('t'), 0, 5);
             $link =array($tn => $t);
-            if($has_expire_date)
-            {
+            if($has_expire_date) {
                 $en = "__s_".substr(sha1('e'), 0, 5);
                 $et = time()+$seconds_to_expire_from_now;
                 $based_upon[] = $et;
@@ -98,8 +95,7 @@ class security
                 array $check_sum_array = array(), 
                 $throw_exception = 1,
                 $verbose_exception = 1
-        )
-    {
+        ) {
             # initializing expcetions message templates
             $exception_verbose_msg = "Invalid argument.";
             $exception_mini_msg = "Invalid argument.";
@@ -109,10 +105,8 @@ class security
                     '$assertion_array' => $assertion_array, 
                     '$check_sum_array'=>$check_sum_array);
             # checking instance existance
-            foreach($args as $name=> $array)
-            {
-                if(!isset($array))
-               {
+            foreach($args as $name=> $array) {
+                if(!isset($array)) {
                    $exception_verbose_msg = "The '$name' array is NULL";
                    goto __THROW_EXCEPTION;
                }
@@ -122,31 +116,25 @@ class security
                 throw new \InvalidArgumentException("\$existance_array is not supplied but demads operation on \$check_sum_array!!");
 
             # a forehead existance checking 
-            if(count($existance_array) && !count($target_array))
-            {
+            if(count($existance_array) && !count($target_array)) {
                 $exception_verbose_msg = "The target array in empy!";
                 goto __THROW_EXCEPTION;
             }
             # adding check sum items into existance items
-            foreach($check_sum_array as $key=> $value)
-            {
+            foreach($check_sum_array as $key=> $value) {
                 if(!isset($existance_array[$key]))
                     $existance_array[] = $key;
             }
             # checking for existance
-            foreach($existance_array as $key)
-            {
-                if(!key_exists($key, $target_array))
-                {
+            foreach($existance_array as $key) {
+                if(!key_exists($key, $target_array)) {
                      $exception_verbose_msg = "The argumen `$key` didn't supplied";
                      goto __THROW_EXCEPTION;
                 }
             }
             # checking for checksums
-            foreach($check_sum_array as $key=> $value)
-            {
-                if($target_array[$key] != $value)
-                {
+            foreach($check_sum_array as $key=> $value) {
+                if($target_array[$key] != $value) {
                      $exception_verbose_msg = "The `$key`'s value didn't match with `$value`";
                      goto __THROW_EXCEPTION;
                 }
@@ -156,33 +144,39 @@ class security
              $asrt_bk_qe = assert_options(ASSERT_QUIET_EVAL);
              # suppressing assertion warnings
              assert_options(ASSERT_WARNING, 0);
+             # Backup function collection container 
              $__FUNCS = array();
+             # check if there are any valid element in given arg?
              $_is__FUNC_avail = function($__FUNCS) { return $__FUNCS && is_array($__FUNCS) && count($__FUNCS); };
-             foreach($assertion_array as $arg => $func)
-             {
+             foreach($assertion_array as $arg => $func) {
 __ASSERT_FUNCS:
+                # check if this is a collection of functions
                 if(is_array($func))
+                    # if so? back it up.
                     $__FUNCS  = $func;
+                # if there are any backed-up function collection?
                 if($_is__FUNC_avail($__FUNCS))
+                    # dequeue a function from collection
                     $func = array_shift($__FUNCS);
-                $should_neg = $should_neg = (@$func[0] === "!");
+                # check if should use NEG validation?
+                $should_neg = (@$func[0] === "!");
+                # if we are using NEG validation
                 if($should_neg)
+                    # fetch NEG-free function's name
                     $func = substr($func, 1);
                  # checking for function existance
-                 if(!function_exists($func) || !is_callable($func))
-                 {
+                 if(!function_exists($func) || !is_callable($func)) {
                      $exception_verbose_msg = "Unable to call `$func()`";
                      goto __THROW_EXCEPTION;
                  }
-                print_r(array($should_neg ? "TRUE" : "FALSE", $func => array($target_array[$arg])));
+                 # if we are using NEGATIVE validation?
                  if($should_neg && !assert(!$func($target_array[$arg]))) {
-                     $exception_verbose_msg = "assertion failed on calling `[!]".($func instanceof Closure ? "Anonymous" : "$func")."(".json_encode($target_array[$arg]).")`";
+                     $exception_verbose_msg = "assertion failed on calling `[!]".($func instanceof \Closure ? "Anonymous" : "$func")."(".json_encode($target_array[$arg]).")`";
                      goto __THROW_EXCEPTION;  
                  }
-                 # asserting the function call
-                 elseif(!$should_neg && !assert($func($target_array[$arg])))
-                 {
-                     $exception_verbose_msg = "assertion failed on calling `".($func instanceof Closure ? "__Anonymous__Func__" : "$func")."(".json_encode($target_array[$arg]).")`";
+                 # if we are using POSIVITIVE validtion?
+                 elseif(!$should_neg && !assert($func($target_array[$arg]))) {
+                     $exception_verbose_msg = "assertion failed on calling `".($func instanceof \Closure ? "__Anonymous__Func__" : "$func")."(".json_encode($target_array[$arg]).")`";
                      goto __THROW_EXCEPTION;
                  }
 __ASSERT_FUNCS_ARRAY:
@@ -211,8 +205,7 @@ __ASSERT_FUNCS_ARRAY:
      * @param string $for_uri Explicitly define the uri that request has come from(default: @$_SERVER['HTTP_REFERER'])
      * @param type $has_expire_date
      */
-    public static function __validate_request(array $target_array, array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0)
-    {
+    public static function __validate_request(array $target_array, array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0) {
         # generating security fields name
         $tn  = "__s_".substr(sha1('t'), 0,5);
         $hn = "__s_".substr(sha1('h'), 0,5);
@@ -228,22 +221,20 @@ __ASSERT_FUNCS_ARRAY:
         $based_upon[] = $target_array[$tn];
         $based_upon[] = @session_id();
         # if array should has expiration value
-        if($has_expire_date)
-        {
+        if($has_expire_date) {
             # check expiration field existance
             self::IsSecure($target_array, array($en));
             # if it does not exists we will never reach this line be cause of exception arising in above line
         }
         # if we make here and $has_expire_date is enabled? OR naturally $target_array contains an expiration field
-        if($has_expire_date || isset($target_array[$en]))
-        {
+        if($has_expire_date || isset($target_array[$en])) {
             # then for sure the exipration field is exists
             # adding expiration value of array to $based_upon[] required for hash
             $based_upon[] = $target_array[$en]; 
             # adding expiration value of array to $isSecure_based_upon[] required for hash
             $isSecure_based_upon[] = $target_array[$en]; 
             # anonymous function for asserting expiration value
-            $expire_checkFunc = function($en){
+            $expire_checkFunc = function($en) {
                     # check if the expiration value is less than current time or not
                     return $en <= time();
                 };
