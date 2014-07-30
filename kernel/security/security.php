@@ -60,7 +60,7 @@ class security
             if($refer && !is_string($refer))
                 throw new \InvalidArgumentException("Expecting \$for_uri be a string instance");
             if(!$refer || !strlen($refer))
-                $refer = @$_SERVER["REQUEST_SCHEME"]."://".@$_SERVER["SERVER_NAME"].@$_SERVER['REQUEST_URI'];
+                $refer = @$_SERVER["REQUEST_SCHEME"]."://".@$_SERVER["SERVER_NAME"].":".@$_SERVER["SERVER_PORT"].@$_SERVER['REQUEST_URI'];
             $hrefer = "__s_".substr(sha1('r'), 0, 5);
             $link[$hrefer] = self::getURIHash($t.$refer);
             return $link;
