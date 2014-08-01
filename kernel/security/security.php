@@ -152,7 +152,7 @@ class security
             # checking for existance
             foreach($existance_array as $key) {
                 if(!key_exists($key, $target_array)) {
-                     $exception_verbose_msg = "The argumen `$key` didn't supplied";
+                     $exception_verbose_msg = "The argument `$key` didn't supplied";
                      goto __THROW_EXCEPTION;
                 }
             }
