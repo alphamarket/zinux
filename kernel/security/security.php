@@ -22,9 +22,9 @@ class security
      * @return string the secure string
      * @throws \InvalidArgumentException arises if condition <b>$has_expire_date && $seconds_to_expire_from_now<=0</b> satisfied
      */
-    public static function __get_uri_hash_string(array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0, $seconds_to_expire_from_now = 0) {
+    public static function __get_uri_hash_string(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0) {
         $hash = "";
-        foreach(self::__get_uri_hash_array($based_upon, $for_uri, $has_expire_date, $seconds_to_expire_from_now) as $key => $value) {
+        foreach(self::__get_uri_hash_array($based_upon, $has_expire_date, $seconds_to_expire_from_now) as $key => $value) {
             $hash = "$hash&$key=$value";
         }
         return $hash;
@@ -38,39 +38,63 @@ class security
      * @return array the secure string array
      * @throws \InvalidArgumentException arises if condition <b>$has_expire_date && $seconds_to_expire_from_now<=0</b> satisfied
      */
-    public static function __get_uri_hash_array(array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0, $seconds_to_expire_from_now = 0) {
-            if($has_expire_date && $seconds_to_expire_from_now<=0)
-                throw new \InvalidArgumentException("The '\$second_to_expire_from_now' didn't provide");
-            $t = time();
-            $based_upon[] = $t;
-            $based_upon[] = @session_id();
-            $tn = "__s_".substr(sha1('t'), 0, 5);
-            $link =array($tn => $t);
-            if($has_expire_date) {
-                $en = "__s_".substr(sha1('e'), 0, 5);
-                $et = time()+$seconds_to_expire_from_now;
-                $based_upon[] = $et;
-                $link .= "&$en=$et";
-            }
-            require_once 'hash.php';
-            $h = hash::Generate(implode("", $based_upon));
-            $hn = "__s_".substr(sha1('h'), 0, 5);
-            $link[$hn] = $h;
-            $refer = $for_uri;
-            if($refer && !is_string($refer))
-                throw new \InvalidArgumentException("Expecting \$for_uri be a string instance");
-            if(!$refer || !strlen($refer))
-                $refer = @$_SERVER["REQUEST_SCHEME"]."://".@$_SERVER["SERVER_NAME"].":".@$_SERVER["SERVER_PORT"].@$_SERVER['REQUEST_URI'];
-            $hrefer = "__s_".substr(sha1('r'), 0, 5);
-            $link[$hrefer] = self::getURIHash($t.$refer);
-            return $link;
+    public static function __get_uri_hash_array(array $based_upon = array(), $has_expire_date = 0, $seconds_to_expire_from_now = 0) {
+        # validate if expire date's args has no confilicts with each others
+        if($has_expire_date && $seconds_to_expire_from_now<=0)
+            throw new \InvalidArgumentException("The '\$second_to_expire_from_now' didn't provide");
+        # generating security fields name
+        $tn  = "__s_".substr(sha1('t'), 0,5);
+        $hn = "__s_".substr(sha1('h'), 0,5);
+        $en = "__s_".substr(sha1('e'), 0,5);
+        $rn  = "__s_".substr(sha1('r'), 0,5);
+        # get current timestamp
+        $t = time();
+        # push the timestamp into based upon args
+        $based_upon[] = $t;
+        # push session ID if any exists into based upon args
+        $based_upon[] = @session_id();
+        # create and init the return link URI component with generated timestamp
+        $link =array($tn => $t);
+        # if we have an expiration on link
+        if($has_expire_date) {
+            # compute expire timestamp
+            $et = time() + $seconds_to_expire_from_now;
+            # push expiration time into based upon args
+            $based_upon[] = $et;
+            # set expiration time into return link URL component
+            $link[$en] = $et;
+        }
+        # invoke hash module
+        require_once 'hash.php';
+        # generate has from based upon args and set hash value into return link URL component
+        $link[$hn] = hash::Generate(implode("", $based_upon));
+        # set requested URI into return link URL component
+        $link[$rn] = self::getURIHash($t.self::getRequestURI());
+        # return the link URI component
+        return $link;
+    }
+    /**
+     * Get proper request URI for security purposes
+     * @return string
+     */
+    protected static function getRequestURI() {
+        return @$_SERVER["REQUEST_SCHEME"]."://".@$_SERVER["SERVER_NAME"].":".@$_SERVER["SERVER_PORT"];
+    }
+    /**
+     * Get proper referer URI for security purposes
+     * @return string
+     */
+    protected static function getRefererURI() {
+        $pu = @parse_url(@$_SERVER["HTTP_REFERER"]);
+        if(!@isset($pu["port"])) { switch(strtolower(@$pu["scheme"])) { case "http": $pu["port"] = 80; break; case "https": $pu["port"] = 443; break; } }
+        return @$pu["scheme"]."://".@$pu["host"].":".@$pu["port"];
     }
     /**
      * Get a proper hash for a URI
      * @param string $uri the URI
      * @return string The hash
      */
-    private static function getURIHash($uri) { return sha1("__R3F3R__{$uri}__53CUR!TY__"); }
+    protected static function getURIHash($uri) { return sha1("__R3F3R__{$uri}__53CUR!TY__"); }
     /**
      * Checks if URI is secure with provided parameters
      * @param array $target_array    Target array to examine parameters
@@ -205,7 +229,7 @@ __ASSERT_FUNCS_ARRAY:
      * @param string $for_uri Explicitly define the uri that request has come from(default: @$_SERVER['HTTP_REFERER'])
      * @param type $has_expire_date
      */
-    public static function __validate_request(array $target_array, array $based_upon = array(), $for_uri = NULL, $has_expire_date = 0) {
+    public static function __validate_request(array $target_array, array $based_upon = array(), $has_expire_date = 0) {
         # generating security fields name
         $tn  = "__s_".substr(sha1('t'), 0,5);
         $hn = "__s_".substr(sha1('h'), 0,5);
@@ -235,23 +259,18 @@ __ASSERT_FUNCS_ARRAY:
             $isSecure_based_upon[] = $target_array[$en]; 
             # anonymous function for asserting expiration value
             $expire_checkFunc = function($en) {
-                    # check if the expiration value is less than current time or not
-                    return $en <= time();
-                };
+                # check if the expiration value is less than current time or not
+                return $en <= time();
+            };
             # register expiration assertion function/value
             $asserts[$expire_checkFunc]= $target_array[$en]; 
         }
-        /**
-         * Validating $refer string here.
-         */
-        $refer = $for_uri;
-        if($refer && !is_string($refer))
-            throw new \InvalidArgumentException("Expecting \$for_uri be a string instance");
-        if(!$refer || !strlen($refer))
-            $refer = @$_SERVER["HTTP_REFERER"];
+        # get referer URI
+        $refer = self::getRefererURI();
+        # require hashing module
         require_once 'hash.php';
         # final checking of $target_array via its assertions
-        self::IsSecure($target_array, $isSecure_based_upon, $asserts , array($hn=>hash::Generate(implode("", $based_upon)), $rn => self::getURIHash(@$target_array[$tn].$refer)));
+        self::IsSecure($target_array, $isSecure_based_upon, $asserts , array($hn => hash::Generate(implode("", $based_upon)), $rn => self::getURIHash(@$target_array[$tn].$refer)));
         # if we reach this line its all OK
         return true;
     }
