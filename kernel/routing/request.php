@@ -409,9 +409,4 @@ __FETCHING_MODULES:
 	{
             return strtoupper($_SERVER['REQUEST_METHOD']) === "GET";
 	}
-        public function InvokeAction()
-        {
-            $c = $this->GetControllerInstance();
-            $c->$this->action->GetPath();
-        }
 }
