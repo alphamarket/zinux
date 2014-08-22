@@ -183,13 +183,13 @@ __ASSERT_FUNCS:
                     # dequeue a function from collection
                     $func = array_shift($__FUNCS);
                 # check if should use NEG validation?
-                $should_neg = (@$func[0] === "!");
+                $should_neg = is_string($func) && (@$func[0] === "!");
                 # if we are using NEG validation
                 if($should_neg)
                     # fetch NEG-free function's name
                     $func = substr($func, 1);
                  # checking for function existance
-                 if(!function_exists($func) || !is_callable($func)) {
+                 if(!is_callable($func)) {
                      $exception_verbose_msg = "Unable to call `$func()`";
                      goto __THROW_EXCEPTION;
                  }
