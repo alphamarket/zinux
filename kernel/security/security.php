@@ -13,6 +13,15 @@ require_once (dirname(__FILE__).'/../../baseZinux.php');
  */
 class security
 {
+    /**
+     * returns how many times this method has been called
+     * @staticvar int call_counter
+     * @return int The call counter
+     */
+    protected static function getCallCounter() {
+        static $call_counter = 0;
+        return $call_counter++;
+    }
     /* 
      * Get a secure GET/POST compatible string
      * @param array $based_upon an array to create secure string based upon it
@@ -48,7 +57,7 @@ class security
         $en = "__s_".substr(sha1('e'), 0,5);
         $rn  = "__s_".substr(sha1('r'), 0,5);
         # get current timestamp
-        $t = time();
+        $t = time() + self::getCallCounter();
         # push the timestamp into based upon args
         $based_upon[] = $t;
         # push session ID if any exists into based upon args
@@ -58,7 +67,7 @@ class security
         # if we have an expiration on link
         if($has_expire_date) {
             # compute expire timestamp
-            $et = time() + $seconds_to_expire_from_now;
+            $et = $t + $seconds_to_expire_from_now;
             # push expiration time into based upon args
             $based_upon[] = $et;
             # set expiration time into return link URL component
