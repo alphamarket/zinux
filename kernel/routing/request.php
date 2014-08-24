@@ -63,11 +63,18 @@ class request extends \zinux\baseZinux
         * Get requested uri string
         */
 	protected $requested_uri;
+        /**
+         * Hold primary $_REQUEST["REQUEST_URI"] value
+         * @var array 
+         */
+        private $primary_requested_uri = array();
          
 	public function __construct(request $request = NULL)
 	{
+            # set primary request URI
+            $this->SetPrimaryURI();
             # set the current URI by default
-            $this->SetURI($_SERVER['REQUEST_URI']);
+            $this->SetURI($this->GetPrimaryURI(FALSE));
             # initiate the initiation
             $this->Initiate();
             # if request was set
@@ -112,6 +119,34 @@ class request extends \zinux\baseZinux
 	public function GetURI()
 	{
             return $this->requested_uri;
+	}
+        /**
+        * Set primary requested URI
+        * @uses $_SERVER uses $_SERVER global variable's components
+        */
+	protected function SetPrimaryURI()
+	{
+            $url_origin = function($s, $use_forwarded_host=false) {
+                $ssl = (!empty($s['HTTPS']) && $s['HTTPS'] == 'on') ? true:false;
+                $sp = strtolower($s['SERVER_PROTOCOL']);
+                $protocol = substr($sp, 0, strpos($sp, '/')) . (($ssl) ? 's' : '');
+                $port = $s['SERVER_PORT'];
+                $port = ((!$ssl && $port=='80') || ($ssl && $port=='443')) ? '' : ':'.$port;
+                $host = ($use_forwarded_host && isset($s['HTTP_X_FORWARDED_HOST'])) ? $s['HTTP_X_FORWARDED_HOST'] : (isset($s['HTTP_HOST']) ? $s['HTTP_HOST'] : null);
+                $host = isset($host) ? $host : $s['SERVER_NAME'] . $port;
+                return "$protocol://$host";
+            };
+            $full_url = function ($s, $use_forwarded_host=false) use($url_origin) { return $url_origin($s, $use_forwarded_host) . $s['REQUEST_URI']; };
+            $this->primary_requested_uri = array(0 => $_SERVER['REQUEST_URI'], 1 => $full_url($_SERVER, 1));
+	}
+        /**
+        * Get primary requested URI
+        */
+	public function GetPrimaryURI($complete = 0)
+	{
+            if(!is_array($this->primary_requested_uri) || count($this->primary_requested_uri) !== 2)
+                trigger_error("Invalid primary requested configuration", E_USER_ERROR);
+            return @$this->primary_requested_uri[$complete ? 1 : 0];
 	}
 
 	/**
