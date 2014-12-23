@@ -265,14 +265,14 @@ __ASSERT_FUNCS_ARRAY:
             # adding expiration value of array to $based_upon[] required for hash
             $based_upon[] = $target_array[$en]; 
             # adding expiration value of array to $isSecure_based_upon[] required for hash
-            $isSecure_based_upon[] = $target_array[$en]; 
+            $isSecure_based_upon[] = $en; 
             # anonymous function for asserting expiration value
             $expire_checkFunc = function($en) {
                 # check if the expiration value is less than current time or not
                 return $en <= time();
             };
             # register expiration assertion function/value
-            $asserts[$expire_checkFunc]= $target_array[$en]; 
+            $asserts[$en] = $expire_checkFunc;
         }
         # get referer URI
         $refer = self::getRefererURI();
