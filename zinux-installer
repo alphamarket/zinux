@@ -17,8 +17,8 @@ chmod 775 "$HOME/.zinux" -R
 cd "$HOME/.zinux"
 echo -e "Starting to cloning \e[33mzinux\e[m..."
 echo -e "\e[33m\c"
-git clone --recursive https://github.com/dariushha/zinux.git
-git clone --recursive https://github.com/dariushha/zg.git
+git clone --recursive https://github.com/noise2/zinux.git
+git clone --recursive https://github.com/noise2/zg.git
 echo -e "\e[m\c"
 cd "$HOME/.zinux"
 echo -e "Modifing \e[33m\$HOME\e[m varibale content ..."
